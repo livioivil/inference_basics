@@ -8,9 +8,7 @@ output:
 Teacher: [Livio Finos](https://liviofinos.net)
 
 
-
-# A Basic Review of Statistics Definitions and Concepts 
-  
+# Some teaching material  
 
 |  Lecture    | Slides (html) | Booklet (html)| Booklet (pdf)|Booklet (Rmd)|
 |--------------|--------|-------|-------|
