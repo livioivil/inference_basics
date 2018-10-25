@@ -1,0 +1,545 @@
+---
+title: "The Linear Model"
+author: "Livio Finos"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+<!-- output: -->
+<!--   ioslides_presentation:  -->
+<!--     logo: C:/Users/livio/Dropbox (DPSS)/didattica/Permutation/AppStats/figures/logoUnipd.jpg -->
+<!--   beamer_presentation: default -->
+
+# Outline
+## Outline
+
+- Covariance and Correlation
+- Simple Linear Model
+- Analysis of the residuals
+- 2 sample
+- Multiple Linear Model
+- Anova
+- Interaction terms
+
+
+ <!-- Before we start -->
+
+```{r, echo=FALSE}
+#clean the memory
+rm (list=ls ())
+
+# We customize the output of our graphs a little bit
+par.old=par ()
+par (cex.main=1.5, lwd=2, col="darkgrey", pch=20, cex=3)
+# par (par.old)
+palette (c ("#FF0000", "#00A08A", "#FFCC00", "#445577", "#45abff"))
+
+# customize the output of knitr
+knitr :: opts_chunk$set (fig.align="center")#, fig.width=6, fig.height=6)
+```
+
+## The Age vs Reaction Time Dataset
+
+The reaction time of these subjects was tested by having them grab a meter stick after it was released by the tester. The number of centimeters that the meter stick dropped before being caught is a direct measure of the person’s response time.
+
+The values of `Age` are in years. The `Gender` is coded as `F` for female and  `M` for male.
+The values of `Reaction.Time` are in centimeters.
+
+(data are fictitious)
+
+To read the data
+
+```{r}
+data(reaction,package = "flip")
+# or download it from: https://github.com/livioivil/flip/tree/master/data
+# str (reaction)
+```
+
+---
+
+We plot the data
+
+```{r,fig.height=4,fig.width=4}
+plot(x=reaction$Age,y=reaction$Reaction.Time,pch=20,col=2,cex=2)
+```
+
+# Measures of Dependence and the Simple linear model
+## Measuring the dependence
+
+we define:
+
+- $X=Age$  
+- $Y=Reaction.Time$
+
+We review some famous index to measure the (linear) dependence among two variables
+
+## Covariance and Variance
+
+**Covariance** between $X$ and $Y$:
+
+$\sigma_{xy}=\frac{\sum_{i=1} ^ n (x_i- \bar{x}) (y_i- \bar{y} )}{n}$
+
+- values between $- \infty$ and $\infty$  
+- $\sigma_{xy} \approx 0$: there is no dependency between $X$ and $Y$  
+- $\sigma_{xy} >> (<<) 0$: there is a strong positive (negative) dependency between $X$ and $Y$  
+
+---
+
+**Variance** of $X$ (= covariance between $X$ and $X$):
+
+$\sigma_{xx}=\sigma_{x} ^ 2= \frac{\sum_{i=1} ^ n (x_i- \bar{x}) ^ 2}{n}$
+
+**Standard Deviation** of $X$:
+
+$\sigma_{xx}=\sqrt{\sigma_{xx}}=\sigma_{x}$
+
+<!-- **(Co)Variance** of $X$:   -->
+<!-- $\sigma_{xy} ^ o=\frac{\sum_{i=1} ^ n (x_i- \bar{x}) (y_i- \bar{ y})}{n-1}$ -->
+
+
+<!-- (similarly for variance and standard deviation) -->
+
+
+## Correlation
+With the Covariance it is difficult to understand when the relationship between $X$ and $Y$ is strong / weak.
+We note that
+
+$- \sigma_{x} \sigma_{y} \leq \sigma_{xy} \leq \sigma_{x} \sigma_{y}$
+<!-- we divide each memeber by $\sigma_x \sigma_y$: -->
+is quivalent to
+$-1 \leq \frac{\sigma_{xy}}{\sigma_{x} \sigma_{y}} \leq 1$
+
+
+**Correlation** between $X$ and $Y$:
+
+$\rho_{xy}=\frac{\sigma{xy}}{\sigma_{x} \sigma_{y}} =
+\frac{\sum_{i=1} ^ n (x_i- \bar{x}) (y_i- \bar{y})}{\sqrt{\sum_{i=1} ^ n (x_i- \bar{ x}) ^ 2} \sqrt{\sum_{i=1} ^ n (y_i- \bar{y}) ^ 2}}$
+
+- values between $-1$ and $1$
+- $\rho_{xy} \approx 0$: there is no dependency between $X$ and $Y$
+- $\rho_{xy} \approx 1 (-1)$: there is a strong positive (negative) dependency between $X$ and $Y$
+
+# The (simple) linear model
+## Linear Trend, the least squares method
+We describe the relationship between   
+`Reaction.Time` and
+`Age` with a straight line.
+
+$Reaction.Time \approx \beta_0 + \beta_1 Age$  
+$Y=\beta_0 + \beta_1X$
+
+Let's draw a line 'in the middle' of the data.
+
+--- 
+
+The **least-squares estimator**
+
+We look for the one that passes more 'in the middle', the one that minimizes the sum of the squares of the residues:
+
+$\hat{\beta}_0$ and $\hat{\beta}_1$ such that  
+$\sum_{i=1} ^ n (y_i - (\hat{\beta}_0 + \hat{\beta}_1x_i )) ^ 2$
+is minimum.
+
+---
+
+```{r,echo=FALSE}
+model=lm(Reaction.Time~Age,data=reaction)
+```
+
+Estimates:  
+
+- Angular coefficient: $\hat{\beta}_1=\frac{\sigma_{xy}}{\sigma_{xx}}=\rho_{xy}\frac{\sigma_{y}}{\sigma_{x}}=\frac{\sum_{i=1}^n(x_i- \bar{x})(y_i-\bar{y})}{\sum_{i=1}^n (x_i-\bar{x})^2}=$ `r coefficients(model)[2]`  
+- Intercept: $\hat{\beta}_0=\bar{y}-\hat{\beta}_1\bar{x}=$ `r coefficients(model)[1]`
+- Response (estimated $y$): $\hat{y}_i=\hat{\beta}_0 + \hat{\beta}_1x_i$
+- Residuals (from the estimated response):
+$y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i)=y_i- \hat{y}_i$
+
+
+and therefore the least squares are the sum of the squared residuals:
+$\sum_{i=1} ^ n (y_i- \hat{\beta}_0 + \hat{\beta}_1x_i) ^ 2=\sum_{i=1} ^ n (y_i- \hat{y}_i ) ^ 2$
+
+---
+
+A graphical representation:
+
+```{r}
+model=lm(Reaction.Time~Age,data=reaction)
+coefficients(model)
+```
+
+---
+
+```{r}
+plot(reaction$Age,reaction$Reaction.Time,pch=20,col=2,cex=1)
+coeff=round(coefficients(model),1)
+title(paste("Y=",coeff[1],"+",coeff[2],"*X"))
+abline(model,col=1)
+``` 
+
+## Interpretation of the coefficients
+
+- $\beta_0$ indicates the value of $y$ when $x=0$ (where the line intersects the ordinate axis).
+- $\beta_1$ indicates how much $y$ grows as a unit of $x$ grows
+    + If $\beta_1=0$ there is no relation between $x$ and $y$.$Y$is constant (horizontal ), knowing$x$does not change the estimate of $y$
+    + If $\beta_1> (<) 0$ the relation between $x$ and $y$ is positive (negative). When $X$ passes from $x$ a $x + 1$ the estimate of $Y$ changes from $\hat{y}$ to $\hat{y} + \hat{\beta}_1$
+
+
+## The normal (simple) linear model
+We assume that the observed values are distributed around true values
+$\beta_0 + \beta_1 X$ according to a Gaussian law:
+
+$Y=\textrm{linear part} + \textrm{normal error}$
+
+$Y=\beta_0 + \beta_1 X + \varepsilon$
+
+**Assumptions of the linear model **
+
+- the $\boldsymbol{y_i=\beta_0 + \beta_1 x_i + \varepsilon_i}$
+the relationship between $X$ and the true (mean) $Y$ is linear.
+-  the **observations** are **independent** each others (
+knowing the value of the $y_i$observation does not help me to predict the value of $y_{i + 1}$). The random part is $\varepsilon_i$, these are the independent terms.
+- $\boldsymbol{\varepsilon_i \sim N (0, \sigma ^ 2), \ \forall i=1, \ldots, n}$ errors have normal distribution with zero mean and common variance (homoschedasticity: same variance).
+
+
+## Hypothesis testing
+If these assumptions are true,
+
+$\hat{\beta_1} \sim N (\beta_1, \sigma ^ 2 / \sum (x_i- \bar{x}) ^ 2)$
+
+We calculate the test statistic:
+
+$t=\frac{\hat{\beta_1}}{std.dev\ \hat{\beta_1}}=\frac{\hat{\beta_1}}{\sqrt{\sum_{i=1} ^ n (y_i- \hat{y}_i) ^ 2 / \sum (x_i- \bar{x}) ^ 2 / (n-2)}}$
+
+If $H_0: \beta_1=0$, $t \sim t (n-2)$ is true
+
+On `reaction` data and $H_1: \beta_1 \neq 0$ (bilateral alternative)
+
+
+----
+
+```{r}
+model=lm (Reaction.Time ~ Age, data=reaction)
+summary (model)
+```
+
+Similar result, but much more assumptions!
+
+
+## The Multiple Linear model
+The simple linear model is 'easily' extensible to the Multiple Linear Model. Formally we have the same elements, we only expect the linear combination of multiple variables.
+
+$Y = \textrm {linear part} + \textrm {normal error}$
+  
+$Y = \beta_0 + \beta_1 X_1 + \ldots + \beta_p x_p + \varepsilon$
+    
+Thus we describe a (hyper) plan of size $p$.
+  
+**Assumptions of Multiple linear model**  
+
+They are the same as the simple linear model
+
+- i) $y_i = \beta_0 + \beta_1 x_{1i} + \ldots + \beta_p x_{pi} + \varepsilon_i$
+  the relationship between X and Y is truly linear, less than the error term$\varepsilon_i$
+- ii) the **observations** are among them **independent**
+- iii) $\boldsymbol {\varepsilon_i \sim N (0, \sigma ^2), \ \forall i = 1, \ldots, n}$
+  
+(we will return to the multiple model later)
+
+## Linear regression in R
+`> lm (formula, ...)`
+
+where:
+  `formula` specifies the link between the employee and the independent (or predictors)
+
+
+## Examples of regression model specification
+Let $y$ be the dependent variable and $x$ and $z$ two predictors
+
+**Regression** | **Regression in R**
+----------------- | ----------------------
+$y = \beta_{0} + \beta_{1} x + \varepsilon$|$lm (y \sim x)$
+$y = \beta_{0} + \beta_{1} x + \beta_{2} z + \varepsilon$|$lm (y \sim x + z)$
+$y = \beta_{0} + \beta_{1} x + \beta_{2} z + \beta_{3} xz + \varepsilon$|$lm (y \sim x + z + x: z)$
+$y = \beta_{0} + \beta_{1} x + \beta_{2} z + \beta_{3} xz + \varepsilon$|$lm (y \sim x * z)$
+  
+  
+For other options on specifying an R model, see:
+`>? formula`
+
+
+## Basic steps of a regression model
+
+**Step** | **Code R** |  **Libraries**
+----------- | ---------------- | -----------
+Model construction |$model = lm(formula)$| stats
+Check recruitment |$plot(model)$| stats
+Evaluation of parameters | $summary (model)$| stats
+Analysis of variance |$anova(model)$| stats
+Analysis of variance |$Anova(model, type = `` III '')$| car
+Viewing effects | see $? effect$| effects
+Comparison with other models \* |$anova (model, model2)$| stats
+Comparison with other models \* \* |$AIC (model)$;$AIC (model2)$| stats
+
+
+\* comparison between *nested* models based on the$F$test
+\* \* model comparison based on the Akaike Information Criterion (AIC) or on the Bayesian Information Criterion (BIC): see also **? AIC **
+  
+  
+## Let's go back to our example (simple linear model)
+  
+```{r}
+plot (reaction$Age, reaction$Reaction.Time, pch = 20, col = 1, cex = 2)
+# to identify observations on the graph with the mouse
+# identify (reaction$Age, reaction$Reaction.Time)
+```
+
+## Estimate of the model and evaluation of the parameters
+
+```{r}
+model = lm (Reaction.Time ~ Age, data = reaction)
+summary (model)
+```
+
+(for now) Note that the test$F$has the same significance as the t test.
+
+
+## Graphical representation of the effect of the Age
+```{r}
+library (effects) # see:? effect
+eff <- allEffects (model)
+plot (eff, 'Age', ask = F, main = '')
+```
+
+## Evaluation of the assumptions on the residuals of the model
+
+
+```{r}
+par (mar = c (6, 5, 4, 2) + 0.1)
+par (mfrow = c (2,2))
+plot (model) # see also:? plot.lm for bibliographical references
+```
+
+* Residual independence?
+* Residual conditions?
+* Homogeneity variance residues?
+* Presence of influential cases?
+  
+Please, no test of normality, homoschedasticity etc. (check the error of the first type on the contrary to what you would like).
+
+## Supplement: Looking for influential cases
+
+- In a statistical model an * influential case * is a statistical unit whose observations are strong
+impact on model parameter estimates
+- In regression models, a particularly effective way to identify influential values is to use * Cook's distance (Cook, 1977) *
+- Given a statistical unit, Cook's distance is a measure of
+how much the regression coefficients of the estimated model would change
+if this unit was omitted
+- Greater is Cook's distance,
+the more the statistical unit helps to determine the parameters of the
+regression model
+
+
+
+## Identification of influential cases
+
+- In the graph just seen R signals the statistical units with Cook distance values close to 0.5 and to 1, values to be considered as attention thresholds.
+- Fox, 2010, proposes a cut-off for Cook's distance that takes into account the number of observations ($n$) and the number of parameters ($k$) of the model:
+ $\dfrac{4}{(n-k-1)}$
+  
+## In our case...
+```{r}
+# calculation and representation of Cook's distance
+distances.cook = cooks.distance (model)
+plot (distances.cook, xlab = "observation number", ylab = "distance of Cook", cex = 1.5, cex.axis = 1.3, cex.lab = 1.5)
+# representation of the cutoff line at the value 4 / (n-k-1)
+n = nrow (reaction); k = length (coefficients (model))
+cutoff = 4 / (n-k-1)
+abline (h= cutoff, lty = 2)
+text (3, cutoff * .9, "cutoff", cex = 1.4)
+```
+  
+  
+## Remark
+
+- Cook's distance is not the only useful indicator for evaluating influential cases. For an overview see R:? Influence.measures
+- The identification, evaluation and interpretation of influential cases are fundamental phases of statistical modeling.
+- However these aspects are often underestimated in concrete case applications :-(
+
+
+### **Exercise 1.**
+Build a regression model by eliminating observation 10. What changes?
+
+# The Two-independent-samples problem
+
+## The Two-independent-samples problem
+
+```{r}
+plot (Reaction.Time ~ Gender, data = reaction, col = 2:3)
+```
+
+Is it possible to estimate a model that uses `Gender` as a predictor? How? 
+
+Use `Gender` as if it where a quantitative variable:
+
+```{r}
+modelGender = lm (Reaction.Time ~ Gender, data = reaction)
+summary (modelGender)
+plot (modelGender)
+```
+
+. How do we interpret the coefficients?
+. What kind of model are we estimating?
+. What are the differences with my old friend t-test for two independent samples ??
+
+
+```{r}
+by (reaction$Reaction.Time, reaction$Gender, mean)
+
+t.test (Reaction.Time ~ Gender, data = reaction, var.equal = TRUE)
+```
+
+
+
+# The Multiple linear model
+
+## The Multiple linear model
+
+
+$$
+Y = {\beta} _{0} + {\beta} _{1} X {1} + \beta_{2} X_{2} + \beta_{3} X_{1} X_{2} + \epsilon
+$$
+
+where is it:
+
+-$Y$=$Reaction.Time$, height
+-$X_{1}$=$Age$, shoe size
+-$X_{2}$=$Gender$
+
+
+### Plot the relationship between $Reaction.Time$ and $Age$ also considering the $Gender$.
+
+```{r}
+plot (reaction$Age, reaction$Reaction.Time, col = (reaction$Gender == "M") + 1, pch = 20, cex = 3)
+legend ( "bottomright", legend = c ( "M", "F"), pch = 20, cex = 2, col = c (2,1), bty = "n")
+```
+
+We know how to estimate a linear model that includes $Reaction.Time$ through the $Age$.
+**EXERCISE:** do it.
+
+
+## Multiple linear model
+How to estimate a model with $Age$, $Gender$ and their interaction?
+
+```{r}
+modelFull = lm (Reaction.Time ~ Age + Gender + Age: Gender, data = reaction)
+```
+
+**How do we interpret the model?**
+
+```{r}
+plot (reaction$Age, reaction$Reaction.Time, col = (reaction$Gender == "M") + 1, pch = 20, cex = 3)
+abline (coefficients (modelFull) [1], coefficients (modelFull) [2], col = 1)
+abline (coefficients (modelFull) [1] + coefficients (modelFull) [3], coefficients (modelFull) [2] + coefficients (modelFull) [4], col = 2)
+```
+
+**How do we interpret the results of the analysis?**
+```{r}
+summary (modelFull)
+```
+
+The $F$ test (shown below in the table) tests the hypothesis:
+$H_0: \ \beta_1 = \ldots = \beta_p = 0$ (all equal to 0)
+versus
+$H_0: \ $ At least one $\beta_i \neq 0$(at least one other than 0)
+
+In this case we have reason to believe that there is at least one useful predictor between Gender, Age and their interaction ($p <.05$).
+
+The coefficients are estimated and tested net of the effect of the other variables ...
+
+### Correlation between predictors
+
+In the multiple regression models we lose the relationship between correlation and$R^2$ (among other things there are $p$ possible correlations with $Y$).
+
+
+The estimation of the coefficients is done in a joint manner, therefore affected by the correlation between the predictors X
+```{r}
+cor (reaction$Age, reaction$Gender == "M")
+```
+it is very high, this will bring instability (greater variance) in the estimates that will be less precise (and therefore higher p-values, wider confidence intervals).
+
+This is the main reason why it is useful to have experiments with orthogonal factorial plans (not discussed today)
+
+### Residual Analysis in Regression
+```{r}
+par (mar = c (6, 5, 4, 2) + 0.1)
+par (mfrow = c (2,2))
+plot (modelFull) # see also:? plot.lm for bibliographical references
+```
+
+## Variables (predictors) Selection
+### Analysis of variance (test for any-variable)
+
+The Deviance Explained and (and$R ^ 2$) increases - does not decrease - with each addition of variables
+(+ varibili = + flexibility = better fit).
+for example:
+
+```{r}
+summary (modelFull)
+modelAgeGen = lm (Reaction.Time ~ Age + Gender, data = reaction)
+summary (modelAgeGen)
+modelAge = lm (Reaction.Time ~ Age, data = reaction)
+summary (modelAge)
+```
+
+From the analysis it seems that the interaction and the Gender are not predictive.
+We test this hypothesis through a comparison of nested models
+
+```{r}
+anova (modelAgeGen, modelFull)
+```
+
+Among the multiple models with or without interaction there is no significant difference in terms of the explained variance.
+
+Excluding the $Gender$ variable instead does not seem like a good idea:
+```{r}
+anova (modelAge, modelAgeGen)
+```
+
+... and not even removing $Age$:
+```{r}
+anova (modelGender, modelAgeGen)
+```
+
+
+The best (most parsimonious) model is the one with only$Age$and$Gender$but without interaction.
+
+## Model selection via AIC and BIC
+
+These are methods that penalize models with many predictors.
+
+We compare the BIC (Bayesian Information Criterion) or the AIC (Akaike Information Criterion) of the models.
+The idea: the lower the BIC and the better the model
+
+```{r}
+n = nrow (reaction)
+(BIC1 = AIC (modelFull, k = log (n)))
+(BIC2 = AIC (modelAgeGen, k = log (n)))
+(BIC3 = AIC (modelAge, k = log (n)))
+(BICGender = AIC (modelGender, k = log (n)))
+```
+
+(Also in this case) The model with `Age + Gender` seems to be the best.
+```{r}
+summary (modelAgeGen)
+```
+```{r}
+eff <- allEffects(modelAgeGen) 
+par(mfrow=c(1,2))
+plot(eff,'Age',ask=F,main='Age') 
+plot(eff,'Gender',ask=F,main='Gender') 
+par(mfrow=c(1,1))
+```

@@ -1,12 +1,26 @@
 ---
-title: "Basic concepts of Statistics:  
-Inference"
+title: "Basic concepts of Statistics:    Inference"
 author: "Livio Finos"
 date: "18 October 2018"
 output:
+  pdf_document:
+    toc: yes
   html_document:
     toc: yes
+    toc_float: yes
 ---
+
+<!-- output: -->
+<!--     xaringan::moon_reader: -->
+<!--     lib_dir: libs -->
+<!--     nature: -->
+<!--       ratio: '16:9' -->
+<!--       highlightLanguage: R -->
+<!--       countIncrementalSlides: false -->
+<!--       highlightLines: true  -->
+
+
+
 
 
 
@@ -391,7 +405,8 @@ We built a machinery that in the long run (many replicates of the experiment) fi
 ```{r}
 library(flip)
 
-(res=flip(Reaction.Time~Age,data=reaction,tail=1))
+(res=flip(Reaction.Time~Age,data=reaction,
+          tail=1,perms = 10000))
 ## compare also with
 # flip(Reaction.Time~Age,data=reaction,tail=1,statTest = "cor")
 # flip(Reaction.Time~Age,data=reaction,tail=1,statTest = "coeff")
@@ -507,8 +522,8 @@ The Power is unknown, but we hope it is as high as possible.
 
 ## Terminology
 
-- **Type I error** (**False Positive**, $\alpha$): the probability to find a relationship when it does not exist (true $H_0$, the test judges $H_1$).
-- **Type II error** (**False Negative**): the probability NOT to find a relationship when it does exist (true $H_1$, the test judges $H_0$).
+- Probability of **Type I error** (Probability of **False Positive**, $\alpha$): the probability to find a relationship when it does not exist (true $H_0$, the test judges $H_1$).
+- Probability of **Type II error** (Probability of **False Negative**): the probability NOT to find a relationship when it does exist (true $H_1$, the test judges $H_0$).
 
 
 - **Specificity**: the probability NOT to find a relationship when it does NOT exist (true $H_0$, the test judges $H_0$). it is equal to 1 - Type I error.
@@ -595,7 +610,7 @@ Now we generate many (e.g. 1000) datasets and we store the p-values.
 ```{r}
 sim <- function(Age,n,m,s){
   Reaction.Time=rnorm(n,m,s)
-  #estrae il p-value dalla tabella dei coefficienti
+  #get the p-value from the output
   summary(lm(Reaction.Time~Age))$coefficients["Age","Pr(>|t|)"]
 }
 
@@ -651,12 +666,12 @@ beta1=coefficients(modelF)[2]
 ----
 
 ```{r}
-yhat=beta0+beta1*reaction$Age 
+y_linear_part=beta0+beta1*reaction$Age 
 s=sd(residuals(modelF))
 n=length(reaction$Age)
 
 # generate random Reaction.Time
-Reaction.Time=yhat+rnorm(n,0,s)
+Reaction.Time=y_linear_part+rnorm(n,0,s)
 #fit the model (estimate the parameters)
 summary(lm(Reaction.Time~Age,data=reaction))$coefficients
 ```
@@ -665,8 +680,7 @@ summary(lm(Reaction.Time~Age,data=reaction))$coefficients
 Now we generate many (e.g. 1000) datasets and, for each, we store the p-value.
 
 ```{r}
-
-p.sim=replicate(1000,sim(reaction$Age,n,yhat,s))
+p.sim=replicate(1000,sim(reaction$Age,n,y_linear_part,s))
 ```
 
 - What do I expect the distribution of these p-values to be?
@@ -704,18 +718,84 @@ For any given $\alpha$, the estimated proportion greater than $\alpha$, the test
 Very good!! :)
 
 
-## Homework 1: Effect of measure quality (less noise)
+## Homework 1: Effect of measure quality (noise)
 
 1. How do the Type I error varies as a function of the standard deviation of the normal errors?   
 Hint: Simulate with different sd (e.g. 2,4,8,16), store the proportion of rejections for $\alpha=.05$, plot the sd vs rejections.  
 
 2. Same task, but under $H_1$ (power study)
 
+## Solution
+
+```{r}
+sim05 <- function(s,n,m){
+  p.sim=replicate(1000,sim(reaction$Age,n,m,s))
+  mean(p.sim<.05)
+}
+```
+
+----
+
+```{r}
+s_values=c(2,4,8,16)
+type1=sapply(s_values,sim05,n,m)
+plot(s_values,type1,type="l",ylim=c(0,.2),main="Type I error",xlab="Sigma (noise)")
+```
+
+----
+
+```{r}
+power=sapply(s_values,sim05,n,y_linear_part)
+plot(s_values,power,type="l",main="Power",xlab="Sigma (noise)")
+```
+
 ## Homework 2: Effect of sample size
 
-1. How does the type I error varies as a function of the sample size? (Same hint of homework 1, but here you sample `Age` `n` times and compute `yhat` )
+1. How does the type I error varies as a function of the sample size? (Same hint of homework 1, but here you sample `Age` `n` times and compute `y_linear_part` )
 
 2. How does the power?
+
+## Solution
+
+```{r}
+sim_n <- function(Age,n,betas,s){
+  Agex <- sample(Age,n,replace = TRUE)
+  while(length(unique(Agex))==1)
+    Agex <- sample(Age,n,replace = TRUE)
+  
+  y_linear_part=betas[1]+betas[2]*Agex
+  Reaction.Time <- rnorm(n,y_linear_part,s)
+  #get the p-values from the output
+  summary(lm(Reaction.Time~Agex))$coefficients["Agex","Pr(>|t|)"]
+}
+
+sim05_n <- function(n,betas,s){
+  p.sim=replicate(1000,sim_n(reaction$Age,n,betas,s))
+  mean(p.sim<.05)
+}
+
+```
+
+----
+
+### H0
+
+```{r}
+betas=c(beta0,0)
+ns=c(5,10,20,50)
+type1=sapply(ns,sim05_n,betas,s)
+plot(ns,type1,type="l",ylim=c(0,.2),main="Type I error",xlab="sample size")
+```
+
+----
+
+### H1
+
+```{r}
+betas=c(beta0,beta1)
+power=sapply(ns,sim05_n,betas,s)
+plot(ns,power,type="l",main="Power",xlab="sample size")
+```
 
 
 ## Homework 3: Confidence intervals
@@ -728,17 +808,93 @@ Make similar evaluations of Homework 1 and 2 for confidence intervals:
     + counts of times the confidence interval contains the TRUE value $\beta_1$
     + length of the confidence interval
 
-<!-- ```{r} -->
-<!-- sim05 <- function(s,n,m){ -->
-<!--   p.sim=replicate(1000,sim(reaction$Age,n,m,s)) -->
-<!--   mean(p.sim<.05) -->
-<!-- } -->
 
-<!-- s_values=c(2,4,8,16) -->
-<!-- type1=sapply(s_values,sim05,n,m) -->
-<!-- plot(s_values,type1,type="l") -->
+## Solution: Sigma (noise)
 
-<!-- power=sapply(s_values,sim05,n,yhat) -->
-<!-- plot(s_values,power,type="l") -->
-<!-- ``` -->
+```{r}
+sim <- function(Age,n,m,s){
+  Reaction.Time=rnorm(n,m,s)
+  #get the p-value from the output
+  CI=confint(lm(Reaction.Time~Age))[2,]
+  contained=all(sign(CI)==c(-1,1))
+  CI_length=CI[2]-CI[1]
+  names(CI_length)=NULL
+  c(contained,CI_length)
+}
 
+sim05 <- function(s,n,m){
+  p.sim=replicate(1000,sim(reaction$Age,n,m,s))
+  rowMeans(p.sim)
+}
+```
+
+----
+
+### H0
+
+```{r,fig.height=4}
+s_values=c(2,4,8,16)
+type1=sapply(s_values,sim05,n,m)
+par(mfrow=c(1,2))
+plot(s_values,type1[1,],type="l",ylim=c(.8,1),main="Coverage",xlab="Sigma (noise)")
+plot(s_values,type1[2,],type="l",main="Length",xlab="Sigma (noise)")
+```
+
+----
+
+### H1
+
+```{r,fig.height=4}
+power=sapply(s_values,sim05,n,y_linear_part)
+par(mfrow=c(1,2))
+plot(s_values,type1[1,],type="l",ylim=c(.8,1),main="Coverage",xlab="Sigma (noise)")
+plot(s_values,type1[2,],type="l",main="Length",xlab="Sigma (noise)")
+```
+
+## Solution: sample size
+
+```{r}
+sim_n <- function(Age,n,betas,s){
+  Agex <- sample(Age,n,replace = TRUE)
+  while(length(unique(Agex))==1)
+    Agex <- sample(Age,n,replace = TRUE)
+  
+  y_linear_part=betas[1]+betas[2]*Agex
+  Reaction.Time <- rnorm(n,y_linear_part,s)
+  CI=confint(lm(Reaction.Time~Agex))[2,]
+  contained=all(sign(CI)==c(-1,1))
+  CI_length=CI[2]-CI[1]
+  names(CI_length)=NULL
+  c(contained,CI_length)
+}
+
+sim05_n <- function(n,betas,s){
+  p.sim=replicate(1000,sim_n(reaction$Age,n,betas,s))
+  rowMeans(p.sim)
+}
+
+```
+
+----
+
+### H0
+```{r,fig.height=4}
+betas=c(beta0,0)
+ns=c(5,10,20,50)
+type1=sapply(ns,sim05_n,betas,s)
+par(mfrow=c(1,2))
+plot(ns,type1[1,],type="l",ylim=c(.8,1),main="Coverage",xlab="n (Sample Size)")
+plot(ns,type1[2,],type="l",main="Length",xlab="n (Sample Size)")
+```
+
+----
+
+### H1
+
+```{r,fig.height=4}
+betas=c(beta0,beta1)
+power=sapply(ns,sim05_n,betas,s)
+par(mfrow=c(1,2))
+plot(ns,type1[1,],type="l",ylim=c(.8,1),main="Coverage",xlab="Sigma (noise)")
+plot(ns,type1[2,],type="l",main="Length",xlab="Sigma (noise)")
+```
