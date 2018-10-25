@@ -2,9 +2,7 @@
 title: "**Didactic**"
 output:
   html_document:
-    theme: cosmo
-    toc: yes
-    toc_float: yes
+    toc: no
 ---
 
 Teacher: [Livio Finos](https://liviofinos.net)
