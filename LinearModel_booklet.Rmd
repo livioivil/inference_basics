@@ -1,6 +1,14 @@
 ---
 title: "The Linear Model"
 author: "Livio Finos"
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+  html_document:
+    number_sections: yes
+    toc_float: yes
+    toc: yes
 ---
 
 <!-- output: -->

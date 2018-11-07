@@ -4,9 +4,11 @@ author: "Livio Finos"
 date: "09 ottobre 2018"
 output:
   pdf_document:
+    number_sections: yes
     toc: yes
   html_document:
     number_sections: yes
+    toc_float: yes
     toc: yes
 ---
 

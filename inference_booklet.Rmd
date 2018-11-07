@@ -60,7 +60,7 @@ knitr :: opts_chunk$set (fig.align="center")#, fig.width=6, fig.height=6)
 
 ## The Age vs Reaction Time Dataset
 
-The reaction time of these subjects was tested by having them grab a meter stick after it was released by the tester. The number of centimeters that the meter stick dropped before being caught is a direct measure of the person’s response time.
+The reaction time of these subjects was tested by having them grab a meter stick after it was released by the tester. The number of centimeters that the meter stick dropped before being caught is a direct measure of the person's response time.
 
 The values of `Age` are in years. The `Gender` is coded as `F` for female and  `M` for male.
 The values of `Reaction.Time` are in centimeters.
@@ -301,9 +301,9 @@ par (mfrow=c (1,1))
 
 In our data set, if we apply the same principle...
 
-How many permutations of the vector $y_1,\ldots,y_n$ are possible? $n!=$ `r factorial(nrow(reaction))`.
+How many permutations of the vector $y_1,\ldots,y_n$ are possible? $n!=3628800$.
 
-big, perhaps not too big ... but what happen with, for example, $n=20$? We got $20!=$ `r factorial(20)`. This is too big, definitely! 
+big, perhaps not too big ... but what happen with, for example, $n=20$? We got $20!=2.432902e+18$. This is too big, definitely! 
 
 We calculate a smaller (but sufficiently large) $B$ of random permutations. 
 
