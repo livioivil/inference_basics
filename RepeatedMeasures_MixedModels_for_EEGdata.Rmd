@@ -1,0 +1,580 @@
+---
+title: "Statistical Analysis of EEG-experiment data"
+author: "Livio Finos"
+date: "09 ottobre 2018"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    number_sections: yes
+    toc: yes
+---
+
+# Introduction
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## The data
+
+**(Fictitious data)**
+
+ERP experiment
+
+- 20 Subjects,
+- 6 Channels: O1, O2, PO7, PO8, P7, P8
+- Stimuli: pictures. Conditions:
+    * 1 (f): fear (face)
+    * 2 (h): happiness (face)
+    * 3 (d): disgust (face)
+    * 4 (n): neutral (face)
+    * 5 (o): object (face)
+- Measure: Area around the component P170
+
+Setting parameters, importing the data:
+```{r,warning=FALSE,message=FALSE}
+rm(list=ls())
+
+load("./dataset/datiEEG.Rdata")
+
+# dati2 is the same as dati, only selecting:
+# ( Chan = "O1" ) & ( Condition = "f" or "n" )
+load("./dataset/dati2EEG.Rdata")
+
+# VERY IMPORTANT:
+contrasts(dati$Chan) <- contr.sum(6)
+contrasts(dati$Condition) <- contr.sum(5)
+contrasts(dati$Subj) <- contr.sum(nlevels(dati$Subj))
+
+contrasts(dati2$Condition) <- contr.sum(2)
+contrasts(dati2$Subj) <- contr.sum(nlevels(dati2$Subj))
+
+```
+
+## Motivation (EDA)
+
+For Channel `O1`:
+
+```{r}
+library(ggplot2)
+p <- ggplot(subset(dati,Chan=="O1"),aes(Condition,Y))
+p+geom_point(size = 3) +geom_boxplot(alpha=.1)
+```
+
+Is there a specificity of the subject?
+
+```{r}
+dati01=subset(dati,Chan=="O1")
+library(ggplot2)
+p <- ggplot(dati01,aes(Condition,Y))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
+   geom_boxplot(alpha=.1)
+```
+
+We subtract the subject-specific effect (i.e. subject's mean) to each observation.
+
+```{r}
+dati01=subset(dati,Chan=="O1")
+Y=scale(matrix(dati01$Y,5),scale=FALSE)
+dati01$Y=as.vector(Y)
+
+library(ggplot2)
+p <- ggplot(dati01,aes(Condition,Y))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
+   geom_boxplot(alpha=.1)
+```
+
+The dispersion of the data has been largely reduced.
+This effect is the one taken in account by the models for repeated measures.
+
+# Repeated Mesures ANOVA
+## Introduction
+
+wiki reference:
+<https://en.wikipedia.org/wiki/Repeated_measures_design>
+
+A nice explanation can be found (in particular see 7.9 and 7.10):   
+Jonathan Baron (2011) Notes on the use of R for psychology experiments and questionnaires
+<https://www.sas.upenn.edu/~baron/from_cattell/rpsych/rpsych.html>
+
+and in the Course materal of   
+ST 732, Applied Longitudinal Data Analysis, NC State University
+by Marie Davidian
+<https://www.stat.ncsu.edu/people/davidian/courses/st732/notes/chap5.pdf>
+from <https://www.stat.ncsu.edu/people/davidian/courses/st732/>
+
+## 2 conditions, matched observations
+Let consider the reduced problem: channel `Chan=="O1`  and `Condition=="n"` or `Condition=="f"`.
+
+How to compare the two conditions?
+First try:
+```{r}
+t.test(dati2$Y[dati2$Condition=="n"],
+       dati2$Y[dati2$Condition=="f"])
+```
+Is it ok?
+
+NO! We don't take in account the fact that measures are taken on the same subject!
+
+```{r}
+t.test(dati2$Y[dati2$Condition=="n"],
+       dati2$Y[dati2$Condition=="f"],paired=TRUE)
+## equivalent to
+t.test(dati2$Y[dati2$Condition=="n"]-
+         dati2$Y[dati2$Condition=="f"])
+```
+
+Can you write it as a linear model?
+
+```{r}
+mod2=lm(Y~ Condition+Subj,data=dati2)
+anova(mod2)
+```
+
+Compare the results. (Different or the same?)
+
+## Linear models with repeated measures
+Let's consider (and fit) a linear model with `Chan*Condition`:
+
+```{r}
+modlmf=lm(Y~ Chan*Condition,data=dati)
+anova(modlmf)
+```
+
+We don't take in account the fact that measures are taken on the same subject!
+
+Can we just add the `Subj` term?
+
+```{r}
+modlmf=lm(Y~ Chan*Condition+Subj,data=dati)
+anova(modlmf)
+```
+
+Answer:  yes and no.  
+The estimates are ok, but we need to take care of the residuals SS in the testing phase.
+
+All the SS that we need can be found in the saturated linear model. We compute them now and we use them later. 
+
+```{r}
+modlmf=lm(Y~ Chan*Condition*Subj,data=dati)
+anova(modlmf)
+```
+
+## Repeated measures
+
+```{r}
+# The standard way
+mod=aov(Y~ Chan*Condition+Subj + Error(Subj/(Chan*Condition)),data=dati)
+summary(mod)
+```
+
+
+A better output and slightly more compleate analysis (Sphericity Corrections):
+
+```{r}
+library(ez)
+mod=ezANOVA(dv=Y, wid=Subj, within=.(Chan,Condition),data=dati,type=3)
+print(mod)
+
+```
+
+To see the relation between repeated measures and linear model, again, the Baron material is a good start. Specially see section "7.9.3  The Appropriate Error Terms"
+
+## Spend your DF in a different way!
+Same number of DF, but spent in a different way
+
+```{r}
+dati$Lateral=dati$Chan
+levels(dati$Lateral)
+levels(dati$Lateral)[c(1,3,5)]="Left"
+levels(dati$Lateral)[-1]="Right"
+levels(dati$Lateral)
+contrasts(dati$Lateral) <- contr.sum(2)
+
+dati$ChanL=dati$Chan
+# https://en.wikipedia.org/wiki/Regular_expression
+# Digits: \d
+levels(dati$ChanL)=gsub("\\d","",levels(dati$ChanL))
+
+contrasts(dati$ChanL) <- contr.sum(3)
+```
+
+
+```{r}
+# The standard way
+# mod=aov(Y~ ChanL*Lateral*Condition+Subj + Error(Subj/(ChanL*Lateral*Condition)),data=dati)
+# summary(mod)
+# 
+
+library(ez)
+mod=ezANOVA(dv=Y, wid=Subj, within=.(Condition,Lateral,ChanL),data=dati,type=3)
+print(mod)
+```
+
+```{r}
+ezPlot(dv=Y, wid=Subj, within=.(ChanL,Lateral,Condition),data=dati,
+       x=Condition,split=ChanL,row=Lateral)
+
+```
+
+## Sphericity
+The sphericity assumption is an assumption about the structure of the covariance matrix in a repeated measures design. Before we describe it lets consider a simpler (but stricter) condition.
+
+**Compound symmetry**
+
+Compound symmetry is met if all the covariances (the off-diagonal elements of the covariance matrix) are equal and all the variances are equal in the populations being sampled.
+Provided the observed covariances are roughly equal in our samples (and the variances are OK too) we can be pretty confident that compound symmetry is not violated.
+
+If compound symmetry is met, then sphericity is also met. 
+
+compound symmetry is met when the correlation between `Condition f` and `Condition h` is equal to the correlation between `Condition f` and `Condition o` or `Condition h` and `Condition n`, etc (same for any other factor within subject, such as `Chan`). But a more direct way to think about compound symmetry is to say that it requires that all subjects in each group change in the same way over trials. In other words the slopes of the lines regressing the dependent variable on time are the same for all subjects. Put that way it is easy to see that compound symmetry can really be an unrealistic assumption. 
+
+Is compound symmetry met in our data?
+
+```{r}
+# install.packages("GGally")
+library(GGally)
+Y=matrix(dati$Y,byrow = TRUE,nrow = 20*5)
+Y=data.frame(Y)
+names(Y)=levels(dati$Chan)
+ggpairs(Y,aes(colour = dati$Condition[1:100], alpha = 0.4))
+```
+
+Not really! (correlations often differ)
+
+**Sphericity**  
+The sphericity assumption is that the all the variances of the differences are equal (in the population sampled). In practice, we'd expect the observed sample variances of the differences to be similar if the sphericity assumption was met.
+
+We can check sphericity assumption using the covariance matrix, but it turns out to be fairly laborious. Remember that  variance of differences can be computed as:
+$$S^2_x-S^2_y = S^2_x +S^2_y - 2S_{xy}$$
+
+
+Further reading:
+<http://homepages.gold.ac.uk/aphome/spheric.html>
+
+<!-- and a Video:   -->
+<!-- Part 1: <https://www.youtube.com/watch?v=8BvlRJeCIaM>   -->
+<!-- Part 2: <https://www.youtube.com/watch?v=bUXdWUHJRqA> -->
+
+This is often an unrealistic assumption in EEG data (spatial location of channel relates to correlation between measures)
+
+## (Further) Limitations
+
+- (Design and) Data must be balanced
+- Repeated Measures Anova doesn't allow for missing data (e.g. subjects/condiction/channel cells)
+- It only handle factors, no quantitative variables
+
+Mixed model is a more flexible approach.
+
+# Mixed models
+
+## Motivation/Introduction
+
+```{r message=FALSE,echo=FALSE}
+par(mfrow=c(1,3))
+voidplot <- function(title){
+  plot(0,0,col=0,xlim=c(0,1),ylim=c(0,1),xlab="X",ylab="Y",asp=1,main=title)
+  abline(0,1,lwd=3)
+}
+voidplot("one for all")
+voidplot("subject-specific intercept")
+intrc=rnorm(5)/3
+intrc[5]=-sum(intrc[-5])
+for(i in 1:5) abline(intrc[i],1,lwd=2,col=i+1,lty=2)
+
+slopes=rnorm(5)/3
+slopes[5]=-sum(slopes[-5])
+voidplot("subject-specific intercept + slope")
+for(i in 1:5) abline(intrc[i],1+slopes[i],lwd=2,col=i+1,lty=2)
+```
+
+Mixed models allow for more flexible modelization.
+
+I assume you are expert on mixed models, if not
+<https://en.wikipedia.org/wiki/Mixed_model>   
+and much more on:
+<http://webcom.upmf-grenoble.fr/LIP/Perso/DMuller/M2R/R_et_Mixed/documents/Bates-book.pdf>  
+and  
+<https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf>
+
+
+## The model
+Models with random effects can be defined as:
+$$Y_{n\times 1} = X_{n\times p} B_{p\times 1} + Z_{n\times q} b_{q\times 1} + \varepsilon_{n\times 1}$$
+
+where $$\varepsilon\sim\mathcal{N}( 0,\sigma^2 I_n)$$
+
+In the models we will consider, the random effects are modeled
+    as a multivariate normal random variable:
+    $$b\sim\mathcal{N}(0,\Sigma_{q\times q}),$$
+
+In a *linear mixed model* the conditional distribution $(Y|\mathcal B=b)$ is    a *spherical* multivariate Gaussian.
+
+
+In our case $n=\#Subjects \times \#Conditions \times \#Channels=20\times 5 \times 6 = 600$.
+$X$ is the matrix of (dummified) predictors. 
+$Z$ can take many dimensions and values. Examples follow.
+
+**Random effect for Subject (Random Intercept)**
+
+$Z$ is the matrix of dummy variables of the column `dati$Subj`.
+
+```{r message=FALSE}
+library(lmerTest)
+# library(lme4)
+# contrasts(dati$Lateral)=contr.sum
+# contrasts(dati$ChanL)=contr.sum
+# contrasts(dati$Condition)=contr.sum
+mod=lmer(Y~ Condition*Lateral*ChanL +(1|Subj),data=dati)
+
+car::Anova(mod)
+```
+
+
+**Random effect for Subject and Channel**
+
+Actually, instead of `Channel`, we use the combination of `ChanL*Lateral`. Same prediction ability (6 channels in Channel and 3X2 combination of ChanL and Lateral), just a different point of view.
+
+$Z$ is the matrix of dummy variables of the column `dati$Subj`.
+
+```{r}
+mod2=lmer(Y~ 0+Lateral*ChanL*Condition +(0+Lateral*ChanL|Subj),data=dati)
+summary(mod2)
+#alternative:
+# mod=lmer(Y~ Condition*Lateral*ChanL +(1+ChanL|Subj),data=dati)
+#   +(1+Chan|Subj) (equivalent to +(Chan|Subj)) is a linear combination of +(0+Chan|Subj). I better like the latter for interpretational reasons.
+
+car::Anova(mod2)
+
+# More flexible, but hard to fit:
+# mod3=lmer(Y~ Condition*ChanL+Lateral +(0+Lateral|Subj)+(0+Condition|Subj)+(0+ChanL|Subj),data=dati)
+# 
+```
+
+## Plotting tools
+
+for the first model:
+```{r message=FALSE}
+library(effects)
+plot(allEffects(mod))
+
+#plot random effects:
+require(lattice)
+qqmath(ranef(mod, condVar=TRUE))
+```
+
+The second model:
+```{r,message=FALSE}
+library(effects)
+plot(allEffects(mod2))
+
+#plot random effects:
+require(lattice)
+qqmath(ranef(mod2, condVar=TRUE))
+
+# scatter plot
+ggpairs(ranef(mod2, condVar=TRUE)[[1]])
+```
+
+An alternative plotting tool:
+
+```{r message=FALSE}
+library(sjPlot)
+library(ggplot2)
+plot_model(mod2, type = "pred", terms = c("Condition", "ChanL","Lateral"))
+```
+
+
+## Validity of the assumptions
+
+
+* Independence of the residuals?
+* Normality of the residuals?
+* Homoscedasticity of the residuals (i.e. same variance between subject/channel/condition?
+* outliers?
+
+* Leaverage? (influential observations)
+
+Please, do not test for normality, for homoscedasticity, sphericity etc. 
+
+Use Exploratory data Analysis, instead!
+
+
+```{r}
+dati$residuals=residuals(mod)
+p <- ggplot(dati, aes(x=Chan, y=residuals,fill=Condition)) +   geom_boxplot()
+p
+
+p <- ggplot(dati, aes(x=Subj, y=residuals,fill=Condition)) +   geom_boxplot()
+p
+```
+
+## Contrasts and post-hoc
+
+### Post-hoc
+```{r}
+library(multcomp)
+summary(glht(mod2, linfct = mcp(Condition = "Tukey")))
+```
+
+### Custom contrasts
+An example:   
+
+- neutral vs object in O1 (left)
+- disgust vs neutral in O1 (left)
+- fear vs neutral in O1 (left)
+- happy vs neutral in O1 (left)
+
+```{r}
+library(multcomp)
+ncoeff=length(coefficients(mod2)[[1]])
+contr <- rbind("n - o" = c(0,0,0,0,0,0,1,-1, rep(0,ncoeff-8)),
+               "d - n" = c(0,0,0,0,0,0,-1, rep(0,ncoeff-7)),
+                 "f - n" = c(0,0,0,0,1,0,-1, rep(0,ncoeff-7)), 
+                 "h - n" = c(0,0,0,0,0,1,-1, rep(0,ncoeff-7)))
+compa= glht(mod2, linfct = contr)
+summary(compa, test = adjusted("none"))
+
+# with multiple comparisons
+summary(compa)
+```
+
+
+# Multivariate ANOVA (MANOVA)
+
+## Motivation
+ehi, wait a moment... the trials for `object` condition are much more than any other condition, the variance of its estimated component must be (much?) lower, homoschedastcity doesn't hold!!
+
+Let's use a different approach
+Reshape the data from `long` to `wide` format.
+
+to simplify the example, let's consider the comparison between conditions `neutral` vs `object`.
+
+## Reshaping the data
+
+Let' now compute the vectors of contrasts (one vector of reach channel, length equal to number of subjects): `Fear vs Neutral`
+
+```{r}
+Y=matrix(dati$Y,byrow = TRUE,nrow = 20)
+colnames(Y)=paste(dati$Condition,dati$ChanL,dati$Lateral,sep = "_")[1:30]
+```
+
+
+```{r}
+colnames(Y)
+contr=matrix(0,30,6)
+contr[c(1,4),1]=c(1,-1)
+contr[c(1,4)+5,2]=c(1,-1)
+contr[c(1,4)+10,3]=c(1,-1)
+contr[c(1,4)+15,4]=c(1,-1)
+contr[c(1,4)+20,5]=c(1,-1)
+contr[c(1,4)+25,6]=c(1,-1)
+
+dim(contr)
+head(contr)
+
+
+Yfn=Y%*%contr
+colnames(Yfn)= levels(dati$Chan)
+dim(Yfn)
+```
+
+What we see in O1?
+
+```{r}
+boxplot(Yfn[,1],col=2)
+abline(0,0)
+```
+
+Same test as above, but under a different model
+```{r}
+t.test(Yfn[,1])
+```
+
+We can run the analysis over all channels
+```{r}
+(uni_t=apply(Yfn,2,t.test))
+```
+
+## Manova
+
+```{r}
+plot(Yfn[,1:2],pch=20)
+abline(v=0)
+abline(h=0)
+points(mean(Yfn[,1]),mean(Yfn[,2]),cex=3,col=2,pch=20)
+```
+
+Manova test, overall among all channels:   
+$H_0$ neutral=object in ANY of the channels.
+<https://en.wikipedia.org/wiki/Multivariate_analysis_of_variance>
+<https://en.wikipedia.org/wiki/Hotelling%27s_T-squared_distribution>
+```{r}
+modman <- manova(Yfn ~ 1)
+anova(modman)
+# equivalent to anova(modman,manova(Yfn ~ 0))
+```
+
+Assumptions: multivariate normality
+
+```{r}
+subj=dati$Subj[(1:20)*30]
+ggpairs(data.frame(Yfn))
+```
+
+Not so bad, actually.
+
+
+
+# Mapping results on a scalp
+
+```{r message=FALSE}
+# install.packages("eegkit")
+library(eegkit)
+
+# plot 2d cap without labels
+eegcap("10-20", plotlabels = FALSE)
+
+
+# get the t-statistic for each channel:
+t_chan=sapply(uni_t,function(chan)chan$statistic)
+names(t_chan)=gsub("\\.t","",names(t_chan))
+
+# match to eeg coordinates
+data(eegcoord)
+cidx <- match(names(t_chan),rownames(eegcoord))
+
+# # plot t-stat in 3d
+#  open3d()
+# eegspace(eegcoord[cidx,1:3],t_chan)
+
+# plot t-stat in 2d
+eegspace(eegcoord[cidx,4:5],t_chan,cex.point = 3,colorlab="t-statistic",mycolors=heat.colors(4))
+
+```
+
+If you like to play with library `ggplot2` this may help:  
+<http://www.mattcraddock.com/blog/2017/02/25/erp-visualization-creating-topographical-scalp-maps-part-1/>
+
+
+# (minimal) Bibliography
+
+Jonathan Baron (2011) Notes on the use of R for psychology experiments and questionnaires
+<https://www.sas.upenn.edu/~baron/from_cattell/rpsych/rpsych.html>
+
+and Course materal of   
+ST 732, Applied Longitudinal Data Analysis, NC State University
+by Marie Davidian
+<https://www.stat.ncsu.edu/people/davidian/courses/st732/notes/chap5.pdf>
+from <https://www.stat.ncsu.edu/people/davidian/courses/st732/>
+
+
+About Type I, II, III SS:    <https://mcfromnz.wordpress.com/2011/03/02/anova-type-iiiiii-ss-explained/>
+
+About Mixed models:   
+<http://webcom.upmf-grenoble.fr/LIP/Perso/DMuller/M2R/R_et_Mixed/documents/Bates-book.pdf>  
+and  
+<https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf>
