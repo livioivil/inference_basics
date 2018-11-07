@@ -1,0 +1,48 @@
+\contentsline {section}{Outline}{2}{section*.2}
+\contentsline {subsection}{Outline}{2}{section*.3}
+\contentsline {subsection}{Before we start (in R)}{2}{section*.4}
+\contentsline {subsection}{The Age vs Reaction Time Dataset}{2}{section*.5}
+\contentsline {section}{Measures of Dependence and the Simple linear model}{3}{section*.6}
+\contentsline {subsection}{Measuring the dependence}{3}{section*.7}
+\contentsline {subsection}{Covariance and Variance}{3}{section*.8}
+\contentsline {subsection}{Correlation}{3}{section*.9}
+\contentsline {subsection}{Linear Trend, the least squares method}{4}{section*.10}
+\contentsline {subsection}{Interpretation of the coefficients}{4}{section*.11}
+\contentsline {section}{Permutation approach to Hypothesis Testing}{5}{section*.12}
+\contentsline {subsection}{Some remarks}{5}{section*.13}
+\contentsline {subsection}{Permutation tests - in a nutshell}{5}{section*.14}
+\contentsline {subsection}{All potential datasets}{5}{section*.15}
+\contentsline {subsection}{Random permutations}{6}{section*.16}
+\contentsline {subsection}{How likely WAS \(\mathaccentV {hat}05E{\beta }_1 ^{obs}\)?}{6}{section*.17}
+\contentsline {subsection}{Calculation of the p-value}{6}{section*.18}
+\contentsline {subsection}{Interpretation}{7}{section*.19}
+\contentsline {subsection}{We make it in \texttt {flip}}{7}{section*.20}
+\contentsline {subsection}{Composite alternatives (bilateral)}{7}{section*.21}
+\contentsline {subsection}{Some remarks}{8}{section*.22}
+\contentsline {section}{Parametric Linear Model}{8}{section*.23}
+\contentsline {subsection}{From permutation tests (nonparametric) to parametric tests}{8}{section*.24}
+\contentsline {subsection}{The (simple) linear model}{8}{section*.25}
+\contentsline {subsection}{Hypothesis testing}{9}{section*.26}
+\contentsline {subsection}{Power is nothing without control}{9}{section*.27}
+\contentsline {subsection}{Terminology}{9}{section*.28}
+\contentsline {subsection}{Properties}{10}{section*.29}
+\contentsline {subsection}{Confidence intervals}{10}{section*.30}
+\contentsline {section}{A simulation to better understand}{10}{section*.31}
+\contentsline {subsection}{A single fictitious dataset}{10}{section*.32}
+\contentsline {subsection}{\(H_0\) is true (Type I error control)}{10}{section*.33}
+\contentsline {subsection}{Many datasets}{11}{section*.34}
+\contentsline {subsection}{\(H_1\) is true (Power evaluation)}{12}{section*.35}
+\contentsline {subsection}{Many datasets}{12}{section*.36}
+\contentsline {subsection}{Homework 1: Effect of measure quality (noise)}{13}{section*.37}
+\contentsline {subsection}{Solution}{13}{section*.38}
+\contentsline {subsection}{Homework 2: Effect of sample size}{14}{section*.39}
+\contentsline {subsection}{Solution}{14}{section*.40}
+\contentsline {subsubsection}{H0}{14}{section*.41}
+\contentsline {subsubsection}{H1}{14}{section*.42}
+\contentsline {subsection}{Homework 3: Confidence intervals}{15}{section*.43}
+\contentsline {subsection}{Solution: Sigma (noise)}{15}{section*.44}
+\contentsline {subsubsection}{H0}{15}{section*.45}
+\contentsline {subsubsection}{H1}{15}{section*.46}
+\contentsline {subsection}{Solution: sample size}{16}{section*.47}
+\contentsline {subsubsection}{H0}{16}{section*.48}
+\contentsline {subsubsection}{H1}{16}{section*.49}
