@@ -531,17 +531,17 @@ include_graphics("./figs/spatial_extent.png")
 ```
 
 
-<!-- ## Results $\alpha=.05$ -->
+## Results $\alpha=.05$
 
-<!-- ```{r,out.height=600} -->
-<!-- include_graphics("./figs/spm_results_fwer05.pdf") -->
-<!-- ``` -->
+```{r,out.height=600}
+include_graphics("./figs/spm_results_fwer05.pdf")
+```
 
-<!-- ## Results $\alpha=.01$ -->
+## Results $\alpha=.01$
 
-<!-- ```{r,out.height=600} -->
-<!-- include_graphics("./figs/spm_results_fwer01.pdf") -->
-<!-- ``` -->
+```{r,out.height=600}
+include_graphics("./figs/spm_results_fwer01.pdf")
+```
 
 ## Remarks
 
