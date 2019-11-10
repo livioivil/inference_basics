@@ -3,14 +3,14 @@ title: "Multiple Testing in Neuroscience"
 author: "Livio Finos"
 date: "15 Novembre 2018"
 output:
-  ioslides_presentation:
-    logo: figs/logoUnipd.jpg
+  html_document:
+    toc: yes
+    toc_float: yes
   pdf_document:
     number_sections: yes
     toc: yes
-  html_document:
-    toc: yes
-    # toc_float: yes
+  ioslides_presentation:
+    logo: figs/logoUnipd.jpg
   beamer_presentation: default
 subtitle: Bonferroni and Random Field Theory
 ---

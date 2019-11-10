@@ -1,0 +1,487 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Manova},
+            pdfauthor={livio finos},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Manova}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{livio finos}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{10 novembre 2019}
+
+
+\begin{document}
+\maketitle
+
+\section{Regressione Multivariata (MANOVA)}\label{MANOVA}
+
+Le soluzioni ai problemi di verifica di ipotesi per uno e due campioni
+risultano essere casi particolari di modelli più ampi. In analogia al
+modo in cui i t-test (univariato) per uno e due campioni possono essere
+formalizzati tramite modello di regressione (univariato), anche i
+modelli esposti sopra risultano essere un caso particolare dei modelli
+di regressione multivariati. Questi verranno introdotti qui di seguito.
+
+\subsection{Definizione del modello e Stima dei parametri}
+
+Il modello lineare\\
+\[\YY_{n\times p}=\XX_{n\times q}\bfB_{q\times p} + \bfE_{n\times p}\]
+con \(\bfE\) matrice normale di dati con righe indipendenti e
+\(\epsilon_i\sim N(0,\Sigma)\ \forall i=1,\ldots,n\). Si noti che questo
+equivale a dire che \(\YY\) è una m.n.d. da
+\(y_i\sim N(\bfB' x_i,\Sigma)\).
+
+La stima della matrice dei parametri \(\bfB\) e di \(\Sigma\) è
+realizzata in stretta analogia con il modello univariato. Sia
+\(\HH =\I - \XX(\XX'\XX)^{-1}\XX'=\I - \PP\) (vedi anche esercizio
+\ref{Hcentramento}), la soluzione ai minimi quadrati è:
+
+\[\hat{\bfB}=(\XX'\XX)^{-1}\XX'\YY\]
+\[\hat{\Sigma}=S_u=(n-q)^{-1}\YY'\HH\YY\] e, di conseguenza,
+\[\hat{\YY}=\XX{\hat \bfB} =\XX(\XX'\XX)^{-1}\XX'\YY=\PP\YY\] e
+\textbackslash{} \[\hat{\bfE}=\YY-\hat{\YY}=\HH\YY=(\I-\PP)\YY.\]
+
+\begin{ExerciseList}
+\Exercise  \label{Hcentramento} Dimostrare che la definizione $\HH=I_n-\frac{1}{n} \bfuno\bfuno'$ già usata nel capitolo \ref{matriciDati} è un caso particolare di $\HH=\I - \XX(\XX'\XX)^{-1}\XX'$ (e quindi definire $\XX$ che verifica l'equivalenza).
+\end{ExerciseList}
+
+\subsection{Stimatori di massima verosimiglianza}
+
+Per derivare più facilmente le proprietà inferenziali di questi
+stimatori ai minimi quadrati è utile metterli in relazione con i
+corrispettivi stimatori di massima verosimiglianza (SMV). Fortunatamente
+i due metodi portano a risultati analoghi. Lo stimatore \(\hat{\bfB}\) è
+lo stesso a cui si perviene tramite approccio dei minimi quadrati mentre
+\(\hat{\Sigma}=S=(n)^{-1}\YY'\HH\YY\). Per derivare questi risultati, è
+prima utile dimostrare il seguente:
+
+\begin{lemma}\label{decoScarti}
+Siano $y_i',\ i=1,\ldots,n$ i vettori riga di una matrice $\YY$, $x_i',\ i=1,\ldots,n$ i vettori riga di una matrice $\XX$  e ${\hat y}_i=\hat{\bfB}'x_i$. Fissate una qualsiasi matrice $\bfB_*$ e una matrice $\Sigma$ (definita positiva), vale
+\begin{eqnarray*}
+\sum_{i=1}^n (y_i-\bfB_*' x_i)'\Sigma^{-1}(y_i-\bfB_*' x_i)=\\
+\tr\left( (\YY-X\bfB_*)\Sigma^{-1}(\YY-\XX\bfB_*)' \right)=\\
+\tr \left( (\YY-\hat{\YY})\Sigma^{-1}(\YY-\hat{\YY})' \right) + \tr\left( (\hat{\YY}-\XX\bfB_*)\Sigma^{-1}(\hat{\YY}-\XX\bfB_*)' 
+\right)
+\end{eqnarray*}
+\end{lemma}
+\begin{proof}
+La prima equazione è vera per definizione.
+Per la seconda uguaglianza si ricordi la proprietà $\tr(A+B)=\tr(A)+\tr(B)$ per $A$ e $B$ matrici quadrate. Ora vale
+\begin{eqnarray*}
+\tr\left((\YY-\XX\bfB_*)\Sigma^{-1}(\YY-\XX\bfB_*)'\right) =\\
+\tr\left((\YY-\hat{\YY}+\hat{\YY}-\XX\bfB_*)\Sigma^{-1}(\YY-\hat{\YY}+\hat{\YY}-\XX\bfB_*)' \right)=\\
+\tr\left((\YY-\hat{\YY})\Sigma^{-1}(\YY-\hat{\YY})'\right) +\tr\left((\YY-\hat{\YY})\Sigma^{-1}(\hat{\YY}-\XX\bfB_*)'\right)+\\
+\tr\left((\hat{\YY}-\XX\bfB_*)\Sigma^{-1}(\YY-\hat{\YY})'\right) + \tr\left((\hat{\YY}-\XX\bfB_*)\Sigma^{-1}(\hat{\YY}-\XX\bfB_*)'\right)
+\end{eqnarray*}
+Il risultato si ottiene se si osserva che il secondo e terzo termine sono nulli. Infatti, 
+ricordando che vale $\tr(AB)=\tr(BA)$ per $A$ e $B$ matrici qualsiasi, per il secondo termine:
+\begin{eqnarray*}
+\tr\left((\YY-\hat{\YY})\Sigma^{-1}(\hat{\YY}-X\bfB_*)'\right)=\tr\left(\HH \YY\Sigma^{-1}(\PP\YY-X\bfB_*)'\right)=\\
+\tr\left(\YY\Sigma^{-1}(\YY'\PP'-\bfB_*'\XX')\HH \right)=\tr\left(\YY\Sigma^{-1}(\YY'\PP'\HH-\bfB_*'\XX'\HH) \right)=\zerobold
+\end{eqnarray*}
+siccome $\YY' \PP'\HH = \YY \zerobold=\zerobold$ e $\bfB_*'\XX'\HH = \bfB_*'(\XX' - \XX'\XX (\XX'\XX)^{-1} \XX')=\bfB_* \zerobold$.
+La stessa conclusione vale per il terzo termine.
+\end{proof}
+
+Ora possiamo mostrare il risultato più rilevante:
+
+\begin{theorem}[Stima di massima verosimiglianza]
+$\hat{\bfB}=(\XX'\XX)^{-1}\XX'\YY$ e $\hat{\Sigma}=S=\YY'\HH\YY/n$ sono gli stimatori di massima verosimiglianza di $\bfB$ e $\Sigma$, rispettivamente.
+\end{theorem}
+\begin{proof}
+Omettendo il termine $2\pi^{p/2}$ che non ha alcun ruolo nella massimizzazione della log-verosimiglianza,
+questa può essere esplicitata nel seguente modo:
+\begin{eqnarray}\nonumber
+l_{èl}(\bfB,\Sigma) &\propto& {-\frac{n}{2}} \log|\Sigma|     -\frac{1}{2} \sum_{i=1}^n (y_i-\bfB' x_i)'\Sigma^{-1}(y_i-\bfB' x_i)\\ \nonumber
+&=& {-\frac{n}{2}} \log|\Sigma|     -\frac{1}{2} \tr\left( (\YY-\XX\bfB)\Sigma^{-1}(\YY-\XX\bfB)' \right)\\  \nonumber
+&=& {-\frac{n}{2}} \log|\Sigma|     -\frac{1}{2} \tr\left( (\YY-\hat{\YY})\Sigma^{-1}(\YY-\hat{\YY})' \right) \\ 
+&&-\frac{1}{2} \tr\left( (\hat{\YY}-\XX\bfB)\Sigma^{-1}(\hat{\YY}-\XX\bfB)' \right) \label{logLik}
+\end{eqnarray}
+
+Per la stima di $\bfB$ si noti che la matrice di parametri $\bfB$ è stata isolata nel terzo termine; questa quantità è sempre positiva e
+massimizza la verosimiglianza quando si riduce a 0, cioè quando $\bfB = \hat{\bfB}$ (infatti $\hat{\YY}=\XX\hat{\bfB}$).
+
+Per derivare lo stimatore di $\Sigma$, si osservi che per il secondo termine vale:
+\begin{eqnarray}\label{SigmaS} \nonumber
+-\frac{1}{2}\tr\left((\YY-\hat{\YY})\Sigma^{-1}(\YY-\hat{\YY})'\right)&=&-\frac{1}{2}\tr\left(\Sigma^{-1}(\YY-\hat{\YY})'(\YY-\hat{\YY})\right)=\\ 
+&=&-\frac{n}{2}\tr(\Sigma^{-1} S)
+\end{eqnarray}
+(si ricordi che $\tr(AB)=\tr(BA)$).
+
+Quindi 
+$$l_{èl}(\bfB,\Sigma)\propto -\log|\Sigma|-\tr(\Sigma^{-1} S).$$
+Mostriamo ora che il massimo è raggiunto in $\Sigma=S$.
+Si definisca $A=\Sigma^{-1} S$ e si usi la proprietà $|AB|=|A||B|$ (ponendo $B=\Sigma$ si ha $|\Sigma|= |S|/|\Sigma^{-1}S|$) per riscrivere quest'ultima come 
+$$l_{èl}(\bfB,\Sigma)\propto -\log|\Sigma|-\tr(\Sigma^{-1} S)=-\log|S|+\log|A| -\tr(A).$$
+$\log|S|$ è una costante e può essere esclusa dalle considerazioni che seguono.
+
+Definiti ora $\lambda_1,\ldots,\lambda_p$ gli autovalori di $A$ e ricordando che $|A|=\prod_i \lambda_i$ e $\tr(A)=\sum_i \lambda_i$, il problema
+si riduce alla minimizzazione di $\sum_i^p (\lambda_i-\log \lambda_i)$. La funzione $f(\lambda)=\lambda-\log \lambda$ è minimizzata in $\lambda=1$ 
+(ponendo la derivata pari a 0). Se tutti gli autovalori sono unitari $A=\I$ e quindi $\Sigma=S$.
+\end{proof}
+
+Questa dimostrazione ci permette di dire che gli stimatori
+\(\hat{\bfB}\) e \(S\) sono asintoticamente efficienti (raggiungono il
+limite inferiore di Rao-Cramer), però non garantiscono la stessa
+proprietà nel finito, specie per campioni piccoli. Anche la non
+distorsione è garantita asintoticamente; per \(\hat{\bfB}\) questa
+risulta valida anche al finito, mentre per ricavare uno stimatore non
+distorto di \(\Sigma\) è necessario fare ricorso allo stimatore ai
+minimi quadrati \(S_u=Sn/(n-q)\).
+
+Ciononostante, l'approccio di massima verosimiglianza resta fondamentale
+per ricavare una forma generale del test basato sul rapporto di
+verosimiglianza che vedremo tra poco.
+
+\subsubsection*{Proprietà}
+
+Anche le proprietà del modello estendono le proprietà del modello
+lineare univariato.
+
+\begin{theorem}
+Dato il modello di regressione (lineare) e gli stimatori appena definiti:
+\begin{itemize}
+\item $\hat \bfB$ è uno stimatore non distorto di $\bfB$
+\item $E(\hat{\bfE})=\zerobold$
+\item $\hat{\bfB}$ (in vettore) ha distribuzione normale multivariata
+\item $\hat{\bfB}\bbot \hat{\bfE}$
+\item $nS \sim W_p(\Sigma, n-q)$ (e quindi uno stimatore non distorto è dato da $S_u=\frac{Sn}{n-q}$)
+\end{itemize}
+\end{theorem}
+
+\subsection{Verifica di Ipotesi su $\bfB$}
+
+Affronteremo ora il problema della verifica d'ipotesi su (sottomatrici
+di) \(\bfB\). In molti casi faremo uso dell'approccio generale del test
+di rapporto di log-verosimiglianza per ricavare alcuni tra i test già
+visti nei capitoli precedenti.
+
+`E quindi utile definirne la forma generale. Si supponga di voler
+testare \(H_0:\ \bfB=\bfB_*\) contro \(H_1:\ \bfB\neq \bfB_*\)
+(solitamente \(\bfB_*=0\)). Il rapporto di log-verosimiglianza è
+definito come
+\(\mathcal{W}=2 (l_{èl}(\hat{\bfB}_{|H_1})-l_{èl}(\hat{\bfB}_{|H_0})) = 2 (l_{1}-l_{0})\).
+
+Si noti anche che sotto \(H_0\) e sotto condizioni di regolarità
+asintoticamente vale \(\mathcal{W}\sim \chi^2_{pq}\).
+
+\subsubsection{Test su $\mu$ con $\Sigma$ nota}
+
+Sia \(\YY\) una m.n.d da \(y_i \sim N(\mu,\Sigma)\). Possiamo scrivere
+questo modello fissando la matrice \(\XX=1_{n}\), cioè la media delle
+righe di \(\YY\) viene modellizzata esclusivamente tramite una costante
+e quindi \(E(\YY)=1_n\mu'=1_n\bfB\) (cioè \(\mu=\bfB'\))
+
+Si voglia verificare l'ipotesi \(H_0: \mu=\mu_0=\bfB_0'\) contro
+\(H_1: \mu\neq\mu_0=\bfB_0'\) con \(\mu_0\) fissato e \(\Sigma\) nota.
+In questo caso, la log-verosimiglianza ha forma:
+\[l_{èl}(\bfB,\Sigma) \propto 
+-\frac{n}{2}\log|\Sigma|-\frac{1}{2}\tr\left((\YY -\bfB\XX)\Sigma^{-1}(\YY -\bfB\XX)'\right).\]
+
+Sotto \(H_0\), possiamo sostituire \(\mu=\mu_0\); sotto \(H_1\) lo SMV
+per \(1_n\hat{\mu}'=1_n(1_n'1_n)^{-1}1_n'\YY= 1_n\bar{y}\) e usando la
+decomposizione (\ref{logLik}) e la equivalenza (\ref{SigmaS}), si
+ottiene \begin{eqnarray*}
+\mathcal{W}= l_{1}- l_{0} \propto 
+&-&\frac{n}{2} \log|\Sigma|   -\frac{n}{2} \tr(\Sigma^{-1}S)  \\
+&+&\frac{n}{2} \log|\Sigma|   +\frac{n}{2} \tr(\Sigma^{-1}S) 
++\frac{1}{2} \tr\left( (\hat{\YY}-1_n\mu_0')\Sigma^{-1}(\hat{\YY}-1_n\mu_0')' \right).
+\end{eqnarray*} Si noti anche che
+\(\mathcal{W}\propto \tr\left( (\hat{\YY}-1_n\mu_0')\Sigma^{-1}(\hat{\YY}-1_n\mu_0')' \right)=n (\hat{\mu}-\mu_0)'\Sigma^{-1}(\hat{\mu}-\mu_0)\)
+Tutto si gioca quindi sulla distanza (di Mahalanobis) tra \(\hat{\mu}\)
+e il vero (sotto \(H_0\)) \(\mu_0\). Quindi possiamo fare inferenza
+usando tale distanza; sappiamo già dal paragrafo \ref{testSigmaNota} che
+questo è un modo valido per fare inferenza, ora ne ricaviamo anche che è
+un buon modo.
+
+\subsubsection{Test su $\mu$ con $\Sigma$ ignota}\label{oneSample}
+
+Il modello e le ipotesi sono le stesse del paragrafo precedente, però
+non assumiamo \(\Sigma\) nota. Riprendiamo la forma compatta della
+(log)verosimiglianza come definita in (\ref{logLik}). Ricordando che
+\(\hat{\bfB}_{|H_0}=\bfB_0'=\mu_0\) e
+\(\hat{\bfB}_{|H_1}=\hat{\bfB}'=\bar{y}\) se ne deduce che
+\[\hat{\Sigma}_{|H_1}=(\YY-1\bar{y}')'(\YY-1\bar{y}')/n=S\] e
+\begin{eqnarray*}
+\hat{\Sigma}_{|H_0}&=&(\YY-1\mu_0)'(\YY-1\mu_0)/n\\
+&=&(\YY-1\bar{y}')'(\YY-1\bar{y}')/n +(1\bar{y}'-1\mu_0')'(1\bar{y}'-1\mu_0')/n\\
+&=&S+(\bar{y}-\mu_0)(\bar{y}-\mu_0)'.
+ \end{eqnarray*} Sempre con riferimento a (\ref{logLik}), si nota che il
+secondo termine si riduce a \(-np/2\) sia sotto \(H_0\), sia sotto
+\(H_1\) (infatti sotto \(H_1\):
+\(\tr\left( (\YY-1\mu')\hat{\Sigma}^{-1}(\YY-1\mu')' \right)= \tr\left( \hat{\Sigma}^{-1}(\YY-1\mu')'(\YY-1\mu') \right)=n\tr(I_p)\)
+e analogamente sotto \(H_0\)). Quindi il rapporto delle due massime
+log-verosimiglianze risulta funzione esclusiva degli stimatori delle
+varianze sotto le due ipotesi:
+\[\mathcal{W}\propto n\log\frac{|S_{H_0}|}{|S_{H_1}|}=n\log\frac{|S+(\bar{y}-\mu_0)(\bar{y}-\mu_0)'|}{|S|}.\]
+Ora sfrutteremo due proprietà dei determinati :
+
+\begin{itemize}
+\item[i ] $|AB|/|B|=|A|$ (ottenuta da $|AB|=|A||B|$) e 
+\item[ii ] $|I_p+BC|=|I_n+CB|$ (con $B_{p\times n}$ e $C_{n\times p}$, usata con $p=1$).
+\end{itemize}
+
+Possiamo notare che
+\(|S+(\bar{y}-\mu_0)(\bar{y}-\mu_0)'| =|S(I+S^{-1}(\bar{y}-\mu_0)(\bar{y}-\mu_0)')|\)
+e che
+\(|(I+S^{-1}(\bar{y}-\mu_0)(\bar{y}-\mu_0)'|=|(1+(\bar{y}-\mu_0)'S^{-1}(\bar{y}-\mu_0)|\).
+Ne consegue che
+\(\mathcal{W}=n\log(|AB|/|B|)=n\log(|A|)=n\log(|1 + (\bar{y}-\mu_0)'S^{-1}(\bar{y}-\mu_0)|)\)
+dove, essendo l'argomento uno scalare, il determinante può essere
+omesso. \((\bar{y}-\mu_0)'S^{-1}(\bar{y}-\mu_0)\) è esattamente
+l'espressione della \(T^2\) a meno del fattore \(n-1\) e quindi ne è
+funzione monotona.
+
+Questo dimostra che il test \(T^2\) già ricavato tramite il lemma
+\ref{T2media}, è anche un test del rapporto di verosimiglianza.
+
+\subsubsection{Test su $\bfB$ in presenza di covariate}
+
+'E molto comune che la verifica di ipotesi riguardi solo una parte dei
+parametri e cioè delle righe di \(\bfB\) (si noti che se solo alcune
+colonne sono di interesse per il test, sarà sufficiente escludere le
+altre variabili/colonne dal modello). Il caso più tipico è quello in cui
+si vuole vedere la relazione tra le variabili \(\XX\) e \(\YY\)
+ammettendo però che l'intercetta sia non nulla.
+
+In generale decomporremo la matrice \(\XX\) in due sottomatrici
+\(\XX_1\) e \(\XX_0\) (di rango rispettivamente \(q_1\) e \(q_0\)),
+facenti riferimento rispettivamente ai parametri sotto test \(\bfB_1\) e
+a quelli che possono assumere valori non nulli anche sotto l'ipotesi
+nulla \(\bfB_0\). \begin{eqnarray}\label{full}
+\mathbf{\YY} = \XX_0\bfB_0 +  \XX_1\bfB_1 + \mathbf{E}
+\end{eqnarray}
+
+L'ipotesi nulla da testare risulta quindi
+\[H_0: \bfB_1=\zerobold \ \forall \bfB_0\]
+
+\bigskip
+
+Tale approccio si rivela estremamente flessibile. Nel caso di
+\(c\geq 2\) due o più campioni indipendenti è sufficiente definire
+\(\XX_0\) come la matrice con una sola colonna di uni (l'intercetta) e
+\(\XX_1\) come matrice di \(c-1\) variabili dummy (indicatrici di
+gruppo, esclusa la categoria di riferimento). Tale caso particolare è ha
+volte detto modello MANOVA.
+
+Il caso di 2 (o \(c>2\)) campioni appaiati può essere incluso in questo
+schema definendo in \(\XX_0\) le dummy ricavate dagli indicatori dei
+soggetti e in \(\XX_1\) l'indicatore dei due (o \(c\)) trattamenti. Si
+noti, inoltre, che è possibile includere il caso di un singolo campione
+definendo \(\XX_0=\emptyset\) e \(\XX_1=1_n\). Più in generale si
+possono includere disegni sperimentali a blocchi ed anche più complessi
+in questo schema generale.
+
+\begin{ExerciseList}
+\Exercise Definire la matrice $\XX$ di un modello di regressione multivariato che formalizzi il confronto di due campioni di numerosità $n_1$ ed $n_2$ (le prime $n_1$ osservazioni di $\YY$ provengono dal primo campione).
+\Exercise Formalizzare $\XX_0$ e $\XX_1$ per la verifica dell'ipotesi nulla di uguaglianza dei due campioni.
+\end{ExerciseList}
+\bigskip
+
+A partire da questa impostazione, è possibile decomporre la devianza
+totale in modo del tutto analogo a quello che accade per i modelli
+univariati. Sia \(\HH_0=\I - \XX_0(\XX_0'\XX_0)^{-1}\XX_0'\), si
+definiscano le seguenti quantità:
+
+\begin{itemize}
+\item Devianza Totale (sotto $H_0$): $T=\YY'\HH_0\YY$
+\item Devianza Residua (sotto $H_1$):  $W=\YY'\HH\YY$
+\item Devianza Spiegata (sotto $H_1$) da $\XX_1$: $B=\YY'\HH_0\YY-\YY'\HH\YY=\YY'(\HH_0-\HH)\YY$
+\end{itemize}
+
+Si noti che grazie al teorema \ref{CraigLancaster} di Craig - Lancaster
+possiamo ricavare che le tre matrici casuali sono indipendenti tra loro,
+seguono una distribuione di Wishart e la loro somma è una whishart con
+g.d.l. pari al rango di \(\HH_0\). In ambito univariato, la statistica
+test F è basata sul rapporto
+\(F=\frac{B/rango(\HH_0-\HH)}{W/rango(\HH)}\) la cui distrbuzione è
+nota. Vale anche la pena notare che lo stesso indice di proporzione di
+varianza spiegata \(R^2=\frac{B}{T}=\frac{B}{B+W}\).
+
+In ambito multivariato le stastistiche di sintesi non sono altrettanto
+immediate. Nei casi non banali, la statistica test non può basarsi sul
+rapporto delle due devianze giacch'e numeratore e denominatore sono
+delle matrici. `E necessario quindi ``sintetizzare'' queste due matrici
+in un'unica quantità.
+
+Si noti che un caso particolare si verifica quando \(\XX_1\) ha una sola
+colonna (e quindi \(rango(\HH_0-\HH)=1\)). Nel ricavare la distribuzione
+della statistica test del rapporto di verosimiglianze (paragrafo
+\ref{oneSample}) abbiamo sfruttato la proprietà ii. per scoprire che
+questa segue una \(T^2\). In generale questo risulta vero non solo per
+il caso di due campioni, ma più in generale nel caso di un solo
+predittore sotto test.
+
+Continuando sulla strada segnata del test del rapporto di
+verosimiglianza, possiamo ricavare il test per il generico problema di
+regressione. In modo del tutto analogo a quando mostrato in
+\ref{oneSample} (e facendo ancora riferimento ai risultati del lemma
+\ref{decoScarti}), possiamo notare che il secondo termine in
+\ref{logLik} si riduce a \(-np/2\) sia sotto \(H_0\) che \(H_1\)
+(infatti sotto \(H_1\):
+\(\tr\left( (\YY-\XX\hat{\bfB})\hat{\Sigma}^{-1}(\YY-\XX\hat{\bfB})' \right)= \tr\left( \hat{\Sigma}^{-1}(\YY-\XX\hat{\bfB})'(\YY-\XX\hat{\bfB}) \right)=n\tr(I_p)\)
+e analogamente sotto \(H_0\) usando \(\XX_0\) e \(\bfB_0\)). Il test del
+rapporto di verosimiglianza quindi si riduce ad una funzione monotona
+dei determinanti delle varianze (funzione delle devianze) residue sotto
+\(H_0\) ed \(H_1\):
+\[\mathcal{W}\propto n\log\frac{|S_{H_0}|}{|S_{H_1}|}=n\log\frac{|T|/n}{|W|/n}=n\log\frac{|W+B|}{|W|}.\]
+
+Come anticipato per`o, la proprietà ii. usata nel paragrafo
+\ref{oneSample} non ci permette di giungere a nessuna forma distributiva
+nota. Siamo quindi costretti a sfruttare i risultati asintotici
+(\(\mathcal{W}\) ha distribuzione asintotica \(\chi^2_{pq_1}\) --
+\(q_1\) e \(p\) dimensioni di \(\bfB\))\\
+oppure ricavare la forma della nuova variabile aleatoria.
+
+\subsubsection{$\Lambda$ di Wilks e altre misure di sintesi}
+\subsubsection*{$\Lambda$ di Wilks}
+
+il rapporto delle verosimiglianze
+\[\lambda^{2/n} \propto |W| /|T| =  |W| |W+B|^{-1} =  |\I +W^{-1}B|^{-1} \sim \Lambda(p,n-q_0-q_1,q_1) \]
+(parametri: \(p=\)colonne Y,\(n-q_0-q_1=\)rango di W, \(q_1=\)rango di
+\(B\))
+
+Ora, sotto \(H_0\), \(X\) `e una matrice di dati da
+\(\N_p(\bfmu,\Sigma)\), cos`i dal teorema di Cochran generalizzato si
+ha, ponendo \(C_1=\HH\) e \(C_2=\HH_0-\HH\) \[
+W=X'C_1X \sim W_p(\Sigma,n-q_0-q_1)
+\] \[
+B=X'C_2X \sim W_p(\Sigma,q_1)
+\] Dal momento che \(B\) e \(W\) sono indipendenti, a condizione che
+\(n-q_0-q_1> 0\), sotto \(H_0\) la statistica \(\lambda^{2/n}\) si
+distribuisce come una \(\Lambda\) di Wilks \[
+|I+W^{-1}B|^{-1} \sim \Lambda(p,n-q_0-q_1,q_1)
+\] Purtroppo solo in casi particolari - cio`e per particolari valori dei
+parametri- si pu`o utilmente sfruttare la distribuzione al finito di
+\(\Lambda\).
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{theorem}
+Si ha
+$$
+\Lambda(p,m,n) \sim \prod_{i=1}^nu_i
+$$
+dove $u_1,\ldots,u_n$ sono $n$ variabili indipendenti e $u_i \sim \beta(\frac{1}{2}
+(m+i-p), \frac{1}{2}p), i=1,\ldots,n$.
+\end{theorem}
+
+\{\em Senza dimostrazione\}.
+
+Per valori grandi di \(m\) si pu`o anche utilizzarsi il risultato
+asintotico.\textbackslash{}
+
+\begin{theorem} 
+$$
+-[m-\frac{1}{2}(p-n+1)]\log\Lambda(p,m,n) \sim \chi^2_{np}
+$$
+per $m \rightarrow \infty$.
+\end{theorem}
+
+\{\em Senza dimostrazione\}.
+
+\subsubsection*{Altre misure di sintesi della varianza spiegata}
+
+Come detto, la statistica di sintesi \(\lambda=|W|/|T|\) non è l'unica
+possibile. Va anche sottolineato che in ambito multivariato, non è
+facile stabilire criteri di ottimalità; ad esempio non esite un test
+uniformemente più potente. La scelta di \(\lambda\) quindi è
+giustificabile per l'importanza che ricopre l'approccio di
+verosimiglianza in tutto l'ambito inferenziale e per il fatto che sia
+nota la sua distribuzione asintotica, ma non gode di migliori proprietà
+rispetto alle altre stastistiche di sintesi che indicheremo qui di
+seguito.
+
+Partendo dalla quantità \(A=W^{-1}B\) è possibile stabilire diverse
+misure di sintesi. Siano \(\lambda_1, \ldots,\lambda_p\) gli autovalori
+non nulli di \(A=W^{-1}B\) Tra le molte, le più note sono:
+
+\begin{itemize}
+\item Wilks: $\prod_i (1/(1+\lambda_i))\sim \Lambda$ come già visto
+\item (Traccia di) Pillai: $\sum_i (1/(1+\lambda_i))$
+\item (Traccia di) Lawley-Hotelling: $\sum_i \lambda_i$
+\item (Massima radice di) Roy: $\max_i \lambda_i$
+\end{itemize}
+
+Nessuna di queste statistiche ha una distribuzione nota (o facile da
+ricavare) sotto l'ipotesi nulla. I progessi tecnologici degli ultimi
+decenni, però ci permettono di ottenere queste distribuzioni tramite
+simulazione.
+
+
+\end{document}

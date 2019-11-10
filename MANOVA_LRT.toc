@@ -1,0 +1,9 @@
+\babel@toc {nil}{}
+\contentsline {section}{\numberline {1}Regressione Multivariata (MANOVA)}{1}% 
+\contentsline {subsection}{\numberline {1.1}Definizione del modello e Stima dei parametri}{1}% 
+\contentsline {subsection}{\numberline {1.2}Stimatori di massima verosimiglianza}{2}% 
+\contentsline {subsection}{\numberline {1.3}Verifica di Ipotesi su $\mathbf {B}$}{4}% 
+\contentsline {subsubsection}{\numberline {1.3.1}Test su $\mu $ con $\Sigma $ nota}{4}% 
+\contentsline {subsubsection}{\numberline {1.3.2}Test su $\mu $ con $\Sigma $ ignota}{5}% 
+\contentsline {subsubsection}{\numberline {1.3.3}Test su $\mathbf {B}$ in presenza di covariate}{5}% 
+\contentsline {subsubsection}{\numberline {1.3.4}$\Lambda $ di Wilks e altre misure di sintesi}{7}% 
