@@ -1,13 +1,13 @@
 ---
 title: "Basic concepts of Statistics:    Inference"
 author: "Livio Finos"
-date: "18 October 2018"
+date: "23 October 2019"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     toc: yes
     toc_float: yes
+  pdf_document:
+    toc: yes
 ---
 
 <!-- output: -->
@@ -47,6 +47,8 @@ Inference:
 ```{r}
 #clean the memory
 rm (list=ls ())
+
+ECHO=FALSE
 
 # We customize the output of our graphs a little bit
 par.old=par ()
@@ -176,7 +178,7 @@ $y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i)=y_i- \hat{y}_i$
 
 
 and therefore the least squares are the sum of the squared residuals:
-$\sum_{i=1} ^ n (y_i- \hat{\beta}_0 + \hat{\beta}_1x_i) ^ 2=\sum_{i=1} ^ n (y_i- \hat{y}_i ) ^ 2$
+$\sum_{i=1} ^ n (y_i- \hat{\beta}_0 - \hat{\beta}_1x_i) ^ 2=\sum_{i=1} ^ n (y_i- \hat{y}_i ) ^ 2$
 
 ---
 
@@ -350,7 +352,7 @@ hist(beta.perm,50)
 points(beta1,0,lwd=3,col=1)
 ```
 
-## How likely WAS $\hat{\beta}_1 ^{obs}$?
+## How likely $\hat{\beta}_1 ^{obs}$ WAS?
 (before the experiment!)
 
 How likely was it to get a $\leq \hat{\beta}_1 ^{obs}$ value among the many possible values of $\hat{\beta}_1 ^{*b}$ (obtained by permuting data)?
@@ -379,7 +381,7 @@ $p=\frac{\# (\hat{\beta}_1 ^{* b} \geq \hat{\beta}_1 ^{obs})}{B + 1} =$ `r (p=su
  
 ## Interpretation
 
-The probability of $p=P (\hat{\beta}_1 ^ * \leq \hat{\beta}_1=$ `r round (coefficients (model), 3)[2]` $| H_0)$ is equal to $p =$ `r p`, i.e. very small.  
+The probability of $p=P (\hat{\beta}_1 ^ * \geq \hat{\beta}_1=$ `r round (coefficients (model), 3)[2]` $| H_0)$ is equal to $p =$ `r p`, i.e. very small.  
 So, it was unlikely to get a value like this **IF $H_0$ is true**.
 
 Neyman-Pearson's approach has made common the use of a significance threshold for example $\alpha=.05$ (or $=. 01$).
@@ -591,8 +593,8 @@ s=sqrt(s2)
 n=length(reaction$Age)
 ```
 
-- $\beta_0=$ `r m`
-- $\sigma^2=$ `r s2`
+- $\beta_0=m=$ `m=` `r m`
+- $\sigma=$ `s=` `r s`
 
 ----
 ```{r}
@@ -727,7 +729,7 @@ Hint: Simulate with different sd (e.g. 2,4,8,16), store the proportion of reject
 
 ## Solution
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 sim05 <- function(s,n,m){
   p.sim=replicate(1000,sim(reaction$Age,n,m,s))
   mean(p.sim<.05)
@@ -736,7 +738,7 @@ sim05 <- function(s,n,m){
 
 ----
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 s_values=c(2,4,8,16)
 type1=sapply(s_values,sim05,n,m)
 plot(s_values,type1,type="l",ylim=c(0,.2),main="Type I error",xlab="Sigma (noise)")
@@ -744,7 +746,7 @@ plot(s_values,type1,type="l",ylim=c(0,.2),main="Type I error",xlab="Sigma (noise
 
 ----
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 power=sapply(s_values,sim05,n,y_linear_part)
 plot(s_values,power,type="l",main="Power",xlab="Sigma (noise)")
 ```
@@ -757,7 +759,7 @@ plot(s_values,power,type="l",main="Power",xlab="Sigma (noise)")
 
 ## Solution
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 sim_n <- function(Age,n,betas,s){
   Agex <- sample(Age,n,replace = TRUE)
   while(length(unique(Agex))==1)
@@ -780,7 +782,7 @@ sim05_n <- function(n,betas,s){
 
 ### H0
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 betas=c(beta0,0)
 ns=c(5,10,20,50)
 type1=sapply(ns,sim05_n,betas,s)
@@ -791,7 +793,7 @@ plot(ns,type1,type="l",ylim=c(0,.2),main="Type I error",xlab="sample size")
 
 ### H1
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 betas=c(beta0,beta1)
 power=sapply(ns,sim05_n,betas,s)
 plot(ns,power,type="l",main="Power",xlab="sample size")
@@ -811,7 +813,7 @@ Make similar evaluations of Homework 1 and 2 for confidence intervals:
 
 ## Solution: Sigma (noise)
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 sim <- function(Age,n,m,s){
   Reaction.Time=rnorm(n,m,s)
   #get the p-value from the output
@@ -832,7 +834,7 @@ sim05 <- function(s,n,m){
 
 ### H0
 
-```{r,fig.height=4}
+```{r,fig.height=4,echo=ECHO,eval=ECHO}
 s_values=c(2,4,8,16)
 type1=sapply(s_values,sim05,n,m)
 par(mfrow=c(1,2))
@@ -844,7 +846,7 @@ plot(s_values,type1[2,],type="l",main="Length",xlab="Sigma (noise)")
 
 ### H1
 
-```{r,fig.height=4}
+```{r,fig.height=4,echo=ECHO,eval=ECHO}
 power=sapply(s_values,sim05,n,y_linear_part)
 par(mfrow=c(1,2))
 plot(s_values,type1[1,],type="l",ylim=c(.8,1),main="Coverage",xlab="Sigma (noise)")
@@ -853,7 +855,7 @@ plot(s_values,type1[2,],type="l",main="Length",xlab="Sigma (noise)")
 
 ## Solution: sample size
 
-```{r}
+```{r,echo=ECHO,eval=ECHO}
 sim_n <- function(Age,n,betas,s){
   Agex <- sample(Age,n,replace = TRUE)
   while(length(unique(Agex))==1)
@@ -878,7 +880,7 @@ sim05_n <- function(n,betas,s){
 ----
 
 ### H0
-```{r,fig.height=4}
+```{r,fig.height=4,echo=ECHO,eval=ECHO}
 betas=c(beta0,0)
 ns=c(5,10,20,50)
 type1=sapply(ns,sim05_n,betas,s)
@@ -891,7 +893,7 @@ plot(ns,type1[2,],type="l",main="Length",xlab="n (Sample Size)")
 
 ### H1
 
-```{r,fig.height=4}
+```{r,fig.height=4,echo=ECHO,eval=ECHO}
 betas=c(beta0,beta1)
 power=sapply(ns,sim05_n,betas,s)
 par(mfrow=c(1,2))

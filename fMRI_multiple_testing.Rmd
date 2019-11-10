@@ -3,14 +3,14 @@ title: "Multiple Testing in Neuroscience"
 author: "Livio Finos"
 date: "15 Novembre 2018"
 output:
-  html_document:
-    toc: yes
-    # toc_float: yes
+  ioslides_presentation:
+    logo: figs/logoUnipd.jpg
   pdf_document:
     number_sections: yes
     toc: yes
-  ioslides_presentation:
-    logo: figs/logoUnipd.jpg
+  html_document:
+    toc: yes
+    # toc_float: yes
   beamer_presentation: default
 subtitle: Bonferroni and Random Field Theory
 ---
@@ -34,9 +34,11 @@ Brett M., Penny W. and Keibel S.
 - [PMN] Russell A. Poldrack, Jeanette A. Mumford, Thomas E. Nichols. (2011) Handbook of functional MRI data analysis. Cambridge
 - Friston, Holmes, Polin, Price and Frith (1996).
 Detecting Activations in PET and fMRI: Levels of Inference and Power. Neuorimage
-- Goeman \& Solari (2014) Tutorial in biostatistics: multiple hypothesis testing in genomics. Statistics in medicine
 
 ----
+
+- Goeman \& Solari (2014) Tutorial in biostatistics: multiple hypothesis testing in genomics. Statistics in medicine
+
 
 - MRC - Cambridge University: <http://imaging.mrc-cbu.cam.ac.uk/imaging/PrinciplesRandomFields>
 - wiki <http://en.wikipedia.org/wiki/Random_field>
@@ -58,8 +60,9 @@ include_graphics("./figs/thresolding.png")
 
 
 ## Motivation
+*Bennett et al. (2012)*
 
-```{r,fig.cap="Bennett et al. (2012)"}
+```{r}
 include_graphics("./figs/salmon.png")
 ```
 
@@ -250,7 +253,8 @@ The assumptions are exchangeable:
 I don't think that the FDR is adequate in fMRI data.
 
 
-**Problems**
+**Problems**  
+
 - Cheating
 - Subsets
 
@@ -267,7 +271,7 @@ eg: I correct all the tests, while discussing only those that I know how to bett
 - FDR control on all subsets = FWER control
 - FWER control on all subsets = FWER control
 
-*Finner H, Roters M. (2001) On the false discovery rate and expected type I errors. biometrical Journal}; 43 (8): 985-1005*
+*Finner H, Roters M. (2001) On the false discovery rate and expected type I errors. biometrical Journal; 43 (8): 985-1005*
 
 
 ## Subsets of Rejections
@@ -317,7 +321,7 @@ include_graphics("./figs/cluster_level.png")
 * Typically better sensitivity
 * Worse spatial specificity   
 
-    – The null hypo of entire cluster is rejected
+    – The null hypo of entire cluster is rejected  
     – Only means that AT LEAST ONE voxels in cluster active
 
 
@@ -425,7 +429,7 @@ in an image after thresholding.
 \]
 
 e.g. for Gaussian test statistic (i.e. $z$, not $t$):
-$$E(\chi_u|H_0)\approx R 2\pi^{-2}W^{-3} u^{2} exp(-u^2/2)$$
+$$E(\chi_u|H_0)\approx R 2\pi^{-2}FWHM (4 log_e 2)^{-1/2}^{-3} u^{2} exp(-u^2/2)$$
 
 $R$ is the number of resels, $u$ is the z-score threshold
 
@@ -500,13 +504,14 @@ $$ P(\chi_u = c) \approx \lambda(c, E(\chi_u))$$
 - the expected number of maxima $E(\chi_u)$ (i.e., clusters) is:
 $$E(\chi_u)\approx R 2\pi^{-(D+1)/2}W^{-D} u_{clust}^{D-1} exp(-u_{clust}^2/2)$$
 
+----
+
+
 - Distribution of the number of voxels $n$ in a cluster:  
 $$P(n \geq k) \approx exp (-\beta k^{2/D})$$,
 where
 $\beta = [\Gamma(D/2 + 1)E(\chi)/(S \Phi(-u))]^{2/D}$
 
-
-----
 
 The probability to observe a cluster with $k$ or more voxles is
 

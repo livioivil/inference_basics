@@ -198,7 +198,7 @@ $Y=\textrm{linear part} + \textrm{normal error}$
 
 $Y=\beta_0 + \beta_1 X + \varepsilon$
 
-**Assumptions of the linear model **
+**Assumptions of the linear model**
 
 - the $\boldsymbol{y_i=\beta_0 + \beta_1 x_i + \varepsilon_i}$
 the relationship between $X$ and the true (mean) $Y$ is linear.
@@ -334,9 +334,9 @@ Please, no test of normality, homoschedasticity etc. (check the error of the fir
 
 ## Supplement: Looking for influential cases
 
-- In a statistical model an * influential case * is a statistical unit whose observations are strong
+- In a statistical model an *influential case* is a statistical unit whose observations are strong
 impact on model parameter estimates
-- In regression models, a particularly effective way to identify influential values is to use * Cook's distance (Cook, 1977) *
+- In regression models, a particularly effective way to identify influential values is to use *Cook's distance (Cook, 1977)*
 - Given a statistical unit, Cook's distance is a measure of
 how much the regression coefficients of the estimated model would change
 if this unit was omitted
@@ -475,18 +475,22 @@ it is very high, this will bring instability (greater variance) in the estimates
 
 This is the main reason why it is useful to have experiments with orthogonal factorial plans (not discussed today)
 
-### Residual Analysis in Regression
+### Residual Analysis
+
 ```{r}
 par (mar = c (6, 5, 4, 2) + 0.1)
 par (mfrow = c (2,2))
 plot (modelFull) # see also:? plot.lm for bibliographical references
 ```
 
-## Variables (predictors) Selection
-### Analysis of variance (test for any-variable)
+
+## Analysis of variance
 
 The Deviance Explained and (and$R ^ 2$) increases - does not decrease - with each addition of variables
 (+ varibili = + flexibility = better fit).
+
+REMARK: this mean that we are considering **nested models**
+
 for example:
 
 ```{r}
@@ -505,6 +509,11 @@ anova (modelAgeGen, modelFull)
 ```
 
 Among the multiple models with or without interaction there is no significant difference in terms of the explained variance.
+
+With ANOVA test we make the following question: "Does the exclusion of predictor $X$ decreases the predictability of the response?". This evaluation is not only based on the reduction of Residual Standard Error (i.e. decrease of Multiple R-squared), but also the reducted flexiblity of the model (i.e. the DF spent to model the tested variable $X$).
+
+As index, the Adjusted R-squared is a more "honest" index of explained variance then the Multiple R-squared.
+
 
 Excluding the $Gender$ variable instead does not seem like a good idea:
 ```{r}
