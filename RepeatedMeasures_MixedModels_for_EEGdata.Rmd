@@ -1,14 +1,14 @@
 ---
 title: "Statistical Analysis of EEG-experiment data"
 author: "Livio Finos"
-date: "09 ottobre 2018"
+date: "20 Novembre 2019"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
   html_document:
     number_sections: yes
     toc_float: yes
+    toc: yes
+  pdf_document:
+    number_sections: yes
     toc: yes
 ---
 

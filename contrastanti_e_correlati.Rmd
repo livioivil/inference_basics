@@ -1,0 +1,213 @@
+---
+title: "Contrasting Contrasts"
+author: "Livio Finos"
+date: "18 / 11 / 2019"
+output:
+  html_document:
+    number_sections: yes
+    toc_float: yes
+    toc: yes
+  pdf_document:
+    number_sections: yes
+    toc: yes
+---
+
+**NOTA** la prima bozza di questo materiale è stato presentato il 18/11/2019 agli incontri regolari del gruppo di Psicostat
+<http://ip146179.psy.unipd.it/psicostat/web>.
+
+Calendario incontri:
+<http://ip146179.psy.unipd.it/psicostat/web/psicostat3.html>
+
+# Introduzione
+
+```{r setup, message=FALSE,echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Inizialmente pensavo di parlare dell'importanza dei contrasti ortogonali nei disegni sperimentali. Mentre iniziavo a lavorarci, capivo che in venti minuti non sarei riuscito a lasciare molto di più del profumo del problema.  
+Nella speranza che questo stimoli comunque l'appetito e lanci il branco alla caccia della sua preda.
+
+
+# The data + EDA
+
+**Challenge**: 
+Costruiamo un dataset dove sono noti gli effetti, riuscite ad analizzarlo in modo adeguato?
+
+
+Il modello proposto è un semplice modello ANCOVA:    
+- risposta normale (lm) con varianza dei residui pari ad 1  
+- modello lineare con predittori: 
+    + due gruppi (`A` e `B`), 
+    + una variabile continua e 
+    + la loro interazione
+- Effetti: Intercetta e gruppo.  La variabile continua non ha relazione con la risposta per il gruppo `A`, ce l'ha invece nel il gruppo `B` (interazione).
+
+Questi sono i dati creati e la loro rappresentazione.
+
+```{r}
+set.seed(1)
+n0=10
+D=data.frame(gr=as.factor(rep(LETTERS[1:2],n0)),
+             x=rnorm(n0*2)+3)
+mu=2+(D$gr=="B")*.5+D$x*(D$gr=="B")*2
+D$y= mu+rnorm(n0*2)
+
+D
+
+library(ggplot2)
+ggplot(D,aes(x=x,y=y,color=gr))+geom_point()+
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+xlim(-.5, 6)
+```
+
+# Modelli lineari
+## Un modello lineare
+
+```{r}
+modDU=lm(y~gr*x,data=D)
+summary(modDU)
+```
+
+Le variabili usate nel modello lineare
+
+```{r}
+(mm <- model.matrix(~gr*x,data=D))
+```
+
+Notate le correlazioni tra predittori e il Multiple R-squared delle prime tre colonne per spiegare la colonna dell'interazione:
+
+```{r}
+cor(mm)
+summary(lm(mm[,2]~mm[,-2]+0))
+```
+
+
+## Un secondo modello lineare ($x$ 0-centrata)
+
+```{r}
+D2=D
+D2$x=D$x-mean(D$x)
+modDUC=lm(y~gr*x,data=D2)
+summary(modDUC)
+
+```
+
+Osservate la scala lo 0 nella scala delle ascisse:
+è chiaro che la differenza nei due gruppi c'è.
+
+```{r}
+ggplot(D2,aes(x=x,y=y,color=gr))+geom_point()+
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_vline(xintercept = 0)
+
+```
+
+
+
+
+**NOTA**
+Notate che il test F (e i vari R-squares) sono identici al primo modello (e così sarà per tutti i successivi).
+
+
+**Correlazioni tra predittori**  
+
+E' utile anche valutare le correlazioni tra i predittori.
+
+
+I predittori:
+
+```{r}
+(mm <- model.matrix(~gr*x,data=D2))
+```
+
+
+Notate la correlazione tra predittori e il Multiple R-squared delle prime tre colonne per spiegare la colonna dell'interazione:
+
+```{r}
+cor(mm)
+
+summary(lm(mm[,2]~mm[,-2]+0))
+```
+
+## ... e un terzo ($x$ 0-centrata + $gr$ 0-centrata)
+
+```{r}
+D3=D2
+contrasts(D3$gr)=contr.sum(2)
+modS0=lm(y~gr*x,data=D3)
+summary(modS0)
+```
+
+```{r}
+ggplot(D3,aes(x=x,y=y,color=gr))+geom_point()+
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_abline(intercept = coef(modS0)[1], slope = coef(modS0)[3])
+
+```
+
+La linea nera nel grafico rappresenta l'equazione:
+`Y=` `r coef(modS0)[1]` `+` `r  coef(modS0)[3]` `X`
+come stimati dal modello. In effetti questo è l'effetto per i soggetti con `gr==0` che non esistono nella verà, ma rappresentano un valore intermedio (in qualche modo nullo); sono quindi una stima *al netto di* `gr`.
+
+
+Osserviamo ora come è cambiata la matrice dei predittori (in particolare l'interazione):
+
+```{r}
+(mm <- model.matrix(~gr*x,data=D3))
+```
+
+
+Notate il Multiple R-squared delle prime tre colonne per spiegare la colonna dell'interazione:
+
+```{r}
+summary(lm(mm[,2]~mm[,-2]+0))
+```
+
+# Una simulazione
+
+Cosa mi direbbero i tre modelli se potessi ripetere molte volte l'esperimento?
+
+```{r}
+res_sim=replicate(1000,
+          {
+            D$y <- D2$y <- D3$y <- mu+rnorm(n0*2)
+            modDU=lm(y~gr*x,data=D)
+            p_DU=summary(modDU)$coeff[,4]
+            modDUC=lm(y~gr*x,data=D2)
+            p_DUC=summary(modDUC)$coeff[,4]
+            modS0=lm(y~gr*x,data=D3)
+            p_S0=summary(modS0)$coeff[,4]
+            c(DU=p_DU,DUC=p_DUC,S0=p_S0)
+          })
+
+res_sim=t(res_sim)
+```
+
+Potenza stimata:
+```{r}
+library(r41sqrt10)
+## modello Dummy
+summaryResSim(res_sim[,1:4])
+## modello Dummy +  Centered X
+summaryResSim(res_sim[,5:8])
+
+## modello S0 +  Centered X
+summaryResSim(res_sim[,9:12])
+
+# prova anche con 
+# D3=D2
+# contrasts(D3$gr)=contr.sum(2)
+# modS0=lm(y~gr*x,data=D3)
+# X non centrata e contr.sum(2)
+```
+
+*APPROFONDIMENTO* abbiamo supposto un effetto più piccolo per `gr` rispetto all'effetto della sua interazione con `x`. La potenza di `gr` però risulta  maggiore. Questa apparente contraddizione si dissolve considerando che la potenza di un test dipende dalla varianza dello stimatore su cui si basa. In questo caso la varianza dello stimatore dell'interazione è molto maggiore di quella dell'effetto gruppo. Ma questo merita un ulteriore approfondimento e non verrà trattato qui.
+
+
+# Conclusioni
+
+La definizione di un effetto dipende in modo cruciale dal modo in cui codifichiamo le variabili (fattori o continue che siano).
+
+La loro stima dipende in modo cruciale dalla correlazione tra i predittori. Questo aspetto è cruciale soprattutto nelle interazioni, dove le correlazioni sono spesso elevate per natura (sono definite come prodotto delle colonne del disegno sperimentale).
+
+Quando è possibile (e sensato), la raccomandazione è quella di centrare i contrasti intorno allo 0 (vedi uso di `contr.sum()`).
+
+
+
