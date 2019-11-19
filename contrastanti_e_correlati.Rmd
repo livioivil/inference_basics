@@ -18,6 +18,12 @@ output:
 Calendario incontri:
 <http://ip146179.psy.unipd.it/psicostat/web/psicostat3.html>
 
+
+Ulteriore materiale didattico alla mia pagine <https://livioivil.github.io/students/Teaching_material.html>
+
+**Abstract**
+Richiamo l'importanza dell'uso di contrasti a somma zero per le variabili categoriali (ad es i fattori di un disegno sperimentale) rispetto all'usuale codifica in variabili dummy. Il problema rimane analogo per le variabili quantitative. Affronto il problema con un dataset sintetico e un modello lineare con un fattore (= variabile categriale), una variabile quantitiva e la loro interazione.
+
 # Introduzione
 
 ```{r setup, message=FALSE,echo=FALSE}
