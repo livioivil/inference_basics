@@ -41,12 +41,12 @@ Costruiamo un dataset dove sono noti gli effetti, riuscite ad analizzarlo in mod
 
 
 Il modello proposto è un semplice modello ANCOVA:    
-- risposta normale (lm) con varianza dei residui pari ad 1  
-- modello lineare con predittori: 
-    + due gruppi (`A` e `B`), 
-    + una variabile continua e 
-    + la loro interazione
-- Effetti: Intercetta e gruppo.  La variabile continua non ha relazione con la risposta per il gruppo `A`, ce l'ha invece nel il gruppo `B` (interazione).
+- risposta normale (lm) con varianza dei residui pari ad 1    
+- modello lineare con predittori:    
+   * due gruppi (`A` e `B`),   
+   * una variabile continua e   
+   * la loro interazione   
+- Effetti: Intercetta e gruppo.  La variabile continua non ha relazione con la risposta per il gruppo `A`, ce l'ha invece nel il gruppo `B` (interazione).  
 
 Questi sono i dati creati e la loro rappresentazione.
 
