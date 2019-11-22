@@ -41,11 +41,11 @@ dati$COND=factor(dati$COND)
 
 ## EDA
 
-For  `Y1`:
+For  `Y7`:
 
 ```{r}
 library(ggplot2)
-p <- ggplot(dati,aes(x=COND,y=Y1,fill=STIM))
+p <- ggplot(dati,aes(x=COND,y=Y7,fill=STIM))
 p=p+geom_dotplot(binaxis = "y",position=position_dodge(0.8),stackdir = "center") +geom_boxplot(alpha=.1)
 p
 ```
@@ -55,7 +55,7 @@ Is there a specificity of the subject?
 ```{r}
 dati$COND_STIM=paste(sep = "_",dati$COND,dati$STIM)
 
-p <- ggplot(dati,aes(x=COND_STIM,y=Y1))
+p <- ggplot(dati,aes(x=COND_STIM,y=Y7))
 p+geom_point(aes(group = ID, colour = ID))+
   geom_line(aes(group = ID, colour = ID))+
    geom_boxplot(alpha=.1)
@@ -64,11 +64,11 @@ p+geom_point(aes(group = ID, colour = ID))+
 We subtract the subject-specific effect (i.e. subject's mean) to each observation.
 
 ```{r}
-Y=scale(matrix(dati$Y1,4,10),scale=FALSE)
-dati$Y1=as.vector(Y)
+Y=scale(matrix(dati$Y7,4,10),scale=FALSE)
+dati$Y7=as.vector(Y)
 
 library(ggplot2)
-p <- ggplot(dati,aes(COND_STIM,Y1))
+p <- ggplot(dati,aes(COND_STIM,Y7))
 p+geom_point(aes(group = ID, colour = ID))+
   geom_line(aes(group = ID, colour = ID))+
    geom_boxplot(alpha=.1)
@@ -145,7 +145,7 @@ $Z$ is the matrix of dummy variables of the column `dati$ID`.
 ```{r message=FALSE}
 library(lmerTest)
 
-mod=lmer(Y1~ COND_STIM +(1|ID),data=dati)
+mod=lmer(Y7~ STIM*COND +(1|ID),data=dati)
 
 summary(mod)
 
