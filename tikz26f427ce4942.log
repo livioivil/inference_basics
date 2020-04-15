@@ -1,0 +1,514 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=latex 2020.4.16)  16 APR 2020 00:04
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**tikz26f427ce4942.tex
+(./tikz26f427ce4942.tex
+LaTeX2e <2020-02-02> patch level 5
+L3 programming layer <2020-04-06> (c:/Users/livio/AppData/Roaming/TinyTeX/texmf
+-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
+)
+\c@part=\count167
+\c@section=\count168
+\c@subsection=\count169
+\c@subsubsection=\count170
+\c@paragraph=\count171
+\c@subparagraph=\count172
+\c@figure=\count173
+\c@table=\count174
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen134
+)
+\@input{preview.aux}
+\openout2 = `preview.aux'.
+
+No file preview.tex.
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/preview/preview.st
+y
+Package: preview 2017/04/24 12.2 (AUCTeX/preview-latex)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/preview/prtightpag
+e.def
+\PreviewBorder=\dimen135
+)
+\pr@snippet=\count175
+\pr@box=\box45
+\pr@output=\toks15
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.st
+y
+Package: amsmath 2020/01/20 v2.17e AMS math features
+\@mathmargin=\skip49
+For additional information on amsmath, use the `?' option.
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.st
+y
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks16
+\ex@=\dimen136
+))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen137
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count176
+LaTeX Info: Redefining \frac on input line 227.
+\uproot@=\count177
+\leftroot@=\count178
+LaTeX Info: Redefining \overline on input line 389.
+\classnum@=\count179
+\DOTSCASE@=\count180
+LaTeX Info: Redefining \ldots on input line 486.
+LaTeX Info: Redefining \dots on input line 489.
+LaTeX Info: Redefining \cdots on input line 610.
+\Mathstrutbox@=\box46
+\strutbox@=\box47
+\big@size=\dimen138
+LaTeX Font Info:    Redeclaring font encoding OML on input line 733.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 734.
+\macc@depth=\count181
+\c@MaxMatrixCols=\count182
+\dotsspace@=\muskip16
+\c@parentequation=\count183
+\dspbrk@lvl=\count184
+\tag@help=\toks17
+\row@=\count185
+\column@=\count186
+\maxfields@=\count187
+\andhelp@=\toks18
+\eqnshift@=\dimen139
+\alignsep@=\dimen140
+\tagshift@=\dimen141
+\tagwidth@=\dimen142
+\totwidth@=\dimen143
+\lineht@=\dimen144
+\@envbody=\toks19
+\multlinegap=\skip50
+\multlinetaggap=\skip51
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2859.
+LaTeX Info: Redefining \] on input line 2860.
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/frontendlayer/
+tikz.sty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgf
+.sty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfr
+cs.sty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+futil-common.tex
+\pgfutil@everybye=\toks21
+\pgfutil@tempdima=\dimen145
+\pgfutil@tempdimb=\dimen146
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+futil-common-lists.tex))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+futil-latex.def
+\pgfutil@abb=\box48
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/ms/everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+frcs.code.tex
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/pgf.revision
+.tex)
+Package: pgfrcs 2020/01/08 v3.1.5b (3.1.5b)
+))
+Package: pgf 2020/01/08 v3.1.5b (3.1.5b)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgf
+core.sty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphicx.
+sty
+Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/keyval.st
+y
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks22
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphics.
+sty
+Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/graph
+ics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: dvips.def on input line 105.
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/dvips
+.def
+File: dvips.def 2017/06/20 v3.1d Graphics/color driver for dvips
+))
+\Gin@req@height=\dimen147
+\Gin@req@width=\dimen148
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/systemlayer/pg
+fsys.sty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/
+pgfsys.code.tex
+Package: pgfsys 2020/01/08 v3.1.5b (3.1.5b)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+fkeys.code.tex
+\pgfkeys@pathtoks=\toks23
+\pgfkeys@temptoks=\toks24
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+fkeysfiltered.code.tex
+\pgfkeys@tmptoks=\toks25
+))
+\pgf@x=\dimen149
+\pgf@y=\dimen150
+\pgf@xa=\dimen151
+\pgf@ya=\dimen152
+\pgf@xb=\dimen153
+\pgf@yb=\dimen154
+\pgf@xc=\dimen155
+\pgf@yc=\dimen156
+\pgf@xd=\dimen157
+\pgf@yd=\dimen158
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count188
+\c@pgf@countb=\count189
+\c@pgf@countc=\count190
+\c@pgf@countd=\count191
+\t@pgf@toka=\toks26
+\t@pgf@tokb=\toks27
+\t@pgf@tokc=\toks28
+\pgf@sys@id@count=\count192
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/
+pgf.cfg
+File: pgf.cfg 2020/01/08 v3.1.5b (3.1.5b)
+)
+Driver file for pgf: pgfsys-dvips.def
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/
+pgfsys-dvips.def
+File: pgfsys-dvips.def 2020/01/08 v3.1.5b (3.1.5b)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/
+pgfsys-common-postscript.def
+File: pgfsys-common-postscript.def 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@objectcount=\count193
+)))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/
+pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgfsyssoftpath@smallbuffer@items=\count194
+\pgfsyssoftpath@bigbuffer@items=\count195
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/
+pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)) (c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.s
+ty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color
+.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: dvips.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcore.code.tex
+Package: pgfcore 2020/01/08 v3.1.5b (3.1.5b)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+.code.tex
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+calc.code.tex
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+util.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+parser.code.tex
+\pgfmath@dimen=\dimen159
+\pgfmath@count=\count196
+\pgfmath@box=\box49
+\pgfmath@toks=\toks29
+\pgfmath@stack@operand=\toks30
+\pgfmath@stack@operation=\toks31
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.code.tex
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.basic.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.trigonometric.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.random.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.comparison.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.base.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.round.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.misc.code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+functions.integerarithmetics.code.tex)))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+float.code.tex
+\c@pgfmathroundto@lastzeros=\count197
+))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfint.
+code.tex)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@picminx=\dimen160
+\pgf@picmaxx=\dimen161
+\pgf@picminy=\dimen162
+\pgf@picmaxy=\dimen163
+\pgf@pathminx=\dimen164
+\pgf@pathmaxx=\dimen165
+\pgf@pathminy=\dimen166
+\pgf@pathmaxy=\dimen167
+\pgf@xx=\dimen168
+\pgf@xy=\dimen169
+\pgf@yx=\dimen170
+\pgf@yy=\dimen171
+\pgf@zx=\dimen172
+\pgf@zy=\dimen173
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@path@lastx=\dimen174
+\pgf@path@lasty=\dimen175
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@shorten@end@additional=\dimen176
+\pgf@shorten@start@additional=\dimen177
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgfpic=\box50
+\pgf@hbox=\box51
+\pgf@layerbox@main=\box52
+\pgf@picture@serial@count=\count198
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgflinewidth=\dimen178
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@pt@x=\dimen179
+\pgf@pt@y=\dimen180
+\pgf@pt@temp=\dimen181
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorequick.code.tex
+File: pgfcorequick.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgfarrowsep=\dimen182
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@max=\dimen183
+\pgf@sys@shading@range@num=\count199
+\pgf@shadingcount=\count266
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgfexternal@startupbox=\box53
+))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/p
+gfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfm
+oduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgfnodeparttextbox=\box54
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfm
+oduleplot.code.tex
+File: pgfmoduleplot.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/
+pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@nodesepstart=\dimen184
+\pgf@nodesepend=\dimen185
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/
+pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2020/01/08 v3.1.5b (3.1.5b)
+))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgff
+or.sty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfk
+eys.sty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+fkeys.code.tex))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/math/pgfmath.s
+ty
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+.code.tex))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pg
+ffor.code.tex
+Package: pgffor 2020/01/08 v3.1.5b (3.1.5b)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath
+.code.tex)
+\pgffor@iter=\dimen186
+\pgffor@skip=\dimen187
+\pgffor@stack=\toks32
+\pgffor@toks=\toks33
+))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlaye
+r/tikz/tikz.code.tex
+Package: tikz 2020/01/08 v3.1.5b (3.1.5b)
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pg
+flibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgf@plot@mark@count=\count267
+\pgfplotmarksize=\dimen188
+)
+\tikz@lastx=\dimen189
+\tikz@lasty=\dimen190
+\tikz@lastxsaved=\dimen191
+\tikz@lastysaved=\dimen192
+\tikz@lastmovetox=\dimen193
+\tikz@lastmovetoy=\dimen194
+\tikzleveldistance=\dimen195
+\tikzsiblingdistance=\dimen196
+\tikz@figbox=\box55
+\tikz@figbox@bg=\box56
+\tikz@tempbox=\box57
+\tikz@tempbox@bg=\box58
+\tikztreelevel=\count268
+\tikznumberofchildren=\count269
+\tikznumberofcurrentchild=\count270
+\tikz@fig@count=\count271
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfm
+odulematrix.code.tex
+File: pgfmodulematrix.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+\pgfmatrixcurrentrow=\count272
+\pgfmatrixcurrentcolumn=\count273
+\pgf@matrix@numberofcolumns=\count274
+)
+\tikz@expandcount=\count275
+
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlaye
+r/tikz/libraries/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)))
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlaye
+r/tikz/libraries/tikzlibrarymatrix.code.tex
+File: tikzlibrarymatrix.code.tex 2020/01/08 v3.1.5b (3.1.5b)
+)
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backen
+d-dvips.def
+File: l3backend-dvips.def 2020-03-12 L3 backend support: dvips
+\l__pdf_internal_box=\box59
+\g__pdf_backend_object_int=\count276
+\l__pdf_backend_content_box=\box60
+\l__pdf_backend_model_box=\box61
+\g__pdf_backend_annotation_int=\count277
+\g__pdf_backend_link_int=\count278
+\g__pdf_backend_link_sf_int=\count279
+)
+No file tikz26f427ce4942.aux.
+\openout1 = `tikz26f427ce4942.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+Preview: Fontsize 10pt
+ABD: EveryShipout initializing macros
+
+! Package pgfkeys Error: I do not know the key '/tikz/redUnipd' and I am going 
+to ignore it. Perhaps you misspelled it.
+
+See the pgfkeys package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.14 \path[redUnipd] (
+                      .1,.5) node {Rejections}; 
+Here is how much of TeX's memory you used:
+ 11784 strings out of 482531
+ 243864 string characters out of 5949356
+ 469882 words of memory out of 5000000
+ 27259 multiletter control sequences out of 15000+600000
+ 532338 words of font info for 24 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 60i,5n,60p,420b,569s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+No pages of output.

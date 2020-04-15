@@ -1,0 +1,34 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Biblio}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Thresholding}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Motivation}{3}{subsection.1.3}%
+\contentsline {section}{\numberline {2}FamilyWise Error Rate}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}FamilyWise Error Rate (FWER)}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Sidak Correction}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Sidak Correction}{5}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Bonferroni}{5}{subsection.2.4}%
+\contentsline {section}{\numberline {3}False Discovery Rate}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}False Discovery Rate (FDR)}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}BH procedure}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}A toy example}{7}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}FDR with Dependent tests}{8}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}FWER or FDR?}{8}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Subsets of Rejections}{10}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Three levels of inference in neuroscience}{10}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Levels of inference}{10}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Voxel-level Inference}{11}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Cluster-level Inference}{11}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Set-level Inference}{11}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Voxel-level Inference}{12}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Do you Bonferroni\ldots {} or not?}{12}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Smoothed Images - Autocorrelation}{12}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}RESEL}{12}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Max-T distribution}{13}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Random Field Theory}{13}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}How it works}{14}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Cluster-level inference}{14}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Spatial extent - motivation}{14}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Cluster-level Inference}{14}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Voxel/Cluster-level in a glance}{16}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Remarks}{16}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Limitations}{17}{subsection.6.5}%

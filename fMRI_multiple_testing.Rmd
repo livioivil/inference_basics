@@ -1,18 +1,18 @@
 ---
 title: "Multiple Testing in Neuroscience"
 author: "Livio Finos"
-date: "15 Novembre 2018"
+date: "University of Padova"
 output:
-  html_document:
-    toc: yes
-    toc_float: yes
   pdf_document:
     number_sections: yes
     toc: yes
+  html_document:
+    toc: yes
+    toc_float: yes
   ioslides_presentation:
     logo: figs/logoUnipd.jpg
   beamer_presentation: default
-subtitle: Bonferroni and Random Field Theory
+subtitle: from Bonferroni to Random Field Theory
 ---
 
 # Introduction
@@ -20,6 +20,8 @@ subtitle: Bonferroni and Random Field Theory
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = FALSE,fig.align='center',out.width = "700px")
+
+options(tinytex.verbose = TRUE)
 ```
 
 ## Biblio
@@ -35,7 +37,7 @@ Brett M., Penny W. and Keibel S.
 - Friston, Holmes, Polin, Price and Frith (1996).
 Detecting Activations in PET and fMRI: Levels of Inference and Power. Neuorimage
 
-----
+<!-- ---- -->
 
 - Goeman \& Solari (2014) Tutorial in biostatistics: multiple hypothesis testing in genomics. Statistics in medicine
 
@@ -151,7 +153,7 @@ FWER under control:
 \end{aligned}
 \]
 
-----
+<!-- ---- -->
 
 **Pros**  
 
@@ -224,9 +226,9 @@ geom_point(aes(x=atild.rank, y=atild), colour="red",size=4)
 include_graphics("./figs/sim_es.png")
 ```
 
-----
+<!-- ---- -->
 
-```{r}
+```{r sim_es2}
 include_graphics("./figs/sim_es2.png")
 ```
 
@@ -258,7 +260,7 @@ I don't think that the FDR is adequate in fMRI data.
 - Cheating
 - Subsets
 
-----
+<!-- ---- -->
 
 **Cheating**
 I can add not interesting hypotheses with significant with p-values
@@ -276,22 +278,24 @@ eg: I correct all the tests, while discussing only those that I know how to bett
 
 ## Subsets of Rejections
 
-```{r,engine='tikz',fig.ext='svg',fig.width=3}
-\begin{tikzpicture}[scale=2.5]
-\draw[rotate=60,thick] (0,0) ellipse (1cm and 2cm);
-\path (-1,1) node {All hypos};
-\draw[rotate=30,thick, black!50!red] (.5cm,0) ellipse (.3cm and .5cm);
-\path[redUnipd] (.1,.5) node {Rejections};
-\pause
-\draw[rotate=00,thick, black] (.5cm,.1) ellipse (.2cm and .2cm);
-\path[black] (.7,.2) node {False Rejections};
-\path[black] (1.2,1.2) node {Overall $\frac{\#\ False\ Rejections}{\#\ Rejections}= 0.10$};
-\pause
-\path[black] (1.2,1) node {but in the subset??};
-\draw [rotate=40,green,thick] (-1.3, -.6) rectangle (1.3,0);
-\path [green] (1.5,.5) node {Subset};
-\end{tikzpicture}
+```{r fdr_cheating}
+include_graphics("./figs/fdr_cheating.png")
 ```
+
+<!-- ```{r tik,engine='tikz',fig.ext='svg',fig.width=3} -->
+<!-- \begin{tikzpicture}[scale=2.5] -->
+<!-- \draw[rotate=60,thick] (0,0) ellipse (1cm and 2cm); -->
+<!-- \path (-1,1) node {All hypos}; -->
+<!-- \draw[rotate=30,thick, black!50!red] (.5cm,0) ellipse (.3cm and .5cm); -->
+<!-- \path[black] (.1,.5) node {Rejections}; -->
+<!-- \draw[rotate=00,thick, black] (.5cm,.1) ellipse (.2cm and .2cm); -->
+<!-- \path[black] (.7,.2) node {False Rejections}; -->
+<!-- \path[black] (1.2,1.2) node {Overall $\frac{\#\ False\ Rejections}{\#\ Rejections}= 0.10$}; -->
+<!-- \path[black] (1.2,1) node {but in the subset??}; -->
+<!-- \draw [rotate=40,green,thick] (-1.3, -.6) rectangle (1.3,0); -->
+<!-- \path [green] (1.5,.5) node {Subset}; -->
+<!-- \end{tikzpicture} -->
+<!-- ``` -->
 
 
 # Three levels of inference in neuroscience
@@ -355,7 +359,7 @@ We look for the distribution of $Max-T$ (maximum t-statistic for $m$ test under 
 include_graphics("./figs/indep_vs_smoothed.png")
 ```
 
-----
+<!-- ---- -->
 
 **Intrinsic smoothness**  
     – MRI signals are aquired in k-space (Fourier space); after projection on anatomical space, signals have continuous support  
@@ -411,7 +415,7 @@ Theory
 include_graphics("./figs/RFT_supraThreshold.png")
 ```
 
-----
+<!-- ---- -->
 
 **Euler Characteristic $\chi_u$ **
 can be thought of as the number of blobs
@@ -429,7 +433,7 @@ in an image after thresholding.
 \]
 
 e.g. for Gaussian test statistic (i.e. $z$, not $t$):
-$$E(\chi_u|H_0)\approx R 2\pi^{-2}FWHM (4 log_e 2)^{-1/2}^{-3} u^{2} exp(-u^2/2)$$
+$$E(\chi_u|H_0)\approx R 2\pi^{-2}W^{-3} u^{2} exp(-u^2/2)$$
 
 $R$ is the number of resels, $u$ is the z-score threshold
 
@@ -475,7 +479,7 @@ Two step-process:
 include_graphics("./figs/clust_cookbook.png")
 ```
 
-----
+<!-- ---- -->
 
 If we reject any cluster we will
 reject the largest. 
@@ -504,7 +508,7 @@ $$ P(\chi_u = c) \approx \lambda(c, E(\chi_u))$$
 - the expected number of maxima $E(\chi_u)$ (i.e., clusters) is:
 $$E(\chi_u)\approx R 2\pi^{-(D+1)/2}W^{-D} u_{clust}^{D-1} exp(-u_{clust}^2/2)$$
 
-----
+<!-- ---- -->
 
 
 - Distribution of the number of voxels $n$ in a cluster:  
@@ -519,7 +523,7 @@ $$P(u_{clust}, k) \approx 1 - exp (-E(\chi)P(n \geq k))$$
 $k_\alpha$ is the $k$ such that $P(u_{clust}, k)=\alpha$. 
 
 
-----
+<!-- ---- -->
 
 $k_\alpha$ depends on the initial *cluster-forming* threshold $u_{clust}$.
 

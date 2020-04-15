@@ -1,0 +1,50 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=latex 2019.12.4)  15 APR 2020 23:46
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**tikz357c10814deb.tex
+(./tikz357c10814deb.tex
+LaTeX2e <2019-10-01> patch level 3
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/10/25 v1.4k Standard LaTeX document class
+(c:/Users/livio/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2019/10/25 v1.4k Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+\@input{preview.aux}
+\openout2 = `preview.aux'.
+
+No file preview.tex.
+
+! LaTeX Error: File `preview.sty' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
+
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.4 \usepackage
+               {amsmath}^^M 
+Here is how much of TeX's memory you used:
+ 215 strings out of 494109
+ 2384 string characters out of 6172267
+ 57128 words of memory out of 5000000
+ 4420 multiletter control sequences out of 15000+600000
+ 3640 words of font info for 14 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 25i,0n,19p,152b,36s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+No pages of output.

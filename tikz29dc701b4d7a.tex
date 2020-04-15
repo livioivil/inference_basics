@@ -1,0 +1,25 @@
+\documentclass{article}
+\include{preview}
+\usepackage[pdftex,active,tightpage]{preview}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\begin{document}
+\begin{preview}
+%% TIKZ_CODE %%
+\begin{tikzpicture}[scale=2.5]
+\draw[rotate=60,thick] (0,0) ellipse (1cm and 2cm);
+\path (-1,1) node {All hypos};
+\draw[rotate=30,thick, black!50!red] (.5cm,0) ellipse (.3cm and .5cm);
+\path[redUnipd] (.1,.5) node {Rejections};
+\pause
+\draw[rotate=00,thick, black] (.5cm,.1) ellipse (.2cm and .2cm);
+\path[black] (.7,.2) node {False Rejections};
+\path[black] (1.2,1.2) node {Overall $\frac{\#\ False\ Rejections}{\#\ Rejections}= 0.10$};
+\pause
+\path[black] (1.2,1) node {but in the subset??};
+\draw [rotate=40,green,thick] (-1.3, -.6) rectangle (1.3,0);
+\path [green] (1.5,.5) node {Subset};
+\end{tikzpicture}
+\end{preview}
+\end{document}
