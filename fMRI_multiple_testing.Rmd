@@ -3,12 +3,12 @@ title: "Multiple Testing in Neuroscience"
 author: "Livio Finos"
 date: "University of Padova"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
   html_document:
     toc: yes
     toc_float: yes
+  pdf_document:
+    number_sections: yes
+    toc: yes
   ioslides_presentation:
     logo: figs/logoUnipd.jpg
   beamer_presentation: default
@@ -585,7 +585,9 @@ This can be solved via permutation-approach
     * This can be solved via All-Resolution Inference approach
 
 
+(All-Resolution Inference, Rosenblatt et al. <https://www.ncbi.nlm.nih.gov/pubmed/30056198>)
+
+
 ... **A serious problem**, no jockes:  
 Eklund, Nicholsd and Knutsson (2016) Cluster failure: Why fMRI inferences for spatial extent have inflated false-positive rates. PNAS
 
-(permutation and All-Resolution Inference are the subject of the next classes)
