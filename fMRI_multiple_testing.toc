@@ -13,22 +13,22 @@
 \contentsline {subsection}{\numberline {3.3}A toy example}{7}{subsection.3.3}%
 \contentsline {subsection}{\numberline {3.4}FDR with Dependent tests}{8}{subsection.3.4}%
 \contentsline {subsection}{\numberline {3.5}FWER or FDR?}{8}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Subsets of Rejections}{10}{subsection.3.6}%
-\contentsline {section}{\numberline {4}Three levels of inference in neuroscience}{10}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Levels of inference}{10}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Voxel-level Inference}{11}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Cluster-level Inference}{11}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Set-level Inference}{11}{subsection.4.4}%
-\contentsline {section}{\numberline {5}Voxel-level Inference}{12}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Do you Bonferroni\ldots {} or not?}{12}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Smoothed Images - Autocorrelation}{12}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}RESEL}{12}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Max-T distribution}{13}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}Random Field Theory}{13}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}How it works}{14}{subsection.5.6}%
-\contentsline {section}{\numberline {6}Cluster-level inference}{14}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Spatial extent - motivation}{14}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Cluster-level Inference}{14}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Voxel/Cluster-level in a glance}{16}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Remarks}{16}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}Limitations}{17}{subsection.6.5}%
+\contentsline {subsection}{\numberline {3.6}Subsets of Rejections}{9}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Three levels of inference in neuroscience}{9}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Levels of inference}{9}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Voxel-level Inference}{10}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Cluster-level Inference}{10}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Set-level Inference}{10}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Voxel-level Inference}{11}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Do you Bonferroni\ldots {} or not?}{11}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Smoothed Images - Autocorrelation}{11}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}RESEL}{11}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Max-T distribution}{12}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Random Field Theory}{12}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}How it works}{13}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Cluster-level inference}{13}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Spatial extent - motivation}{13}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Cluster-level Inference}{13}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Voxel/Cluster-level in a glance}{15}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Remarks}{15}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Limitations}{16}{subsection.6.5}%

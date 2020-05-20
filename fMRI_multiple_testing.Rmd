@@ -17,6 +17,9 @@ subtitle: from Bonferroni to Random Field Theory
 
 # Introduction
 
+You find Rmd file and all materials at <http://livioivil.github.io/students/Teaching_material.html>
+
+
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = FALSE,fig.align='center',out.width = "700px")
@@ -68,7 +71,7 @@ include_graphics("./figs/thresolding.png")
 include_graphics("./figs/salmon.png")
 ```
 
-We need a method that ensure a given (good) Specificity and as much Power it can.
+We need a method that ensures a fixed, high Specificity (i.e. low type I error) and as much Power it can.
 
 
 # FamilyWise Error Rate
@@ -105,7 +108,7 @@ When the $m$ tests are **independent** (or with some form positive dependence):
     & (de Morgan)\\
     &= 1 - (1- \widetilde{\alpha})^{m_0}\ \ (m_0= \textrm{numb of true null hypos}) \\
     & (\textrm{we don't know $m_0$, but we know that $m_0\leq m$})\\
-    &\leq 1 - (1- \widetilde{\alpha})^{m} 
+    &\geq 1 - (1- \widetilde{\alpha})^{m} 
 \end{aligned}
 \]
 
@@ -149,7 +152,8 @@ FWER under control:
 \mathrm{FWER} & =  P \big (p_i \leq \alpha / m \textrm{ for at least one True null hypo} \big) \\
 & =  P \Big (\bigcup_{i \in \{\textrm{true null hypotheses}\}} \{p_i \leq \alpha / m \} \Big) \\
 & \leq  \sum_{i \in \{\textrm{true null hypotheses}\}} \mathrm{P} (p_i \leq \alpha / m) \\
-& \leq \#\{\textrm{true null hypotheses} \} \frac{\alpha}{m} \leq \alpha
+&(m_0=\#\{\textrm{true null hypotheses} \})\\
+& \leq m_0 \frac{\alpha}{m} \leq \alpha
 \end{aligned}
 \]
 
@@ -244,7 +248,7 @@ For ANY dependence: **BY**
 
 *Benjamini Y, Yekutieli D. (2001) The control of the false discovery rate in multiple testing under dependency. Annals of statistics 29 (4): 1165-1188*
 
-But usually very conservative (sometime more than Bonferroni)
+But usually very conservative (sometimes more than Bonferroni)
 
 ## FWER or FDR?
 
@@ -279,7 +283,7 @@ eg: I correct all the tests, while discussing only those that I know how to bett
 ## Subsets of Rejections
 
 ```{r fdr_cheating}
-include_graphics("./figs/fdr_cheating.png")
+include_graphics("./figs/fdr_cheating_red.png")
 ```
 
 <!-- ```{r tik,engine='tikz',fig.ext='svg',fig.width=3} -->
@@ -496,7 +500,7 @@ $f(R,u_{clust})$ that allows us to calculate a
 Family Wise threshold $k_\alpha$
 pertaining to cluster size.
 
----
+<!-- --- -->
 
 $W=|\Lambda|^{-1/(2D)}=FWHM (4 log_e 2)^{-1/2}$, 
 where $FWHM=FWHM_xFWHM_yFWHM_z$, $\Lambda$ is the covariance matrix of the field’s first partial derivatives and $D$ is the number of dimensions (i.e. $D=3$)
@@ -563,7 +567,6 @@ include_graphics("./figs/spm_results_fwer01.pdf")
 - Calculates that threshold very fast.
 
 ## Limitations
-**Limitations (1/2)**
 
 - *Sufficient smoothness*  
     * FWHM smoothness $3-4\times$ voxel size (Z)  
@@ -575,9 +578,6 @@ include_graphics("./figs/spm_results_fwer01.pdf")
 
 This can be solved via permutation-approach
 
----
-
-**Limitations (2/2)**
 
 - Inference pertains to entire cluster (i.e. there is at least one voxel)
     * This can be solved via All-Resolution Inference approach
