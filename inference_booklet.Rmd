@@ -482,8 +482,7 @@ $Y=\beta_0 + \beta_1 X + \varepsilon$
 
 - the $\boldsymbol{y_i=\beta_0 + \beta_1 x_i + \varepsilon_i}$
 the relationship between $X$ and the true (mean) $Y$ is linear.
--  the **observations ** are **independent** each others (
-knowing the value of the $y_i$observation does not help me to predict the value of $y_{i + 1}$). The random part is $\varepsilon_i$, these are the independent terms.
+-  the **observations** are **independent** each others (knowing the value of the $y_i$ observation does not help me to predict the value of $y_{i + 1}$). The random part is $\varepsilon_i$, these are the independent terms.
 - $\boldsymbol{\varepsilon_i \sim N (0, \sigma ^ 2), \ \forall i=1, \ldots, n}$ errors have normal distribution with zero mean and common variance (homoschedasticity: same variance).
 
 
@@ -513,7 +512,7 @@ Similar result, but much more assumptions!
 
 
 ## Power is nothing without control
-We don't know if the data are genareted  under $H_0$ or under $H_1$. 
+We don't know if the data are generated  under $H_0$ or under $H_1$. 
 
 But we have a tool (the test) that  
 
@@ -529,7 +528,7 @@ The Power is unknown, but we hope it is as high as possible.
 
 
 - **Specificity**: the probability NOT to find a relationship when it does NOT exist (true $H_0$, the test judges $H_0$). it is equal to 1 - Type I error.
-- **Power** (**Sensitivity**): the probability to NOT find a relationship when it does exist (true $H_1$, the test judges $H_1$). it is equal to 1 - Type II error.
+- **Power** (**Sensitivity**): the probability to find a relationship when it does exist (true $H_1$, the test judges $H_1$). it is equal to 1 - Type II error.
 
 ## Properties
 
@@ -805,7 +804,7 @@ plot(ns,power,type="l",main="Power",xlab="sample size")
 Make similar evaluations of Homework 1 and 2 for confidence intervals:   
 
 - set $\alpha=.05$, 
-- genate datasets, fit the models, 
+- generate datasets, fit the models, 
 - Two quantities are of interest here:
     + counts of times the confidence interval contains the TRUE value $\beta_1$
     + length of the confidence interval
