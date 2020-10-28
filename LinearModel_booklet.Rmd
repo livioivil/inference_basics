@@ -2,12 +2,12 @@
 title: "The Linear Model"
 author: "Livio Finos"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
   html_document:
     number_sections: yes
     toc_float: yes
+    toc: yes
+  pdf_document:
+    number_sections: yes
     toc: yes
 ---
 
@@ -22,10 +22,9 @@ output:
 - Covariance and Correlation
 - Simple Linear Model
 - Analysis of the residuals
-- 2 sample
 - Multiple Linear Model
-- Anova
-- Interaction terms
+- 2 sample t-test, Anova
+- Interaction terms, Ancova
 
 
  <!-- Before we start -->
@@ -58,10 +57,11 @@ To read the data
 ```{r}
 data(reaction,package = "flip")
 # or download it from: https://github.com/livioivil/flip/tree/master/data
+# or from this folder:
+# load("./dataset/reaction.rda")
 # str (reaction)
 ```
 
----
 
 We plot the data
 
@@ -89,7 +89,6 @@ $\sigma_{xy}=\frac{\sum_{i=1} ^ n (x_i- \bar{x}) (y_i- \bar{y} )}{n}$
 - $\sigma_{xy} \approx 0$: there is no dependency between $X$ and $Y$  
 - $\sigma_{xy} >> (<<) 0$: there is a strong positive (negative) dependency between $X$ and $Y$  
 
----
 
 **Variance** of $X$ (= covariance between $X$ and $X$):
 
@@ -125,7 +124,7 @@ $\rho_{xy}=\frac{\sigma{xy}}{\sigma_{x} \sigma_{y}} =
 - $\rho_{xy} \approx 0$: there is no dependency between $X$ and $Y$
 - $\rho_{xy} \approx 1 (-1)$: there is a strong positive (negative) dependency between $X$ and $Y$
 
-# The (simple) linear model
+# The linear model
 ## Linear Trend, the least squares method
 We describe the relationship between   
 `Reaction.Time` and
@@ -136,7 +135,6 @@ $Y=\beta_0 + \beta_1X$
 
 Let's draw a line 'in the middle' of the data.
 
---- 
 
 The **least-squares estimator**
 
@@ -146,7 +144,6 @@ $\hat{\beta}_0$ and $\hat{\beta}_1$ such that
 $\sum_{i=1} ^ n (y_i - (\hat{\beta}_0 + \hat{\beta}_1x_i )) ^ 2$
 is minimum.
 
----
 
 ```{r,echo=FALSE}
 model=lm(Reaction.Time~Age,data=reaction)
@@ -164,7 +161,6 @@ $y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i)=y_i- \hat{y}_i$
 and therefore the least squares are the sum of the squared residuals:
 $\sum_{i=1} ^ n (y_i- \hat{\beta}_0 + \hat{\beta}_1x_i) ^ 2=\sum_{i=1} ^ n (y_i- \hat{y}_i ) ^ 2$
 
----
 
 A graphical representation:
 
@@ -173,7 +169,6 @@ model=lm(Reaction.Time~Age,data=reaction)
 coefficients(model)
 ```
 
----
 
 ```{r}
 plot(reaction$Age,reaction$Reaction.Time,pch=20,col=2,cex=1)
@@ -182,7 +177,7 @@ title(paste("Y=",coeff[1],"+",coeff[2],"*X"))
 abline(model,col=1)
 ``` 
 
-## Interpretation of the coefficients
+### Interpretation of the coefficients
 
 - $\beta_0$ indicates the value of $y$ when $x=0$ (where the line intersects the ordinate axis).
 - $\beta_1$ indicates how much $y$ grows as a unit of $x$ grows
@@ -207,7 +202,33 @@ knowing the value of the $y_i$observation does not help me to predict the value 
 - $\boldsymbol{\varepsilon_i \sim N (0, \sigma ^ 2), \ \forall i=1, \ldots, n}$ errors have normal distribution with zero mean and common variance (homoschedasticity: same variance).
 
 
-## Hypothesis testing
+  
+Let's go back to our data (and model):
+
+```{r}
+plot (reaction$Age, reaction$Reaction.Time, pch = 20, col = 1, cex = 2)
+# to identify observations on the graph with the mouse
+# identify (reaction$Age, reaction$Reaction.Time)
+```
+
+### Fit the model (i.e. Estimate the parameters)
+
+```{r}
+model = lm (Reaction.Time ~ Age, data = reaction)
+summary (model)
+```
+
+(for now) Note that the test$F$has the same significance as the t test.
+
+
+### Graphical representation of the effect of the Age
+```{r}
+library (effects) # see:? effect
+eff <- allEffects (model)
+plot (eff, 'Age', ask = F, main = '')
+```
+
+### Hypothesis testing
 If these assumptions are true,
 
 $\hat{\beta_1} \sim N (\beta_1, \sigma ^ 2 / \sum (x_i- \bar{x}) ^ 2)$
@@ -221,14 +242,10 @@ If $H_0: \beta_1=0$, $t \sim t (n-2)$ is true
 On `reaction` data and $H_1: \beta_1 \neq 0$ (bilateral alternative)
 
 
-----
 
 ```{r}
-model=lm (Reaction.Time ~ Age, data=reaction)
 summary (model)
 ```
-
-Similar result, but much more assumptions!
 
 
 ## The Multiple Linear model
@@ -258,7 +275,7 @@ where:
   `formula` specifies the link between the employee and the independent (or predictors)
 
 
-## Examples of regression model specification
+### Examples of regression model specification
 Let $y$ be the dependent variable and $x$ and $z$ two predictors
 
 **Regression** | **Regression in R**
@@ -273,7 +290,7 @@ For other options on specifying an R model, see:
 `>? formula`
 
 
-## Basic steps of a regression model
+### Basic steps of a regression model
 
 **Step** | **Code R** |  **Libraries**
 ----------- | ---------------- | -----------
@@ -287,36 +304,12 @@ Comparison with other models \* |$anova (model, model2)$| stats
 Comparison with other models \* \* |$AIC (model)$;$AIC (model2)$| stats
 
 
-\* comparison between *nested* models based on the$F$test
+\* comparison between *nested* models based on the$F$test  
 \* \* model comparison based on the Akaike Information Criterion (AIC) or on the Bayesian Information Criterion (BIC): see also **? AIC **
   
-  
-## Let's go back to our example (simple linear model)
-  
-```{r}
-plot (reaction$Age, reaction$Reaction.Time, pch = 20, col = 1, cex = 2)
-# to identify observations on the graph with the mouse
-# identify (reaction$Age, reaction$Reaction.Time)
-```
-
-## Estimate of the model and evaluation of the parameters
-
-```{r}
-model = lm (Reaction.Time ~ Age, data = reaction)
-summary (model)
-```
-
-(for now) Note that the test$F$has the same significance as the t test.
 
 
-## Graphical representation of the effect of the Age
-```{r}
-library (effects) # see:? effect
-eff <- allEffects (model)
-plot (eff, 'Age', ask = F, main = '')
-```
-
-## Evaluation of the assumptions on the residuals of the model
+## Evaluating the validity of the assumptions: the residuals of the fitted model
 
 
 ```{r}
@@ -332,7 +325,7 @@ plot (model) # see also:? plot.lm for bibliographical references
   
 Please, no test of normality, homoschedasticity etc. (check the error of the first type on the contrary to what you would like).
 
-## Supplement: Looking for influential cases
+### Supplement: Looking for influential cases
 
 - In a statistical model an *influential case* is a statistical unit whose observations are strong
 impact on model parameter estimates
@@ -346,13 +339,14 @@ regression model
 
 
 
-## Identification of influential cases
+Identification of influential cases:
 
 - In the graph just seen R signals the statistical units with Cook distance values close to 0.5 and to 1, values to be considered as attention thresholds.
 - Fox, 2010, proposes a cut-off for Cook's distance that takes into account the number of observations ($n$) and the number of parameters ($k$) of the model:
  $\dfrac{4}{(n-k-1)}$
   
-## In our case...
+In our case:
+
 ```{r}
 # calculation and representation of Cook's distance
 distances.cook = cooks.distance (model)
@@ -365,17 +359,17 @@ text (3, cutoff * .9, "cutoff", cex = 1.4)
 ```
   
   
-## Remark
+**Remarks**
 
 - Cook's distance is not the only useful indicator for evaluating influential cases. For an overview see R:? Influence.measures
 - The identification, evaluation and interpretation of influential cases are fundamental phases of statistical modeling.
 - However these aspects are often underestimated in concrete case applications :-(
 
 
-### **Exercise 1.**
-Build a regression model by eliminating observation 10. What changes?
+**Exercise 1.**
+Build a regression model by eliminating observation 10. How does the model change?
 
-# The Two-independent-samples problem
+# Some special cases (t-test and ANOVA etc)
 
 ## The Two-independent-samples problem
 
@@ -397,6 +391,12 @@ plot (modelGender)
 . What kind of model are we estimating?
 . What are the differences with my old friend t-test for two independent samples ??
 
+have a look here:
+
+```{r}
+model.matrix(Reaction.Time ~ Gender, data = reaction)
+```
+
 
 ```{r}
 by (reaction$Reaction.Time, reaction$Gender, mean)
@@ -404,22 +404,56 @@ by (reaction$Reaction.Time, reaction$Gender, mean)
 t.test (Reaction.Time ~ Gender, data = reaction, var.equal = TRUE)
 ```
 
+REMARK: The t-test is very often ran allowing for the variance of the two groups to be different (i.e. Welch correction -- var.equal = TRUE in `R`, the default). In this case regression model (which assumes homoscedasticity, i.e. equal variance for all observations) is not exactly equivalent to the t-test -- despite the two are usually very close each other.
+
+## ANalysis Of VAriance (ANOVA)
+
+```{r}
+reaction$Age_categ=cut(reaction$Age,c(0,30,60,Inf))
+table(reaction$Age_categ)
+
+plot (Reaction.Time ~ Age_categ, data = reaction, col = 2:4)
+
+```
 
 
-# The Multiple linear model
+Can we use a multiple linear model to fit a categorical variable (with more than 2 levels)?
 
-## The Multiple linear model
+Have a look:
+```{r}
+model.matrix(Reaction.Time ~ Age_categ, data = reaction)
+```
+
+
+
+```{r}
+mod=lm(Reaction.Time ~ Age_categ, data = reaction)
+summary(mod)
+```
+
+See the correspondence between overall significance in multiple linear model (above) and ANOVA (here below):
+
+```{r}
+car::Anova(mod)
+# same result: anova(mod)
+```
+
+
+
+# Interaction model (ANCOVA), model selection etc
+
+## The Multiple linear model with interaction
 
 
 $$
 Y = {\beta} _{0} + {\beta} _{1} X {1} + \beta_{2} X_{2} + \beta_{3} X_{1} X_{2} + \epsilon
 $$
 
-where is it:
+where:  
 
--$Y$=$Reaction.Time$, height
--$X_{1}$=$Age$, shoe size
--$X_{2}$=$Gender$
+- $Y$=$Reaction.Time$    
+- $X_{1}$=$Age$    
+- $X_{2}$=$Gender$
 
 
 ### Plot the relationship between $Reaction.Time$ and $Age$ also considering the $Gender$.
@@ -433,12 +467,20 @@ We know how to estimate a linear model that includes $Reaction.Time$ through the
 **EXERCISE:** do it.
 
 
-## Multiple linear model
+
 How to estimate a model with $Age$, $Gender$ and their interaction?
 
 ```{r}
 modelFull = lm (Reaction.Time ~ Age + Gender + Age: Gender, data = reaction)
 ```
+
+What predictors (i.e. independent variables) does R use internally?  
+Have a look:
+
+```{r}
+model.matrix(Reaction.Time ~ Age + Gender + Age: Gender, data = reaction)
+```
+
 
 **How do we interpret the model?**
 
@@ -473,7 +515,7 @@ cor (reaction$Age, reaction$Gender == "M")
 ```
 it is very high, this will bring instability (greater variance) in the estimates that will be less precise (and therefore higher p-values, wider confidence intervals).
 
-This is the main reason why it is useful to have experiments with orthogonal factorial plans (not discussed today)
+This is the main reason why it is useful to have experiments with orthogonal factorial designs (not discussed today)
 
 ### Residual Analysis
 
@@ -487,7 +529,7 @@ plot (modelFull) # see also:? plot.lm for bibliographical references
 ## Analysis of variance
 
 The Deviance Explained and (and$R ^ 2$) increases - does not decrease - with each addition of variables
-(+ varibili = + flexibility = better fit).
+(+ variables = + flexibility = better fit). (warning: better fit doesn't correspond to a better generalization to new data)
 
 REMARK: this mean that we are considering **nested models**
 
