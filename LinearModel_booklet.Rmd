@@ -2,12 +2,12 @@
 title: "The Linear Model"
 author: "Livio Finos"
 output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
   html_document:
     number_sections: yes
     toc_float: yes
-    toc: yes
-  pdf_document:
-    number_sections: yes
     toc: yes
 ---
 
@@ -159,7 +159,7 @@ $y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i)=y_i- \hat{y}_i$
 
 
 and therefore the least squares are the sum of the squared residuals:
-$\sum_{i=1} ^ n (y_i- \hat{\beta}_0 + \hat{\beta}_1x_i) ^ 2=\sum_{i=1} ^ n (y_i- \hat{y}_i ) ^ 2$
+$\sum_{i=1} ^ n (y_i- \hat{\beta}_0 - \hat{\beta}_1x_i) ^ 2=\sum_{i=1} ^ n (y_i- \hat{y}_i ) ^ 2$
 
 
 A graphical representation:
@@ -253,7 +253,7 @@ The simple linear model is 'easily' extensible to the Multiple Linear Model. For
 
 $Y = \textrm {linear part} + \textrm {normal error}$
   
-$Y = \beta_0 + \beta_1 X_1 + \ldots + \beta_p x_p + \varepsilon$
+$Y = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p + \varepsilon$
     
 Thus we describe a (hyper) plan of size $p$.
   
