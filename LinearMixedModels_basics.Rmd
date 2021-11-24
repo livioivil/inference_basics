@@ -2,16 +2,17 @@
 title: "Statistical Analysis of Designs with Repeated Measures by Linear Mixed Models"
 author: "Livio Finos"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
   html_document:
     number_sections: yes
     toc_float: yes
     toc: yes
+  pdf_document:
+    number_sections: yes
+    toc: yes
 ---
 
 # Motivation
+
 ```{r setup, message=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
