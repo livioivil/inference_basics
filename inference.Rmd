@@ -188,8 +188,8 @@ coefficients(model)
 
 ---
 
-```{r}
-plot(reaction$Age,reaction$Reaction.Time,pch=20,col=2,cex=1)
+```{r,fig.height=4,fig.width=4}
+plot(x=reaction$Age,y=reaction$Reaction.Time,pch=20,col=2,cex=2,xlab="Age",ylab="Reaction.Time")
 coeff=round(coefficients(model),1)
 title(paste("Y=",coeff[1],"+",coeff[2],"*X"))
 abline(model,col=1)

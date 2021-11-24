@@ -1,7 +1,6 @@
 ---
-title: "Statistical Analysis of Designs with Repeated Measures through Mixed Models"
+title: "Statistical Analysis of Designs with Repeated Measures by Mixed Models"
 author: "Livio Finos"
-date: "20 Novembre 2019"
 output:
   html_document:
     number_sections: yes
@@ -21,56 +20,53 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Import
 
 ```{r}
-# import dati:
-library(readxl)
-dati <- read_excel("DATA_AC.xlsx")
-# View(dati)
-dati=as.data.frame(dati)
-dim(dati)
-str(dati)
-dati$ID=factor(dati$ID)
-dati$STIM=factor(dati$STIM)
-dati$COND=factor(dati$COND)
+
+load("./dataset/datiEEG_LMM_2x2.Rdata")
+summary(dati)
 ```
 
 
 - 10 Subjects,
-- 2-levels factor `STIM`
-- 2-levels factor `COND`
+- 2-levels factor `Chan`
+- 2-levels factor `Condition`
 
 
 ## EDA
 
-For  `Y7`:
+For  `Y`: P300 Average Amplitude
 
 ```{r}
 library(ggplot2)
-p <- ggplot(dati,aes(x=COND,y=Y7,fill=STIM))
+p <- ggplot(dati,aes(x=Chan,y=Y,fill=Condition))
 p=p+geom_dotplot(binaxis = "y",position=position_dodge(0.8),stackdir = "center") +geom_boxplot(alpha=.1)
 p
 ```
 
-Is there a specificity of the subject?
+Is there a specificity of the Subject?
 
 ```{r}
-dati$COND_STIM=paste(sep = "_",dati$COND,dati$STIM)
+dati$Chan_Condition=paste(sep = "_",dati$Chan,dati$Condition)
 
-p <- ggplot(dati,aes(x=COND_STIM,y=Y7))
-p+geom_point(aes(group = ID, colour = ID))+
-  geom_line(aes(group = ID, colour = ID))+
+p <- ggplot(dati,aes(x=Chan_Condition,y=Y))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
    geom_boxplot(alpha=.1)
 ```
 
-We subtract the subject-specific effect (i.e. subject's mean) to each observation.
+We subtract the Subject-specific effect (i.e. Subject's mean) to each observation.
 
 ```{r}
-Y=scale(matrix(dati$Y7,4,10),scale=FALSE)
-dati$Y7=as.vector(Y)
+mod=lm(Y~Subj,data=dati)
+# summary(mod)
+Y=residuals(mod)
+dati$Yc=as.vector(Y)
+
+
 
 library(ggplot2)
-p <- ggplot(dati,aes(COND_STIM,Y7))
-p+geom_point(aes(group = ID, colour = ID))+
-  geom_line(aes(group = ID, colour = ID))+
+p <- ggplot(dati,aes(Chan_Condition,Yc))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
    geom_boxplot(alpha=.1)
 ```
 
@@ -83,8 +79,8 @@ This effect is the one taken in account by the models for repeated measures.
 
 ```{r}
 # VERY IMPORTANT:
-contrasts(dati$STIM) <- contr.sum(2) #2 is the number of levels
-contrasts(dati$COND) <- contr.sum(2) #2 is the number of levels
+contrasts(dati$Condition) <- contr.sum(2) #2 is the number of levels
+contrasts(dati$Chan) <- contr.sum(2) #2 is the number of levels
 ```
 
 
@@ -97,18 +93,18 @@ voidplot <- function(title){
   abline(0,1,lwd=3)
 }
 voidplot("one for all")
-voidplot("subject-specific intercept")
+voidplot("Subject-specific intercept")
 intrc=rnorm(5)/3
 intrc[5]=-sum(intrc[-5])
 for(i in 1:5) abline(intrc[i],1,lwd=2,col=i+1,lty=2)
 
 slopes=rnorm(5)/3
 slopes[5]=-sum(slopes[-5])
-voidplot("subject-specific intercept + slope")
+voidplot("Subject-specific intercept + slope")
 for(i in 1:5) abline(intrc[i],1+slopes[i],lwd=2,col=i+1,lty=2)
 ```
 
-Mixed models allow to model subject-specific (average) effect by assuming that it is randomly drawn from the dstribution of the population (which is normal).
+Mixed models allow to model Subject-specific (average) effect by assuming that it is randomly drawn from the dstribution of the population (which is normal).
 
 
 I assume you are expert on mixed models, if not
@@ -131,21 +127,21 @@ In the models we will consider, the random effects are modeled
     as a multivariate normal random variable:
     $$b\sim\mathcal{N}(0,\Sigma_{q\times q}),$$
 
-In a *linear mixed model* the conditional distribution $(Y|\mathcal B=b)$ is    a *spherical* multivariate Gaussian.
+In a *linear mixed model* the Conditional distribution $(Y|\mathcal B=b)$ is    a *spherical* multivariate Gaussian.
 
 
-In our case $n=\#ID \times \#COND \times \#STIM=10\times 2 \times 2 = 40$.
+In our case $n=\#Subj \times \#Chan \times \#Condition=10\times 2 \times 2 = 40$.
 $X$ is the matrix of (dummified) predictors. 
 $Z$ can take many dimensions and values. Examples follow.
 
 **Random effect for Subject (Random Intercept)**
 
-$Z$ is the matrix of dummy variables of the column `dati$ID`.
+$Z$ is the matrix of dummy variables of the column `dati$Subj`.
 
 ```{r message=FALSE}
 library(lmerTest)
 
-mod=lmer(Y7~ STIM*COND +(1|ID),data=dati)
+mod=lmer(Y~ Condition*Chan +(1|Subj),data=dati)
 
 summary(mod)
 
@@ -173,7 +169,7 @@ An alternative plotting tool:
 ```{r message=FALSE}
 library(sjPlot)
 library(ggplot2)
-plot_model(mod, type = "pred", terms = c("COND","STIM"))
+plot_model(mod, type = "pred", terms = c("Chan","Condition"))
 ```
 
 
@@ -182,7 +178,7 @@ plot_model(mod, type = "pred", terms = c("COND","STIM"))
 
 * Independence of the residuals?
 * Normality of the residuals?
-* Homoscedasticity of the residuals (i.e. same variance between subject/STIM/COND?
+* Homoscedasticity of the residuals (i.e. same variance between Subject/Condition/Chan?
 * outliers?
 
 * Leaverage? (influential observations)
@@ -194,11 +190,10 @@ Use Exploratory data Analysis, instead!
 
 ```{r}
 dati$residuals=residuals(mod)
-p <- ggplot(dati, aes(x=COND_STIM, y=residuals,fill=STIM)) +   geom_boxplot() +
-  geom_point(aes(group = COND_STIM))
+p <- ggplot(dati, aes(x=Chan_Condition, y=residuals,fill=Subj)) +   geom_boxplot() 
 p
 
-p <- ggplot(dati, aes(x=ID, y=residuals,col=ID)) +   geom_boxplot()+  geom_point(aes(group = interaction(ID)))
+p <- ggplot(dati, aes(x=Subj, y=residuals,col=Subj)) +   geom_boxplot()+  geom_point(aes(group = interaction(Subj)))
 p
 ```
 
@@ -207,7 +202,7 @@ p
 <!-- ### Post-hoc -->
 <!-- ```{r} -->
 <!-- library(multcomp) -->
-<!-- summary(glht(mod, linfct = mcp(COND = "Tukey"))) -->
+<!-- summary(glht(mod, linfct = mcp(Chan = "Tukey"))) -->
 <!-- ``` -->
 
 <!-- ### Custom contrasts -->
