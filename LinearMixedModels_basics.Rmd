@@ -1,0 +1,248 @@
+---
+title: "Statistical Analysis of Designs with Repeated Measures by Linear Mixed Models"
+author: "Livio Finos"
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+  html_document:
+    number_sections: yes
+    toc_float: yes
+    toc: yes
+---
+
+# Motivation
+```{r setup, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Import
+
+```{r}
+
+load("./dataset/datiEEG_LMM_2x2.Rdata")
+summary(dati)
+```
+
+
+- 10 Subjects,
+- 2-levels factor `Chan`
+- 2-levels factor `Condition`
+
+
+## EDA
+
+For  `Y`: P300 Average Amplitude
+
+```{r}
+library(ggplot2)
+p <- ggplot(dati,aes(x=Chan,y=Y,fill=Condition))
+p=p+geom_dotplot(binaxis = "y",position=position_dodge(0.8),stackdir = "center") +geom_boxplot(alpha=.1)
+p
+```
+
+Is there a specificity of the Subject?
+
+```{r}
+dati$Chan_Condition=paste(sep = "_",dati$Chan,dati$Condition)
+
+p <- ggplot(dati,aes(x=Chan_Condition,y=Y))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
+   geom_boxplot(alpha=.1)
+```
+
+We subtract the Subject-specific effect (i.e. Subject's mean) to each observation.
+
+```{r}
+mod=lm(Y~Subj,data=dati)
+# summary(mod)
+Y=residuals(mod)
+dati$Yc=as.vector(Y)
+
+
+
+library(ggplot2)
+p <- ggplot(dati,aes(Chan_Condition,Yc))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
+   geom_boxplot(alpha=.1)
+```
+
+The dispersion of the data has been largely reduced.
+This effect is the one taken in account by the models for repeated measures. 
+
+# Mixed models
+
+## IMPORTANT REMARK about contrasts in (mixed) linear models
+
+```{r}
+# VERY IMPORTANT:
+contrasts(dati$Condition) <- contr.sum(2) #2 is the number of levels
+contrasts(dati$Chan) <- contr.sum(2) #2 is the number of levels
+```
+
+
+## Intuition
+
+```{r message=FALSE,echo=FALSE}
+par(mfrow=c(1,3))
+voidplot <- function(title){
+  plot(0,0,col=0,xlim=c(0,1),ylim=c(0,1),xlab="X",ylab="Y",asp=1,main=title)
+  abline(0,1,lwd=3)
+}
+voidplot("one for all")
+voidplot("Subject-specific intercept")
+intrc=rnorm(5)/3
+intrc[5]=-sum(intrc[-5])
+for(i in 1:5) abline(intrc[i],1,lwd=2,col=i+1,lty=2)
+
+slopes=rnorm(5)/3
+slopes[5]=-sum(slopes[-5])
+voidplot("Subject-specific intercept + slope")
+for(i in 1:5) abline(intrc[i],1+slopes[i],lwd=2,col=i+1,lty=2)
+```
+
+Mixed models allow to model Subject-specific (average) effect by assuming that it is randomly drawn from the dstribution of the population (which is normal).
+
+
+I assume you are expert on mixed models, if not
+<https://en.wikipedia.org/wiki/Mixed_model>   
+and much more on:
+<http://webcom.upmf-grenoble.fr/LIP/Perso/DMuller/M2R/R_et_Mixed/documents/Bates-book.pdf>  
+and  
+<https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf>
+
+
+Due to the small size of the dataset, in our example we only explore the scenario with random intercept and fixed slope (i.e. a simpler model, less parameters).
+
+## The model
+Models with random effects can be defined as:
+$$Y_{n\times 1} = X_{n\times p} B_{p\times 1} + Z_{n\times q} b_{q\times 1} + \varepsilon_{n\times 1}$$
+
+where $$\varepsilon\sim\mathcal{N}( 0,\sigma^2 I_n)$$
+
+In the models we will consider, the random effects are modeled
+    as a multivariate normal random variable:
+    $$b\sim\mathcal{N}(0,\Sigma_{q\times q}),$$
+
+In a *linear mixed model* the Conditional distribution $(Y|\mathcal B=b)$ is    a *spherical* multivariate Gaussian.
+
+
+In our case $n=\#Subj \times \#Chan \times \#Condition=10\times 2 \times 2 = 40$.
+$X$ is the matrix of (dummified) predictors. 
+$Z$ can take many dimensions and values. Examples follow.
+
+**Random effect for Subject (Random Intercept)**
+
+$Z$ is the matrix of dummy variables of the column `dati$Subj`.
+
+```{r message=FALSE}
+library(lmerTest)
+
+mod=lmer(Y~ Condition*Chan +(1|Subj),data=dati)
+
+summary(mod)
+
+car::Anova(mod,type=3)
+```
+
+
+
+## Plotting tools
+
+for the first model:
+```{r message=FALSE}
+library(effects)
+plot(allEffects(mod))
+
+#plot random effects:
+require(lattice)
+qqmath(ranef(mod, condVar=TRUE))
+```
+
+
+
+An alternative plotting tool:
+
+```{r message=FALSE}
+library(sjPlot)
+library(ggplot2)
+plot_model(mod, type = "pred", terms = c("Chan","Condition"))
+```
+
+
+## Validity of the assumptions
+
+
+* Independence of the residuals?
+* Normality of the residuals?
+* Homoscedasticity of the residuals (i.e. same variance between Subject/Condition/Chan?
+* outliers?
+
+* Leaverage? (influential observations)
+
+Please, do not test for normality, for homoscedasticity, sphericity etc. 
+
+Use Exploratory data Analysis, instead!
+
+
+```{r}
+dati$residuals=residuals(mod)
+p <- ggplot(dati, aes(x=Chan_Condition, y=residuals,fill=Subj)) +   geom_boxplot() 
+p
+
+p <- ggplot(dati, aes(x=Subj, y=residuals,col=Subj)) +   geom_boxplot()+  geom_point(aes(group = interaction(Subj)))
+p
+```
+
+<!-- ## Contrasts and post-hoc -->
+
+<!-- ### Post-hoc -->
+<!-- ```{r} -->
+<!-- library(multcomp) -->
+<!-- summary(glht(mod, linfct = mcp(Chan = "Tukey"))) -->
+<!-- ``` -->
+
+<!-- ### Custom contrasts -->
+<!-- An example:    -->
+
+<!-- - neutral vs object in O1 (left) -->
+<!-- - disgust vs neutral in O1 (left) -->
+<!-- - fear vs neutral in O1 (left) -->
+<!-- - happy vs neutral in O1 (left) -->
+
+<!-- ```{r} -->
+<!-- library(multcomp) -->
+<!-- ncoeff=length(coefficients(mod2)[[1]]) -->
+<!-- contr <- rbind("n - o" = c(0,0,0,0,0,0,1,-1, rep(0,ncoeff-8)), -->
+<!--                "d - n" = c(0,0,0,0,0,0,-1, rep(0,ncoeff-7)), -->
+<!--                  "f - n" = c(0,0,0,0,1,0,-1, rep(0,ncoeff-7)),  -->
+<!--                  "h - n" = c(0,0,0,0,0,1,-1, rep(0,ncoeff-7))) -->
+<!-- compa= glht(mod2, linfct = contr) -->
+<!-- summary(compa, test = adjusted("none")) -->
+
+<!-- # with multiple comparisons -->
+<!-- summary(compa) -->
+<!-- ``` -->
+
+
+# (minimal) Bibliography
+
+Jonathan Baron (2011) Notes on the use of R for psychology experiments and questionnaires
+<https://www.sas.upenn.edu/~baron/from_cattell/rpsych/rpsych.html>
+
+and Course materal of   
+ST 732, Applied Longitudinal Data Analysis, NC State University
+by Marie Davidian
+<https://www.stat.ncsu.edu/people/davidian/courses/st732/notes/chap5.pdf>
+from <https://www.stat.ncsu.edu/people/davidian/courses/st732/>
+
+
+About Type I, II, III SS:    <https://mcfromnz.wordpress.com/2011/03/02/anova-type-iiiiii-ss-explained/>
+
+About Mixed models:   
+<http://webcom.upmf-grenoble.fr/LIP/Perso/DMuller/M2R/R_et_Mixed/documents/Bates-book.pdf>  
+and  
+<https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf>
