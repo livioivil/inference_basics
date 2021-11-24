@@ -1,0 +1,200 @@
+---
+title: "Contrasting Contrasts"
+author: "Livio Finos"
+output:
+  html_document:
+    number_sections: yes
+    toc_float: yes
+    toc: yes
+  pdf_document:
+    number_sections: yes
+    toc: yes
+---
+
+
+**Abstract**
+I recall the importance of the use of zero-sum contrasts for categorical variables compared to the usual coding in dummy variables. The problem remains the same for quantitative variables. I tackle the problem with a synthetic dataset and a linear model with a factor (= categorical variable), a quantitative variable and their interaction.
+
+
+```{r setup, message=FALSE,echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# The data + EDA
+
+**The Challenge**:   
+Let's build a dataset where the effects are known, can you analyze it adequately?
+
+
+The proposed model is a simple ANCOVA model:
+- normal response (lm) with errors with 0 mean and variance equal to 1
+- linear model with predictors:
+   * two groups (`A` and` B`),
+   * a continuous variable e
+   * their interaction
+- Effects: Intercept and group. The continuous variable has no relation to the answer for the group `A`, it has it instead in the group` B` (interaction).
+
+These are the data created and their representation.
+
+```{r}
+set.seed(1)
+n0=10
+D=data.frame(gr=as.factor(rep(LETTERS[1:2],n0)),
+             x=rnorm(n0*2)+3)
+mu=2+(D$gr=="B")*.5+D$x*(D$gr=="B")*2
+D$y= mu+rnorm(n0*2)
+
+D
+
+library(ggplot2)
+ggplot(D,aes(x=x,y=y,color=gr))+geom_point()+
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+xlim(-.5, 6)
+```
+
+# Linear Models  
+## A linear model?
+
+```{r}
+modDU=lm(y~gr*x,data=D)
+summary(modDU)
+```
+
+matrix of predictors (i.e. independent variables)
+
+```{r}
+(mm <- model.matrix(~gr*x,data=D))
+```
+
+Have a look to the correlations between predictors
+
+```{r}
+cor(mm)
+```
+ and the Multiple R-squared of the first three columns to explain the interaction column:
+
+```{r}
+summary(lm(mm[,2]~mm[,-2]+0))
+```
+
+
+## Another linear model? ($x$ 0-centered)
+
+```{r}
+D2=D
+D2$x=D$x-mean(D$x)
+modDUC=lm(y~gr*x,data=D2)
+summary(modDUC)
+
+```
+
+Observe the 0 on the abscise:
+there is a clear difference between groups A and B.
+
+```{r}
+ggplot(D2,aes(x=x,y=y,color=gr))+geom_point()+
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_vline(xintercept = 0)
+
+```
+
+
+
+**Correlations between predictors**
+
+It is also useful to evaluate the correlations between predictors.
+
+```{r}
+(mm <- model.matrix(~gr*x,data=D2))
+```
+
+
+Have a look to the correlations between predictors
+
+```{r}
+cor(mm)
+```
+
+and the Multiple R-squared of the first three columns to explain the interaction column:
+
+```{r}
+summary(lm(mm[,2]~mm[,-2]+0))
+```
+
+## a third linear model?? ($x$ 0-centered + $gr$ 0-centered)
+
+```{r}
+D3=D2
+contrasts(D3$gr)=contr.sum(2)
+modS0=lm(y~gr*x,data=D3)
+summary(modS0)
+```
+
+```{r}
+ggplot(D3,aes(x=x,y=y,color=gr))+geom_point()+
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_abline(intercept = coef(modS0)[1], slope = coef(modS0)[3])
+
+```
+
+The black line in the graph represents the equation:
+`Y =` `r coef (modS0) [1]` `+` `r coef (modS0) [3]` `X`
+as estimated by the model. Actually, this is the effect for subjects with `gr == 0` which do not exist in reality, but represent an intermediate (somewhat null) value; are therefore an estimate *net of* the effects of `gr`.
+
+
+Let's now observe how the predictor matrix has changed (in particular the interaction):
+
+```{r}
+(mm <- model.matrix(~gr*x,data=D3))
+```
+
+and:
+```{r}
+summary(lm(mm[,2]~mm[,-2]+0))
+```
+
+
+# A simulation
+
+What would the three models tell me if I could repeat the experiment many times?
+
+```{r}
+res_sim=replicate(1000,
+          {
+            D$y <- D2$y <- D3$y <- mu+rnorm(n0*2)
+            modDU=lm(y~gr*x,data=D)
+            p_DU=summary(modDU)$coeff[,4]
+            modDUC=lm(y~gr*x,data=D2)
+            p_DUC=summary(modDUC)$coeff[,4]
+            modS0=lm(y~gr*x,data=D3)
+            p_S0=summary(modS0)$coeff[,4]
+            c(DU=p_DU,DUC=p_DUC,S0=p_S0)
+          })
+
+res_sim=t(res_sim)
+```
+
+(Empirical) Power:
+
+```{r}
+library(r41sqrt10)
+## model Dummy
+summaryResSim(res_sim[,1:4])
+## model Dummy +  Centered X
+summaryResSim(res_sim[,5:8])
+
+## model S0 +  Centered X
+summaryResSim(res_sim[,9:12])
+
+# prova anche con 
+# D3=D2
+# contrasts(D3$gr)=contr.sum(2)
+# modS0=lm(y~gr*x,data=D3)
+# X non centrata e contr.sum(2)
+```
+
+# Conclusion
+
+The definition of an effect depends crucially on the way we encode variables (whether they are factors or continuous).
+
+Their estimation depends crucially on the correlation between predictors. This point becomes crucial in interactions, where correlations are often high by nature (they are defined as a product of the columns of the experimental design).
+
+When possible (and sensible), the recommendation is to center the contrasts around 0 (see using `contr.sum ()`).
