@@ -2,12 +2,12 @@
 title: "Statistical Analysis of Designs with Repeated Measures by Linear Mixed Models"
 author: "Livio Finos"
 output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
   html_document:
     number_sections: yes
     toc_float: yes
-    toc: yes
-  pdf_document:
-    number_sections: yes
     toc: yes
 ---
 
@@ -135,25 +135,21 @@ In our case $n=\#Subj \times \#Chan \times \#Condition=10\times 2 \times 2 = 40$
 $X$ is the matrix of (dummified) predictors. 
 $Z$ can take many dimensions and values. Examples follow.
 
-**Random effect for Subject (Random Intercept)**
+## Different Models
 
-$Z$ is the matrix of dummy variables of the column `dati$Subj`.
+###  ONLY Condition, restricted to Chan=O2 (i.e. 1 Factor)
 
 ```{r message=FALSE}
 library(lmerTest)
 
-mod=lmer(Y~ Condition*Chan +(1|Subj),data=dati)
+mod=lmer(Y~ Condition +(1+Condition|Subj),data=subset(dati,Chan=="O2"))
 
 summary(mod)
-
-car::Anova(mod,type=3)
 ```
 
 
+Plotting tools:
 
-## Plotting tools
-
-for the first model:
 ```{r message=FALSE}
 library(effects)
 plot(allEffects(mod))
@@ -165,12 +161,72 @@ qqmath(ranef(mod, condVar=TRUE))
 
 
 
+
+
+
+###  Condition and Chan (i.e. 2 Factors)
+
+**Random effect for Subject (Random Intercept)**
+
+$Z$ is the matrix of dummy variables of the column `dati$Subj`.
+
+
+```{r message=FALSE}
+library(lmerTest)
+
+mod2=lmer(Y~ Condition*Chan +(1|Subj),data=dati)
+
+summary(mod2)
+
+car::Anova(mod2,type=3,test="F")
+```
+
+
+
+**Random effect for Subject: Random Intercept + radom factors**
+
+```{r message=FALSE}
+library(lmerTest)
+
+# A trick to make the model fit working. But take care of the (slight) different interpretation: coefficient/sqrt(nrow(dati)) to get the effects in the original -1,+1 scale. 
+
+contrasts(dati$Condition)=contrasts(dati$Condition)/sqrt(nrow(dati))
+contrasts(dati$Chan)=contrasts(dati$Chan)/sqrt(nrow(dati))
+
+mod3=lmer(Y~ Condition*Chan +(1+Condition+Chan|Subj),data=dati)
+
+# It could also work with +(1+Condition+Chan|Subj)
+# but we simplify here the problem.
+
+summary(mod3)
+
+car::Anova(mod3,type=3,test="F")
+```
+
+
+## Plotting tools
+
+```{r message=FALSE}
+library(effects)
+plot(allEffects(mod))
+
+#plot random effects:
+require(lattice)
+qqmath(ranef(mod3, condVar=TRUE))
+```
+
+
+
 An alternative plotting tool:
 
 ```{r message=FALSE}
 library(sjPlot)
 library(ggplot2)
-plot_model(mod, type = "pred", terms = c("Chan","Condition"))
+plot_model(mod3, type = "est")
+
+plot_model(mod3, type = "eff", terms = c("Chan","Condition"))
+
+plot_model(mod3, type = "re", terms = c("Chan","Condition"))
 ```
 
 
@@ -190,7 +246,7 @@ Use Exploratory data Analysis, instead!
 
 
 ```{r}
-dati$residuals=residuals(mod)
+dati$residuals=residuals(mod3)
 p <- ggplot(dati, aes(x=Chan_Condition, y=residuals,fill=Subj)) +   geom_boxplot() 
 p
 
