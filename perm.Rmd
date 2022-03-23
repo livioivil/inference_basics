@@ -3,31 +3,19 @@ title: "Permutation Tests"
 author: "Livio Finos"
 date: "University of Padova"
 output: 
-  pdf_document:
-    keep_tex: yes
-    number_sections: yes
-    toc: yes
   html_document:
     toc: yes
     # toc_float: yes
     number_sections: yes
+  pdf_document:
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
   beamer_presentation: default  
   ioslides_presentation:
     logo: figs/logoUnipd.jpg
 ---
 
-<!-- --- -->
-<!-- title: "Permutations" -->
-<!-- author: "Livio Finos" -->
-<!-- date: "20 settembre 2018" -->
-<!-- output: -->
-<!--   html_document: -->
-<!--     toc: yes -->
-<!-- --- -->
-
-<!-- --- -->
-
-<!-- --- -->
 
 # Introduction
 
@@ -599,17 +587,24 @@ $$\mathcal{O}=\{\textrm{all permutations of the observed data }\mathbf{y}\} = \{
 
 <!-- ---- -->
 
-**Remark**: exchangeable observations: $f(y_1,y_2)=f(y_2,y_1)$. 
+<!-- ---- -->
 
-It implies observations:  
-
-- are **identically distributed**:  
-$t$-test and linear models assume normality, only asymptotic control of the tye I error  
-- have the **same dependence**:   
-$t$-test and linear models assumes independence, which is just a special case ($f(y_1,y_2)=f(y_2)f(y_1)=f(y_2,y_1)$), i.e. more stringent assumptions 
+**Remark about assumption of exchangeability**: This means that, Under the Null Hypothesis, observations within subject are assumed to be exchangeable: e.g. $f(y_1,y_2)=f(y_2,y_1)$. 
 
 
-**Intuition** for an alternative proof of the control of the type I error
+This assumption is always true as long as observations:  
+
+- are **identically distributed**,   
+- have the **same dependence**, e.g. the same correlation.   
+
+
+Parametric $t$-test and linear models assumes independence (more stringent than 'same dependence'), and normality of the errors, i.e. more severe assumptions than permutation approach.
+
+When normality is not met, the parametric approach only provides asymptotic control of the tye I error, while permutation approach provides exactness.
+
+
+
+**An Intuition about the proof** for an alternative proof of the control of the type I error
 
 $$f(\mathbf{y}|\mathcal{O})=\frac{f(\mathbf{y}\cap\mathcal{O})}{f(\mathcal{O})}=
 \frac{f(\mathbf{y})}{f(\mathcal{O})}=
@@ -688,10 +683,6 @@ If $H_0: \beta_1=0$, $t \sim t (n-2)$ is true
 On `reaction` data and $H_1: \beta_1 \neq 0$ (bilateral alternative)
 
 
-han detto che era probabillmente uno dei partecipanti, e che bisogna disattivare la possibilità di scrivere sullo schermo, credo l'host possa risalire a chi sia stato
-han detto che era probabillmente uno dei partecipanti, e che bisogna disattivare la possibilità di scrivere sullo schermo, credo l'host possa risalire a chi sia stato
-
-
 ```{r}
 model=lm (Reaction.Time ~ Age, data=reaction)
 summary (model)
@@ -748,7 +739,7 @@ plot(res_cor@permT,res_t@permT,pch=20,col=2)
 ## Rank-correlation
 
 - $n$ observations from $y$, we are interested on $F(y|x)$
-    - we don't need $y_1$ and $y_2$ do be continuous, we don't even neet to have finite moments (usual minimal assumption).
+    - we don't need $y_1$ and $y_2$ do be continuous, we don't even need to have finite moments (usual minimal assumption).
 
 - Hypotheses
     - $H_0: F(y|x)=F(y|x')\ \forall x,x'$  
@@ -777,11 +768,9 @@ plot(res)
 ## The Two-independent-sample problem
 
 * Two samples: 
-    - $n_1$ observations from $y_1$
-<!-- =(y_1,y_2,\ldots,y_{n1})$ and  -->
-    - $n_2$ observations from $y_2$
-<!-- $Y_2=(y_{n1+1},y_{n1+2},\ldots,y_{n1+n2})$ -->
-    - we don't need $y_1$ and $y_2$ do be continuous, we don't even neet to have finite moments (usual minimal assumption)
+    - $n_1$ observations from $y_1$  
+    - $n_2$ observations from $y_2$  
+    - we don't need $y_1$ and $y_2$ do be continuous, we don't even neeD to have second (nor higher order) finite moments, which is the usual minimal assumption.
 
 * Hypotheses
     - $H_0: F(y_1)=F(y_2)$  
@@ -793,7 +782,7 @@ plot(res)
 * Test Statistic: 
      - Standardized mean difference (t-statistic)  
      - Estimated slope coefficient (label of groups as dummy predictor)  
-     - other test statistic such as the (unstandardized) mean difference are permutationally equivalent 
+     - other test statistic such as the (non standardized) mean difference are permutationally equivalent 
 
 ```{r}
 data("seeds")
@@ -824,17 +813,6 @@ Yes, equivalent to rank-tests, we just rely on exact distribution instead of asy
 
 (wilcox.test(y~grp,data=seeds))
 ```
-
-
-<!-- We can analyse it within a multivariate famework: -->
-<!-- ```{r} -->
-<!-- data("seeds") -->
-<!-- seeds=na.omit(seeds) -->
-
-<!-- (res=flip(.~grp,data=seeds)) -->
-<!-- plot(res) -->
-<!-- ``` -->
-
 
 ## Chi square and other cathegorical methods
 
@@ -880,7 +858,7 @@ e.g. 3 groups of `Age`: young [18-35), middle age [35-60), old [60-100)
 
 * C samples: 
     - $n_i$ observations from $y_i$ ($i=1,\ldots,C$)
-    - we don't need $y_i$ do be continuous, we don't even neet to have finite moments (usual minimal assumption)
+    - we don't need $y_i$ do be continuous, we don't even need to have finite moments (usual minimal assumption)
 
 * Hypotheses
     - $H_0: F(y_i)=F(y_j)\ \forall (i,j)$  
@@ -892,7 +870,7 @@ e.g. 3 groups of `Age`: young [18-35), middle age [35-60), old [60-100)
 * Test Statistic: 
      - F-statistic  
      - $R^2$  
-     - other test statistic such as the (unstandardized) mean difference are permutationally equivalent 
+     - other test statistic such as the (non standardized) mean difference are permutationally equivalent 
      - Rank-based is also possible
 
 
@@ -923,7 +901,7 @@ npc(res)
 
 ## Stratified permutations (discrete nuisances)
 
-What if we want to test $x=$ `Age` also using $z=$ `Gender` as nuisance in the `reaction` dataset?
+What if we want to test $x=$ `Age` also using $z=$ `Gender` as nuisance in the `reaction` data set?
 
 Under the null hypothesis:
  $f(y|x,z)=f(y|x',z)=f(y|z) \ \forall (x,x')$
@@ -1025,7 +1003,7 @@ legend("topright",legend=c("H0(x,y) (Fisher)","H0(x)","H0(y)"),col=2:4,bty="n",l
 
 
 ### Tippett (min-p) Combining Function
-We ispect the rejection regions of the two univariate tests and the one of Fisher combination.  
+We inspect the rejection regions of the two univariate tests and the one of Fisher combination.  
 The intersection of each univariate test with the Fisher region defines the rejection region of a closed testing - i.e. adjusted for multiple testing.
 This fall to be the same rejection region given by Wesfall \& Young. Indeed, it is a closed testing with shortcut.
 
@@ -1086,14 +1064,6 @@ Bonferroni is conservative
 **Multiple testing result**  
     Reject all hypotheses with (non-permuted) p-values at most $\tilde\alpha$
 
-<!-- ----  -->
-
-<!-- **Histogram of the smallest p-value of 10 independent tests** -->
-
-<!-- ```{r} -->
-<!-- library(knitr) -->
-<!-- include_graphics("./figMTP/minp.pdf") -->
-<!-- ``` -->
 
 ## Correlation structure of p-values
 
@@ -1182,7 +1152,7 @@ p-value Independents: little or no gain
 (NB: a test with bi-directional alternative and with negative correlation produce p-value positively correlated)
 
 **Real data**  
-The variables of real datasets are often correlated  
+The variables of real data sets are often correlated  
 then permutations are (often) convenient
 
 **How?** `R: library(flip); flip(); flip.adjust()`
@@ -1193,7 +1163,7 @@ then permutations are (often) convenient
 
 <!-- - Generalize the Type I error to the case of multiple hypotheses   -->
 <!-- - Control the probability of at LEAST a false rejections   -->
-<!-- - corrects the p-value (adjusted p-value always equal to or greather than the unadjusted p-value) -->
+<!-- - corrects the p-value (adjusted p-value always equal to or greater than the unadjusted p-value) -->
 
 
 # A case study: Pharmacokinetic Study of Carbidopa 
@@ -1293,7 +1263,7 @@ npc(res,"Fisher")
 There is an effect of `Dose`, overall.
 
 
-- By end-points (closed testing with max-t combininig function). 
+- By end-points (closed testing with max-t combining function). 
 Try also different methods (e.g. `method="Fisher"`) and compare the results of `method="minP"` with the one of `method="Holm"`. 
 
 ```{r}
@@ -1311,12 +1281,17 @@ summary(res)
 The Grounding Theory:  
 - Pesarin (2001) Multivariate Permutation Tests: With Applications in Biostatistics by Fortunato, Wiley, New York
 
+An alternative approach to the Permutation testing:  
+- Hemerik J, Goeman J. Exact testing with random permutations. Test (Madr). 2018;27(4):811-825. doi: 10.1007/s11749-017-0571-1. Epub 2017 Nov 30. PMID: 30930620; PMCID: PMC6405018.  
+
+
 A flexible approach to General Linear Model based on the sign-flip score test:  
 - Hemerik, Goeman and Finos (2020) Robust testing in generalized linear models by sign flipping score contributions. Journal of the Royal Statistical Society Series B (Statistical Methodology) 82(3). DOI: 10.1111/rssb.12369  
 Implemented in R package flipscores:  
 <https://cran.r-project.org/web/packages/flipscores/index.html>  
 better to use the github develop version:  
 <https://github.com/livioivil/flipscores>
+
 
 A nice review of the regression model within the permutation framework:   
 - Anderson M. Winkler, Gerard R. Ridgway, Matthew A. Webster, Stephen M. Smith, Thomas E. Nichols (2014)

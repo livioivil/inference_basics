@@ -205,14 +205,18 @@ $$\mathcal{O}=\{\textrm{all permutations of the observed data }\mathbf{y}\} = \{
 
 <!-- ---- -->
 
-**Remark**: exchangeable observations: $f(y_1,y_2)=f(y_2,y_1)$. 
+**Remark**: For Repeated Measures this means that, Under the Null Hypothesis,  observations within subject are assumed to be exchangeable: $f(y_1,y_2)=f(y_2,y_1)$. 
 
-It implies observations:  
 
-- are **identically distributed**:  
-$t$-test and linear models assume normality, only asymptotic control of the tye I error  
-- have the **same dependence**:   
-$t$-test and linear models assumes independence, which is just a special case ($f(y_1,y_2)=f(y_2)f(y_1)=f(y_2,y_1)$), i.e. more stringend assumptions 
+This assumption is always true as long as observations:  
+
+- are **identically distributed** (within the same subject),    
+- have the **same dependence**, e.g. the same correlation.   
+
+$t$-test and linear models assumes independence, which is just a special case: ($f(y_1,y_2)=f(y_2)f(y_1)=f(y_2,y_1)$), i.e. a more severe assumption!
+
+paired $t$-test and repeated measures assumes homoscedasticity of the vector of differences (i.e. one difference for each subject), here we only assume symmetry. Again, permutation approach makes less assumptions.
+
 
 
 <!-- ---- -->
@@ -291,7 +295,7 @@ This is much more realistic (see discussion later).
 
 ## One Linear model for each Subject
 
-The following approach is developed in Basso \& Finos (2012) and in Finos \& Basso (2014). It is very similar to (basically an esxtension of) the NonParametric Group level analysis developed in SnPM by Nichols and Holmes (2001).
+The following approach is developed in Basso \& Finos (2012) and in Finos \& Basso (2014). It is very similar to (basically an extension of) the NonParametric Group level analysis developed in SnPM by Nichols and Holmes (2001).
 
 
 Assuming a hierarchical linear model we have a subject-specific linear model for each subject. The vector of outcomes $y_i$ can be modeled as a linear function of the predictor
@@ -310,10 +314,10 @@ Therefore we have that:
 $\hat\beta_i\sim (\beta,\Psi+\Sigma_i)$
 
 
-Let's consider again the test on the effect of the Codition. The matrix of predictors $X$ is the matrix of $k=C-1=4$ dummy variables. The null hypothesis becomes:
+Let's consider again the test on the effect of the Condition. The matrix of predictors $X$ is the matrix of $k=C-1=4$ dummy variables. The null hypothesis becomes:
 $$H_0: \beta=(\beta_1,\ldots,\beta_k)=0$$
 The observations within the subject (i.e. stratum) are exchangeable under the null hypothesis.
-However, we don't have a *separate* (in the sense of Pesarin, 2001. This is often known as Subset Pivotality, WY, 1993) test for $H_0:\beta_1=0$ since we are permuting the observation under the global null hypothesis (i.e. values retive to other conditions affect the estimate of $\beta_1$).
+However, we don't have a *separate* (in the sense of Pesarin, 2001. This is often known as Subset Pivotality, WY, 1993) test for $H_0:\beta_1=0$ since we are permuting the observation under the global null hypothesis (i.e. values relative to other conditions affect the estimate of $\beta_1$).
 
 The same problem rises if the matrix of $X$ contains other factors, such as `ChanL` and `Lateral`.
 Let's now consider the experimental design modeled as a linear model with `ChanL*Lateral*Condition`.
@@ -338,7 +342,7 @@ contrasts(dati$Lateral)=NULL
 ```
 
 
-We fit a model *within* each subject and we store the vector of estiamted coefficients.
+We fit a model *within* each subject and we store the vector of estimated coefficients.
 ```{r}
 dataCoeff=obs2coeffWithin(Y~ ChanL*Lateral*Condition,data=dati,units=~Subj)
 ```
@@ -349,7 +353,7 @@ Since the model is full-rank in this design (i.e. no residuals error) and balanc
 We know, then, how to derive an exact test for $H_0: \beta=0$.
 Now we use these coefficients as a dataset to test for multivariate symmetry.
 
-A very important result relies in the fact tha the tests are separate, that is, the symmetry under the null hypothesis is ensured for each element of $\beta$ whatever is the true mean of the others elements of $\beta$.
+A very important result relies in the fact that the tests are separate, that is, the symmetry under the null hypothesis is ensured for each element of $\beta$ whatever is the true mean of the others elements of $\beta$.
 
 
 ```{r}
@@ -376,11 +380,11 @@ summary(npc(mod,subsets = list(ChanL=1:2,Lateral=3,Condition=4:7,
 ```
 
 
-This approach is very general, it works also when we have non-balenced and non-saturated models. For example we may like to use the values computed on each single trial and not the average. In this case, the model is not full rank and we have different numeber of trial in each condition.
+This approach is very general, it works also when we have non-balanced and non-saturated models. For example we may like to use the values computed on each single trial and not the average. In this case, the model is not full rank and we have different number of trial in each condition.
 In this case, the test remains exact only if we can assume symmetric distribution of the errors. If this is not the case, the test become approximated. It should be noted, however that usually the speed in convergence to the exact control of the type I error is faster than for parametric (gaussian) model since the our method becomes exact whenever the distributions of the $\hat\beta_i$ become symmetric (i.e. odd moments converge to zero), while the parametric one is exact when the same distributions become normal (i.e. both even and odd moments converge to zero).
 
 Furthermore, the symmetry is the only condition, we still allow for hetheroscedastic errors between subjects. We also allow for different design matrix between subjects ($X_i\neq X_j$).
-As an extreem and surprisingly result, we also allow for the error within subject to varies.
+As an extreme and surprisingly result, we also allow for the error within subject to varies.
 
 
 
@@ -396,7 +400,7 @@ car::Anova(mod_mix)
 ```
 
 
-The (parametric) Repeated measures method assumes sphericity of the errors, the nonparametric (permutation) does not.
+The (parametric) Repeated measures method assumes  of the errors, the nonparametric (permutation) does not.
 
 Mixed model does not make this assumption, but assumes normality and homoscedasticity of the observations.
 
@@ -408,7 +412,7 @@ p <- ggplot(dati, aes(x=Subj, y=residuals,fill=Condition)) +   geom_boxplot()
 p
 ```
 
-The variabily of the subjects doesn't not appear homogeneous.
+The variability of the subjects doesn't not appear homogeneous.
 
 
 
@@ -444,7 +448,7 @@ colnames(Y)=gsub(":Condition.","",colnames(Y))
 colnames(Y)
 ```
 
-Analysis: raw and adjusted p-values (min-p preocedure)
+Analysis: raw and adjusted p-values (min-p procedure)
 
 ```{r}
 res=flip(Y,perms=10000)
@@ -454,13 +458,13 @@ summary(res)
 ```
 
 
-To show the results plot intensity colors based on the significance of the adjusted p-values for each channel. Just for visual purpuses, we transform the adjusted p-values by $-log10(p)$:
+To show the results plot intensity colors based on the significance of the adjusted p-values for each channel. Just for visual purposes, we transform the adjusted p-values by $-log10(p)$:
 
 ```{r message=FALSE}
-# install.packages("eegkit")
+# install.packages("legit")
 library(eegkit)
 
-# get the a z value from the adjusted p-value for each channel, just for visual purpuses:
+# get the a z value from the adjusted p-value for each channel, just for visual purposes:
 pvals=getFlip(res,"Adjust:maxT")
 rownames(pvals)=gsub("Chan","",rownames(pvals))
 

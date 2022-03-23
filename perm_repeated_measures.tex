@@ -359,22 +359,28 @@ Note that it holds when for all \(\pi \in \Pi\):
 If we assume exchangeability of observations, then:
 \[\mathcal{O}=\{\textrm{all permutations of the observed data }\mathbf{y}\} = \{\mathbf{y}^*:\pi^*\circ\mathbf{y}\}\]
 
-\textbf{Remark}: exchangeable observations: \(f(y_1,y_2)=f(y_2,y_1)\).
+\textbf{Remark}: For Repeated Measures this means that, Under the Null
+Hypothesis, observations within subject are assumed to be exchangeable:
+\(f(y_1,y_2)=f(y_2,y_1)\).
 
-It implies observations:
+This assumption is always true as long as observations:
 
 \begin{itemize}
 \tightlist
 \item
-  are \textbf{identically distributed}:\\
-  \(t\)-test and linear models assume normality, only asymptotic control
-  of the tye I error\\
+  are \textbf{identically distributed} (within the same subject),\\
 \item
-  have the \textbf{same dependence}:\\
-  \(t\)-test and linear models assumes independence, which is just a
-  special case (\(f(y_1,y_2)=f(y_2)f(y_1)=f(y_2,y_1)\)), i.e.~more
-  stringend assumptions
+  have the \textbf{same dependence}, e.g.~the same correlation.
 \end{itemize}
+
+\(t\)-test and linear models assumes independence, which is just a
+special case: (\(f(y_1,y_2)=f(y_2)f(y_1)=f(y_2,y_1)\)), i.e.~a more
+severe assumption!
+
+paired \(t\)-test and repeated measures assumes homoscedasticity of the
+vector of differences (i.e.~one difference for each subject), here we
+only assume symmetry. Again, permutation approach makes less
+assumptions.
 
 \(T^{(k)}(Y)\) \(\lceil(1-\alpha)|\Pi|\ \rceil\)-th sorted value of
 \(T(\pi Y)\)
@@ -459,7 +465,7 @@ The nonparametric one:
 \begin{verbatim}
 ## 
 ##   Test  Stat tail p-value
-## Y    t 3.287   ><  0.0046
+## Y    t 3.287   ><  0.0040
 \end{verbatim}
 
 \begin{Shaded}
@@ -472,7 +478,7 @@ The nonparametric one:
 \begin{verbatim}
 ## 
 ##   Test  Stat tail p-value
-## Y    t 3.287   ><  0.0046
+## Y    t 3.287   ><  0.0034
 \end{verbatim}
 
 \hypertarget{permutation-based-repeated-measures-anova}{%
@@ -504,9 +510,9 @@ much more realistic (see discussion later).
 Subject}\label{one-linear-model-for-each-subject}}
 
 The following approach is developed in Basso \& Finos (2012) and in
-Finos \& Basso (2014). It is very similar to (basically an esxtension
-of) the NonParametric Group level analysis developed in SnPM by Nichols
-and Holmes (2001).
+Finos \& Basso (2014). It is very similar to (basically an extension of)
+the NonParametric Group level analysis developed in SnPM by Nichols and
+Holmes (2001).
 
 Assuming a hierarchical linear model we have a subject-specific linear
 model for each subject. The vector of outcomes \(y_i\) can be modeled as
@@ -522,15 +528,15 @@ Therefore: \((\hat\beta_i|\beta_i)\sim (\beta_i,\Sigma_i)\)
 We also assume that \(\beta_i\sim(\beta,\Psi)\). Therefore we have that:
 \(\hat\beta_i\sim (\beta,\Psi+\Sigma_i)\)
 
-Let's consider again the test on the effect of the Codition. The matrix
+Let's consider again the test on the effect of the Condition. The matrix
 of predictors \(X\) is the matrix of \(k=C-1=4\) dummy variables. The
 null hypothesis becomes: \[H_0: \beta=(\beta_1,\ldots,\beta_k)=0\] The
 observations within the subject (i.e.~stratum) are exchangeable under
 the null hypothesis. However, we don't have a \emph{separate} (in the
 sense of Pesarin, 2001. This is often known as Subset Pivotality, WY,
 1993) test for \(H_0:\beta_1=0\) since we are permuting the observation
-under the global null hypothesis (i.e.~values retive to other conditions
-affect the estimate of \(\beta_1\)).
+under the global null hypothesis (i.e.~values relative to other
+conditions affect the estimate of \(\beta_1\)).
 
 The same problem rises if the matrix of \(X\) contains other factors,
 such as \texttt{ChanL} and \texttt{Lateral}. Let's now consider the
@@ -577,7 +583,7 @@ Data preparation:
 \end{Shaded}
 
 We fit a model \emph{within} each subject and we store the vector of
-estiamted coefficients.
+estimated coefficients.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -595,7 +601,7 @@ component-wise, i.e.~for marginal test)
 We know, then, how to derive an exact test for \(H_0: \beta=0\). Now we
 use these coefficients as a dataset to test for multivariate symmetry.
 
-A very important result relies in the fact tha the tests are separate,
+A very important result relies in the fact that the tests are separate,
 that is, the symmetry under the null hypothesis is ensured for each
 element of \(\beta\) whatever is the true mean of the others elements of
 \(\beta\).
@@ -613,36 +619,36 @@ element of \(\beta\) whatever is the true mean of the others elements of
 ## 9999 permutations.
 ## 
 ##                                        est.Su   Test    Stat tail p-value sig.
-## (Intercept)_Tnaive                         NA Tnaive -3.1020   ><  0.0070   **
+## (Intercept)_Tnaive                         NA Tnaive -3.1020   ><  0.0078   **
 ## ChanLP_Tnaive                              NA Tnaive -7.6164   ><  0.0002  ***
 ## ChanLPO_Tnaive                             NA Tnaive -5.2511   ><  0.0002  ***
-## LateralRight_Tnaive                        NA Tnaive -1.7162   ><  0.1070     
-## Conditionf_Tnaive                          NA Tnaive  0.9595   ><  0.3394     
-## Conditionh_Tnaive                          NA Tnaive  4.8141   ><  0.0002  ***
+## LateralRight_Tnaive                        NA Tnaive -1.7162   ><  0.1064     
+## Conditionf_Tnaive                          NA Tnaive  0.9595   ><  0.3528     
+## Conditionh_Tnaive                          NA Tnaive  4.8141   ><  0.0004  ***
 ## Conditionn_Tnaive                          NA Tnaive  4.5430   ><  0.0002  ***
 ## Conditiono_Tnaive                          NA Tnaive  6.7913   ><  0.0002  ***
-## ChanLP:LateralRight_Tnaive                 NA Tnaive  0.5942   ><  0.5590     
+## ChanLP:LateralRight_Tnaive                 NA Tnaive  0.5942   ><  0.5636     
 ## ChanLPO:LateralRight_Tnaive                NA Tnaive  2.4635   ><  0.0252    *
-## ChanLP:Conditionf_Tnaive                   NA Tnaive -0.3815   ><  0.7106     
-## ChanLPO:Conditionf_Tnaive                  NA Tnaive -0.7127   ><  0.4810     
-## ChanLP:Conditionh_Tnaive                   NA Tnaive -1.2310   ><  0.2322     
-## ChanLPO:Conditionh_Tnaive                  NA Tnaive -1.0945   ><  0.2836     
-## ChanLP:Conditionn_Tnaive                   NA Tnaive  0.1750   ><  0.8678     
-## ChanLPO:Conditionn_Tnaive                  NA Tnaive  0.2800   ><  0.7800     
+## ChanLP:Conditionf_Tnaive                   NA Tnaive -0.3815   ><  0.7046     
+## ChanLPO:Conditionf_Tnaive                  NA Tnaive -0.7127   ><  0.4910     
+## ChanLP:Conditionh_Tnaive                   NA Tnaive -1.2310   ><  0.2296     
+## ChanLPO:Conditionh_Tnaive                  NA Tnaive -1.0945   ><  0.2886     
+## ChanLP:Conditionn_Tnaive                   NA Tnaive  0.1750   ><  0.8616     
+## ChanLPO:Conditionn_Tnaive                  NA Tnaive  0.2800   ><  0.7752     
 ## ChanLP:Conditiono_Tnaive                   NA Tnaive  4.5902   ><  0.0002  ***
 ## ChanLPO:Conditiono_Tnaive                  NA Tnaive  4.1505   ><  0.0004  ***
-## LateralRight:Conditionf_Tnaive             NA Tnaive  0.9319   ><  0.3762     
-## LateralRight:Conditionh_Tnaive             NA Tnaive  0.1410   ><  0.8834     
-## LateralRight:Conditionn_Tnaive             NA Tnaive  1.6669   ><  0.1158     
-## LateralRight:Conditiono_Tnaive             NA Tnaive  0.5563   ><  0.5812     
-## ChanLP:LateralRight:Conditionf_Tnaive      NA Tnaive -1.1426   ><  0.2804     
-## ChanLPO:LateralRight:Conditionf_Tnaive     NA Tnaive -1.0363   ><  0.3258     
-## ChanLP:LateralRight:Conditionh_Tnaive      NA Tnaive -0.5911   ><  0.5592     
-## ChanLPO:LateralRight:Conditionh_Tnaive     NA Tnaive -2.1793   ><  0.0414    *
-## ChanLP:LateralRight:Conditionn_Tnaive      NA Tnaive -0.6310   ><  0.5294     
-## ChanLPO:LateralRight:Conditionn_Tnaive     NA Tnaive -1.4425   ><  0.1678     
-## ChanLP:LateralRight:Conditiono_Tnaive      NA Tnaive  1.0884   ><  0.2768     
-## ChanLPO:LateralRight:Conditiono_Tnaive     NA Tnaive -1.0263   ><  0.3014
+## LateralRight:Conditionf_Tnaive             NA Tnaive  0.9319   ><  0.3592     
+## LateralRight:Conditionh_Tnaive             NA Tnaive  0.1410   ><  0.8878     
+## LateralRight:Conditionn_Tnaive             NA Tnaive  1.6669   ><  0.1106     
+## LateralRight:Conditiono_Tnaive             NA Tnaive  0.5563   ><  0.5822     
+## ChanLP:LateralRight:Conditionf_Tnaive      NA Tnaive -1.1426   ><  0.2740     
+## ChanLPO:LateralRight:Conditionf_Tnaive     NA Tnaive -1.0363   ><  0.3166     
+## ChanLP:LateralRight:Conditionh_Tnaive      NA Tnaive -0.5911   ><  0.5702     
+## ChanLPO:LateralRight:Conditionh_Tnaive     NA Tnaive -2.1793   ><  0.0452    *
+## ChanLP:LateralRight:Conditionn_Tnaive      NA Tnaive -0.6310   ><  0.5280     
+## ChanLPO:LateralRight:Conditionn_Tnaive     NA Tnaive -1.4425   ><  0.1722     
+## ChanLP:LateralRight:Conditiono_Tnaive      NA Tnaive  1.0884   ><  0.2936     
+## ChanLPO:LateralRight:Conditiono_Tnaive     NA Tnaive -1.0263   ><  0.3158
 \end{verbatim}
 
 Since the fitted model within each subject is a saturated one, the
@@ -661,7 +667,7 @@ p-values for Global effect and factor are computed by NPC methodology.
 \begin{verbatim}
 ## 
 ##    comb.funct nVar  Stat p-value
-## V1     Fisher   30 90.51  0.0002
+## V1     Fisher   30 89.57  0.0002
 \end{verbatim}
 
 \begin{Shaded}
@@ -682,19 +688,19 @@ p-values for Global effect and factor are computed by NPC methodology.
 ##  permutations.
 ## 
 ##                         comb.funct nVar   Stat p-value sig.
-## ChanL                       Fisher    2 13.479  0.0002  ***
+## ChanL                       Fisher    2 13.371  0.0002  ***
 ## Lateral                     Fisher    1  8.517  0.0002  ***
-## Condition                   Fisher    4 20.350  0.0002  ***
-## ChanL_Lateral               Fisher    2  9.099  0.0008  ***
-## ChanL_Condition             Fisher    8 16.382  0.0454    *
-## Lateral_Condition           Fisher    4 11.082  0.0098   **
-## ChanL_Lateral_Condition     Fisher    8 10.407  0.2082
+## Condition                   Fisher    4 19.624  0.0002  ***
+## ChanL_Lateral               Fisher    2  9.091  0.0006  ***
+## ChanL_Condition             Fisher    8 16.377  0.0476    *
+## Lateral_Condition           Fisher    4 11.169  0.0092   **
+## ChanL_Lateral_Condition     Fisher    8 10.267  0.2184
 \end{verbatim}
 
-This approach is very general, it works also when we have non-balenced
+This approach is very general, it works also when we have non-balanced
 and non-saturated models. For example we may like to use the values
 computed on each single trial and not the average. In this case, the
-model is not full rank and we have different numeber of trial in each
+model is not full rank and we have different number of trial in each
 condition. In this case, the test remains exact only if we can assume
 symmetric distribution of the errors. If this is not the case, the test
 become approximated. It should be noted, however that usually the speed
@@ -707,7 +713,7 @@ moments converge to zero).
 
 Furthermore, the symmetry is the only condition, we still allow for
 hetheroscedastic errors between subjects. We also allow for different
-design matrix between subjects (\(X_i\neq X_j\)). As an extreem and
+design matrix between subjects (\(X_i\neq X_j\)). As an extreme and
 surprisingly result, we also allow for the error within subject to
 varies.
 
@@ -776,8 +782,8 @@ Compare the previous results with the one of the parametric approach:
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
 
-The (parametric) Repeated measures method assumes sphericity of the
-errors, the nonparametric (permutation) does not.
+The (parametric) Repeated measures method assumes of the errors, the
+nonparametric (permutation) does not.
 
 Mixed model does not make this assumption, but assumes normality and
 homoscedasticity of the observations.
@@ -794,7 +800,7 @@ This could be a relevant point for our data:
 
 \includegraphics{perm_repeated_measures_files/figure-latex/unnamed-chunk-12-1.pdf}
 
-The variabily of the subjects doesn't not appear homogeneous.
+The variability of the subjects doesn't not appear homogeneous.
 
 \hypertarget{contrasts-and-post-hoc}{%
 \subsection{Contrasts and post-hoc}\label{contrasts-and-post-hoc}}
@@ -852,7 +858,7 @@ we make \texttt{Conditionh\ +\ ChanO2:Conditionh}.
 ## [1] "ChanO1"  "ChanO2"  "ChanP7"  "ChanP8"  "ChanPO7" "ChanPO8"
 \end{verbatim}
 
-Analysis: raw and adjusted p-values (min-p preocedure)
+Analysis: raw and adjusted p-values (min-p procedure)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -869,21 +875,21 @@ Analysis: raw and adjusted p-values (min-p preocedure)
 ## 9999 permutations.
 ## 
 ##         Test   Stat tail p-value Adjust:maxT sig.
-## ChanO1     t -1.472   ><  0.1560      0.1560     
-## ChanO2     t -2.137   ><  0.0456      0.0802     
-## ChanP7     t -2.449   ><  0.0232      0.0618     
-## ChanP8     t -3.675   ><  0.0028      0.0088   **
-## ChanPO7    t -2.375   ><  0.0292      0.0640     
-## ChanPO8    t -2.981   ><  0.0090      0.0250    *
+## ChanO1     t -1.472   ><  0.1592      0.1592     
+## ChanO2     t -2.137   ><  0.0454      0.0744     
+## ChanP7     t -2.449   ><  0.0270      0.0630     
+## ChanP8     t -3.675   ><  0.0020      0.0066   **
+## ChanPO7    t -2.375   ><  0.0320      0.0644     
+## ChanPO8    t -2.981   ><  0.0074      0.0240    *
 \end{verbatim}
 
 To show the results plot intensity colors based on the significance of
-the adjusted p-values for each channel. Just for visual purpuses, we
+the adjusted p-values for each channel. Just for visual purposes, we
 transform the adjusted p-values by \(-log10(p)\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# install.packages("eegkit")}
+\CommentTok{\# install.packages("legit")}
 \FunctionTok{library}\NormalTok{(eegkit)}
 \end{Highlighting}
 \end{Shaded}
@@ -898,7 +904,7 @@ transform the adjusted p-values by \(-log10(p)\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# get the a z value from the adjusted p{-}value for each channel, just for visual purpuses:}
+\CommentTok{\# get the a z value from the adjusted p{-}value for each channel, just for visual purposes:}
 \NormalTok{pvals}\OtherTok{=}\FunctionTok{getFlip}\NormalTok{(res,}\StringTok{"Adjust:maxT"}\NormalTok{)}
 \FunctionTok{rownames}\NormalTok{(pvals)}\OtherTok{=}\FunctionTok{gsub}\NormalTok{(}\StringTok{"Chan"}\NormalTok{,}\StringTok{""}\NormalTok{,}\FunctionTok{rownames}\NormalTok{(pvals))}
 
