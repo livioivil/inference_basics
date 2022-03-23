@@ -2,12 +2,12 @@
 title: "Contrasting Contrasts"
 author: "Livio Finos"
 output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
   html_document:
     number_sections: yes
     toc_float: yes
-    toc: yes
-  pdf_document:
-    number_sections: yes
     toc: yes
 ---
 
@@ -66,12 +66,13 @@ matrix of predictors (i.e. independent variables)
 (mm <- model.matrix(~gr*x,data=D))
 ```
 
-Have a look to the correlations between predictors
+Have a look to the mixed moments (i.e. covariance without centering around the mean) between predictors. mixed moments equal to 0 means orthogonal predictors:
 
 ```{r}
-cor(mm)
+t(mm)%*%mm/nrow(mm)
 ```
- and the Multiple R-squared of the first three columns to explain the interaction column:
+
+and the Multiple R-squared of the first three columns to explain the interaction column:
 
 ```{r}
 summary(lm(mm[,2]~mm[,-2]+0))
@@ -104,14 +105,16 @@ ggplot(D2,aes(x=x,y=y,color=gr))+geom_point()+
 It is also useful to evaluate the correlations between predictors.
 
 ```{r}
-(mm <- model.matrix(~gr*x,data=D2))
+mm <- model.matrix(~gr*x,data=D2)
+head(mm)
 ```
 
 
-Have a look to the correlations between predictors
+
+Have a look to the mixed moments (i.e. covariance without centering around the mean) between predictors. mixed moments equal to 0 means orthogonal predictors:
 
 ```{r}
-cor(mm)
+t(mm)%*%mm/nrow(mm)
 ```
 
 and the Multiple R-squared of the first three columns to explain the interaction column:
@@ -143,7 +146,15 @@ as estimated by the model. Actually, this is the effect for subjects with `gr ==
 Let's now observe how the predictor matrix has changed (in particular the interaction):
 
 ```{r}
-(mm <- model.matrix(~gr*x,data=D3))
+mm <- model.matrix(~gr*x,data=D3)
+head(mm)
+```
+
+
+And have a look to the mixed moments (i.e. covariance without centering around the mean) between predictors. mixed moments equal to 0 means orthogonal predictors:
+
+```{r}
+t(mm)%*%mm/nrow(mm)
 ```
 
 and:
@@ -193,8 +204,12 @@ summaryResSim(res_sim[,9:12])
 
 # Conclusion
 
-The definition of an effect depends crucially on the way we encode variables (whether they are factors or continuous).
+The definition of an effect depends crucially on the way we encode variables (whether they are factors or continuous). The interpretation changes depending on the encoding.
 
-Their estimation depends crucially on the correlation between predictors. This point becomes crucial in interactions, where correlations are often high by nature (they are defined as a product of the columns of the experimental design).
+Anche la potenza dei test ad essi associati è guidata dalla dipendenza con gli altri coefficienti (e quindi dalla dipendenza tra i predittori del disegno sperimentale). Questo aspetto è importante soprattutto nelle interazioni, dove le correlazioni con gli effetti principali sono spesso elevate per natura perchè sono definite come prodotto delle colonne del disegno sperimentale.
+
+Quando è possibile (e sensato), la raccomandazione è quella di centrare i contrasti intorno allo 0 (vedi uso di `contr.sum()`).
+
+Furthermore, the power to test these effects dependes on the dependendence among predictors (i.e. cross product, mixed moments). This point becomes salient in interactions, where correlations are often high by nature (interactions are defined as a product of the columns of the experimental design).
 
 When possible (and sensible), the recommendation is to center the contrasts around 0 (see using `contr.sum ()`).

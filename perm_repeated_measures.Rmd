@@ -1,0 +1,486 @@
+---
+title: "Conditional Inference for Repeated Measures models"
+author: "Livio Finos"
+output: 
+  pdf_document:
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+  beamer_presentation: default  
+  ioslides_presentation:
+    logo: figs/logoUnipd.jpg
+  html_document:
+    toc: yes
+    # toc_float: yes
+---
+
+# Introduction
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## The data
+
+**(Fictitious data)**
+
+ERP experiment
+
+- 20 Subjects,
+- 6 Channels: O1, O2, PO7, PO8, P7, P8
+- Stimuli: pictures. Conditions:
+    * 1 (f): fear (face)
+    * 2 (h): happiness (face)
+    * 3 (d): disgust (face)
+    * 4 (n): neutral (face)
+    * 5 (o): object
+- Measure: Area around the component P170
+
+Setting parameters, importing the data:
+
+```{r,warning=FALSE,message=FALSE}
+rm(list=ls())
+library(flip)
+# 
+# # example of files contents:
+# # s01 NC P7 f -7.1121
+# # s01 NC P7 h -7.2582
+# # s01 NC P7 d -7.4540
+# # s01 NC P7 n -5.6729
+# # s01 NC P7 o -2.1812
+# # s01 NC PO7 f -7.4169
+# 
+# 
+# library(readr)
+# library(dplyr)
+# 
+# dati=lapply(datafiles, read_delim,col_names = FALSE ,delim = " ")
+# dati=bind_rows(dati)
+# str(dati)
+# names(dati)=c("Subj","Group","Chan","Condition","Y")
+# 
+# # Not used in this analysis
+# dati$Group=NULL
+# dati$Subj=factor(dati$Subj)
+# dati$Chan=factor(dati$Chan)
+# dati$Condition=factor(dati$Condition)
+# str(dati)
+# save(dati,file="datiEEG.Rdata")
+# 
+# dati2=subset(dati,(Chan=="O1")&(Condition%in%c("f","n")))
+# dati2$Condition=factor(dati2$Condition)
+# save(dati2,file="dati2EEG.Rdata")
+load("./dataset/datiEEG.Rdata")
+load("./dataset/dati2EEG.Rdata")
+
+# VERY IMPORTANT:
+contrasts(dati$Chan) <- contr.sum(6)
+contrasts(dati$Condition) <- contr.sum(5)
+contrasts(dati$Subj) <- contr.sum(nlevels(dati$Subj))
+
+contrasts(dati2$Condition) <- contr.sum(2)
+contrasts(dati2$Subj) <- contr.sum(nlevels(dati2$Subj))
+
+```
+
+## Motivation (EDA)
+
+For Channel `O1`:
+
+```{r}
+library(ggplot2)
+p <- ggplot(subset(dati,Chan=="O1"),aes(Condition,Y))
+p+geom_point(size = 3) +geom_boxplot(alpha=.1)
+```
+
+Is there a specificity of the subject?
+
+```{r}
+dati01=subset(dati,Chan=="O1")
+library(ggplot2)
+p <- ggplot(dati01,aes(Condition,Y))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
+   geom_boxplot(alpha=.1)
+```
+
+We subtract the subject-specific effect (i.e. subject's mean) to each observation.
+
+```{r}
+dati01=subset(dati,Chan=="O1")
+Y=scale(matrix(dati01$Y,5),scale=FALSE)
+dati01$Y=as.vector(Y)
+
+library(ggplot2)
+p <- ggplot(dati01,aes(Condition,Y))
+p+geom_point(aes(group = Subj, colour = Subj))+
+  geom_line(aes(group = Subj, colour = Subj))+
+   geom_boxplot(alpha=.1)
+```
+
+The dispersion of the data has been largely reduced.
+This effect is the one taken in account by the models for repeated measures.
+
+# Two Paired samples and symmetry test
+
+## Definition
+
+Let consider the reduced problem: channel `Chan=="O1`  and `Condition=="n"` or `Condition=="f"`.
+
+
+Let be $y$ the outcome, $x$ the condition/treatment ($x\in \{1="f",2="n"\}$ in our case). Let be $z=$ `Subject` the nuisance factor in the stratified problem.
+
+Under the null hypothesis:
+ $f(y|x=1,z)=f(y|x=2,z)=f(y|z)$  
+while possibly (even under $H_0$)
+$\exists (z,z'): f(y|x,z) \neq f(y|x',z')$  
+
+This imply that observations are exchangeable only within the same subject ($z$, i.e. playing the role of Strata).
+
+In the gaussian-parametric approach we assume a different mean for each subject (i.e. Subject-specific effect), but the variance is forced to be constant among subjects. Here we don't make this assumption.
+This is much more realistic (see discussion later).
+
+## Testing Symmetry
+
+The test statistic is based on the mean difference $T(y)=\sum_{i=1}^n (y_{i2}-y_{i1})/n=\sum_{i=1}^n d_{i}/n$
+
+Since $f(y_{i1})=f(y|x=1,z=i)=f(y|x=2,z=i)=f(y_{i2})$, $d_{i}$ is symmetric.
+
+Therefore, the null hypothesis is equivalentely written as:
+
+\[
+\begin{aligned}
+H_0:&\ f(y_i|x_i=1,z_i)=f(y_i|x_i=2,z_i) \ \forall z_i \\
+\implies & f(d_i)=f(-d_i)\ \forall z_i
+\end{aligned}
+\]
+
+
+Permutantion within the observation $i$ reduces to randomly flipping the sign of $d_i$. We test for symmetry.
+
+**REMARK** The opposite implication is not always true: $f(d_i)=f(-d_i) \nRightarrow f(y_i|x_i=1,z_i)=f(y_i|x_i=2,z_i) \ \forall z_i$; consider the important example of $y_i\sim N(0,\Sigma(x_i,z_i))$ (i.e. the variance depends on the levels of $x_i$ and the subject $z_i$). In this case $(y_i|x_i=1,z_i)-(y_i|x_i=2,z_i)\sim N(0,\Sigma(x_i=1,z_i)+\Sigma(x_i=2,z_i))$ is still (normal and therefore) symmetric! Therefore the assumption of symmetry of the difference is broader than the assumption of exchangeability of observations within the same subject.
+
+## A bit of theory
+
+(see also Pesarin, 2001; Hemerik \& Goeman, 2017)
+
+Let $Y$ be data taking values in a sample space $\mathcal{Y}$. Let $\Pi$ be a finite set of transformations
+$\pi : \mathcal{Y} \rightarrow \mathcal{Y}$, such that $\Pi$ is a group with respect to the operation of composition of
+transformations:   
+
+- it contains identity, 
+- every element has an inverse in the group,
+- closure: if $\pi_1,\pi_2\in\Pi$: $\pi_1\circ\pi_2\in\Pi$
+
+(e.g. $\Pi$ set of all possible permutations)
+
+
+<!-- ---- -->
+
+**Test statistic** $T(Y):\ \mathbb{R}^n\to\mathbb{R}$
+
+$H_0$: null hypothesis which implies that the joint distribution
+of the test statistics $T(\pi Y), \pi \in \Pi$, is invariant under all transformations in $\Pi$ of $Y$.
+That is, writing $\Pi = \{\pi_1,\ldots, \pi_{|\Pi|}\}$, under $H_0$:
+
+$$T(\pi_1 Y), \ldots, T(\pi_{|\Pi|}Y) \overset{d}{=} T(\pi_1g Y), \ldots, T(\pi_{|\Pi|}gY)$$
+for all $g \in \Pi$.
+
+Note that it holds when for all $\pi \in \Pi$: $Y \overset{d}{=}\pi Y$.
+
+
+<!-- ---- -->
+
+<!-- $\mathbf{y}=(y_1,y_2,\ldots,y_n)$ the vector of observed data -->
+
+**Orbit** of $\mathcal{O}$: 
+$$\mathcal{O}=\{\pi Y : \pi \in \Pi\} \subseteq \mathcal{Y}$$.
+
+(losely) the set of all samples having the same likelihood under $H_0$.  
+$$\mathcal{O}=\{\pi \mathbf{y}:\ f(\pi \mathbf{y})=f(\mathbf{y}) \}$$
+($|\mathcal{O}|$ number of elements of $\mathcal{O}$)
+
+If we assume exchangeability of observations, then:
+$$\mathcal{O}=\{\textrm{all permutations of the observed data }\mathbf{y}\} = \{\mathbf{y}^*:\pi^*\circ\mathbf{y}\}$$
+
+<!-- ---- -->
+
+**Remark**: exchangeable observations: $f(y_1,y_2)=f(y_2,y_1)$. 
+
+It implies observations:  
+
+- are **identically distributed**:  
+$t$-test and linear models assume normality, only asymptotic control of the tye I error  
+- have the **same dependence**:   
+$t$-test and linear models assumes independence, which is just a special case ($f(y_1,y_2)=f(y_2)f(y_1)=f(y_2,y_1)$), i.e. more stringend assumptions 
+
+
+<!-- ---- -->
+
+$T^{(k)}(Y)$ $\lceil(1-\alpha)|\Pi|\ \rceil$-th sorted value of $T(\pi Y)$
+
+**Theorem**: Under $H_0$, $P(T(Y) > T^{(k)}) \leq \alpha$.
+
+intuition:
+
+<!-- $A=\{T(\pi Y): T(\pi Y)\geq  T^{(k)} \}$ -->
+
+
+$$f(\mathbf{y}^*|\mathcal{O})=\frac{f(\mathbf{y}^*\cap\mathcal{O})}{f(\mathcal{O})}=
+\frac{f(\mathbf{y}^*)}{f(\mathcal{O})}=
+\frac{f(\mathbf{y}^*)}{f(\cup_{y\in\mathcal{O}}y)}=\frac{1}{|\mathcal{O}|}\ \forall\ \mathbf{y}^*\in \mathcal{O}$$
+i.e. each permutation is equally likely in the Orbit $\mathcal{O}$.
+
+(due to group structure)
+\[
+\begin{aligned}
+&P(T(\mathbf{y})\geq T^{(k)} | \mathbf{y}^*\in\mathcal{O}, H_0)=\\
+&=\int_{T^{(k)}}^{+\infty} f(T(\mathbf{y}))dT(\mathbf{y})=\\
+&=\sum_{\mathbf{y}\in\mathcal{O}} I(T(\mathbf{y}^*)\geq T(\mathbf{y}))/|\mathcal{O}|\leq \alpha
+\ \ \ \ \forall\mathcal{O}
+\end{aligned}
+\]
+
+
+### Properties (see Pesarin, 2001)
+
+The theorem above proves that the permutation tests have **exact control of the type I error**, i.e. $P(p-value\leq \alpha|H_0)=\alpha$ assuming $\alpha\in \{1/|\mathcal{O}|,2/|\mathcal{O}|,\ldots,1\}$ - don't forget that the orbit $\mathcal{O}$ is a finite set; if this is not the case, the test is (slightly) conservative.
+
+Further properties:  
+
+- The permutations tests are **Unbiased**: $P(p-value\leq \alpha|H_0)>\alpha$  
+- The test is **Consistent**: $P(p-value\leq \alpha|H_1)\to 1$ when $n\to\infty$  
+- The test converge to the parametric counterpart (when it exists)  
+
+## Results
+
+The parametric paired t-test:
+
+```{r}
+t.test(dati2$Y[dati2$Condition=="n"]-
+         dati2$Y[dati2$Condition=="f"])
+```
+
+The nonparametric one:
+```{r}
+flip(dati2$Y[dati2$Condition=="n"]-
+         dati2$Y[dati2$Condition=="f"],perms=10000)
+
+# Equivalent to
+flip(Y~Condition,Strata=~Subj,data=dati2,perms=10000)
+```
+
+
+
+# Permutation-Based Repeated Measures ANOVA
+
+## Introduction
+
+Let be $y$ the outcome, $x$ the condition/treatment ($x\in (f,h,d,n,o)$ in our case). Let be $z=$ `Subject` the nuisance factor in a stratified problem.
+
+Under the null hypothesis:
+$f(y|x,z)=f(y|x',z)=f(y|z) \ \forall (x,x')$  
+while possibly (even under $H_0$)
+$\exists (z,z'): f(y|x,z) \neq f(y|x',z')$  
+
+This imply that observations are exchangeable only within the same subject ($z$).
+
+In the gaussian-parametric approach we assume a different mean for each subject (i.e. Subject-specific effect), but the variance is forced to be constant among subjects. Here we don't make this assumption.
+This is much more realistic (see discussion later).
+
+
+## One Linear model for each Subject
+
+The following approach is developed in Basso \& Finos (2012) and in Finos \& Basso (2014). It is very similar to (basically an esxtension of) the NonParametric Group level analysis developed in SnPM by Nichols and Holmes (2001).
+
+
+Assuming a hierarchical linear model we have a subject-specific linear model for each subject. The vector of outcomes $y_i$ can be modeled as a linear function of the predictor
+
+$y_i=\beta_{0i}+\beta_{1i}x_1+\ldots+\beta_{ki}x_2+\varepsilon_i=X\beta_i+\varepsilon_i; \ i=1\ldots,n$
+
+$y_i$ is a vector, $X$ is a matrix of $k$ predictors, $\varepsilon_i$ is a vector of iid r.v.
+
+
+Therefore:
+$(\hat\beta_i|\beta_i)\sim (\beta_i,\Sigma_i)$
+
+
+We also assume that $\beta_i\sim(\beta,\Psi)$.
+Therefore we have that:
+$\hat\beta_i\sim (\beta,\Psi+\Sigma_i)$
+
+
+Let's consider again the test on the effect of the Codition. The matrix of predictors $X$ is the matrix of $k=C-1=4$ dummy variables. The null hypothesis becomes:
+$$H_0: \beta=(\beta_1,\ldots,\beta_k)=0$$
+The observations within the subject (i.e. stratum) are exchangeable under the null hypothesis.
+However, we don't have a *separate* (in the sense of Pesarin, 2001. This is often known as Subset Pivotality, WY, 1993) test for $H_0:\beta_1=0$ since we are permuting the observation under the global null hypothesis (i.e. values retive to other conditions affect the estimate of $\beta_1$).
+
+The same problem rises if the matrix of $X$ contains other factors, such as `ChanL` and `Lateral`.
+Let's now consider the experimental design modeled as a linear model with `ChanL*Lateral*Condition`.
+
+Data preparation:
+```{r}
+dati$Lateral=dati$Chan
+levels(dati$Lateral)
+levels(dati$Lateral)[c(1,3,5)]="Left"
+levels(dati$Lateral)[-1]="Right"
+levels(dati$Lateral)
+
+dati$ChanL=dati$Chan
+
+# https://en.wikipedia.org/wiki/Regular_expression
+# Digits: \d
+levels(dati$ChanL)=gsub("\\d","",levels(dati$ChanL))
+
+contrasts(dati$Condition)=NULL
+contrasts(dati$ChanL)=NULL
+contrasts(dati$Lateral)=NULL
+```
+
+
+We fit a model *within* each subject and we store the vector of estiamted coefficients.
+```{r}
+dataCoeff=obs2coeffWithin(Y~ ChanL*Lateral*Condition,data=dati,units=~Subj)
+```
+
+From the results above we have that $\hat\beta_i\sim (\beta,\Psi+\Sigma_i)$. 
+Since the model is full-rank in this design (i.e. no residuals error) and balanced, the distribution is also symmetric around the mean: $f(\hat\beta_i-\beta)=f(-(\hat\beta_i-\beta))$ (at least component-wise, i.e. for marginal test)
+
+We know, then, how to derive an exact test for $H_0: \beta=0$.
+Now we use these coefficients as a dataset to test for multivariate symmetry.
+
+A very important result relies in the fact tha the tests are separate, that is, the symmetry under the null hypothesis is ensured for each element of $\beta$ whatever is the true mean of the others elements of $\beta$.
+
+
+```{r}
+mod=flipMixWithin(data=dataCoeff,perms=10000,statTest = "Tnaive")
+summary(mod)
+```
+
+Since the fitted model within each subject is a saturated one, the effect of each nuisance factor is removed without errors in the estimates.
+
+
+p-values for Global effect and factor are computed by NPC methodology.
+
+```{r}
+#Global
+npc(mod,trace=FALSE)
+
+# colnames(mod@permT)
+# Combined by factor
+summary(npc(mod,subsets = list(ChanL=1:2,Lateral=3,Condition=4:7,
+                       ChanL_Lateral=8:9,
+                       ChanL_Condition=10:17,
+                       Lateral_Condition=18:21,
+                       ChanL_Lateral_Condition=22:29)))
+```
+
+
+This approach is very general, it works also when we have non-balenced and non-saturated models. For example we may like to use the values computed on each single trial and not the average. In this case, the model is not full rank and we have different numeber of trial in each condition.
+In this case, the test remains exact only if we can assume symmetric distribution of the errors. If this is not the case, the test become approximated. It should be noted, however that usually the speed in convergence to the exact control of the type I error is faster than for parametric (gaussian) model since the our method becomes exact whenever the distributions of the $\hat\beta_i$ become symmetric (i.e. odd moments converge to zero), while the parametric one is exact when the same distributions become normal (i.e. both even and odd moments converge to zero).
+
+Furthermore, the symmetry is the only condition, we still allow for hetheroscedastic errors between subjects. We also allow for different design matrix between subjects ($X_i\neq X_j$).
+As an extreem and surprisingly result, we also allow for the error within subject to varies.
+
+
+
+## Comparison with parametric Mixed-Model
+
+Compare the previous results with the one of the parametric approach:
+
+```{r}
+library(lmerTest)
+mod_mix=lmer(Y~ ChanL*Lateral*Condition +(ChanL*Lateral|Subj),data=dati)
+
+car::Anova(mod_mix)
+```
+
+
+The (parametric) Repeated measures method assumes sphericity of the errors, the nonparametric (permutation) does not.
+
+Mixed model does not make this assumption, but assumes normality and homoscedasticity of the observations.
+
+This could be a relevant point for our data:
+
+```{r}
+dati$residuals=residuals(mod_mix)
+p <- ggplot(dati, aes(x=Subj, y=residuals,fill=Condition)) +   geom_boxplot()
+p
+```
+
+The variabily of the subjects doesn't not appear homogeneous.
+
+
+
+## Contrasts and post-hoc
+
+### Post-hoc and Custom contrasts
+
+For this example we restrict the analysis to the comparison `Happy vs Neutral`.
+
+Let' now compute the vectors of contrasts (one vector of reach channel, length equal to number of subjects): `Happy vs Neutral`
+
+```{r}
+contrasts(dati$Chan)=NULL
+contrasts(dati$Condition)=NULL
+
+dati_2cond_6chan=subset(dati,(Condition%in%c("h","n")))
+dati_2cond_6chan$Condition=factor(dati_2cond_6chan$Condition)
+dati_2cond_6chan$Condition=relevel(dati_2cond_6chan$Condition,"n")
+
+dataCoeff=obs2coeffWithin(Y~ Chan*Condition,data=dati_2cond_6chan,units=~Subj)
+
+colnames(dataCoeff$coeffWithin)
+```
+
+`dataCoeff$coeffWithin` contains the estimates of the coefficients for the model for each subject.
+
+The column `Conditionh` contains the contrast `h-n` in `Chan01`. To get the same contrast in any other channel we add the column of interaction `Conditionh:Chan` to the one of `Chan01`. As an example, to get `n-f` in `Chan02` we make 
+`Conditionh + ChanO2:Conditionh`.
+
+```{r}
+Y=dataCoeff$coeffWithin[,7]+cbind(ChanO1=0,dataCoeff$coeffWithin[,8:12])
+colnames(Y)=gsub(":Condition.","",colnames(Y))
+colnames(Y)
+```
+
+Analysis: raw and adjusted p-values (min-p preocedure)
+
+```{r}
+res=flip(Y,perms=10000)
+
+res=flip.adjust(res)
+summary(res)
+```
+
+
+To show the results plot intensity colors based on the significance of the adjusted p-values for each channel. Just for visual purpuses, we transform the adjusted p-values by $-log10(p)$:
+
+```{r message=FALSE}
+# install.packages("eegkit")
+library(eegkit)
+
+# get the a z value from the adjusted p-value for each channel, just for visual purpuses:
+pvals=getFlip(res,"Adjust:maxT")
+rownames(pvals)=gsub("Chan","",rownames(pvals))
+
+# match to eeg coordinates
+data(eegcoord)
+cidx <- match(rownames(pvals),rownames(eegcoord))
+
+# plot t-stat in 2d
+eegspace(eegcoord[cidx,4:5],-log10(pvals[,1]),cex.point = 3,colorlab="-log10(adj-p)",mycolors=heat.colors(4))
+```
+
+
+# (minimal) Bibliography
+
+
+- Basso \& Finos (2012). Exact Multivariate Permutation Tests for Fixed
+Effects in Mixed-Models. *Communications in Statistics - Theory and Methods*, 41: 2991 - 3001.
+
+- Finos \& Basso (2014) Permutation tests for between-unit fixed effects in multivariate
+generalized linear mixed models. *Stat Comput* 24, 941–952.
+
+- Nichols \& Holmes (2001) Nonparametric Permutation Tests For Functional Neuroimaging: A Primer with Examples. *Human Brain Mapping* 15, 1-25.
+<https://onlinelibrary.wiley.com/doi/ftr/10.1002/hbm.1058>
