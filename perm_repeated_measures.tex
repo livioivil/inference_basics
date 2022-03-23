@@ -465,7 +465,7 @@ The nonparametric one:
 \begin{verbatim}
 ## 
 ##   Test  Stat tail p-value
-## Y    t 3.287   ><  0.0040
+## Y    t 3.287   ><  0.0038
 \end{verbatim}
 
 \begin{Shaded}
@@ -478,7 +478,7 @@ The nonparametric one:
 \begin{verbatim}
 ## 
 ##   Test  Stat tail p-value
-## Y    t 3.287   ><  0.0034
+## Y    t 3.287   ><  0.0038
 \end{verbatim}
 
 \hypertarget{permutation-based-repeated-measures-anova}{%
@@ -619,36 +619,36 @@ element of \(\beta\) whatever is the true mean of the others elements of
 ## 9999 permutations.
 ## 
 ##                                        est.Su   Test    Stat tail p-value sig.
-## (Intercept)_Tnaive                         NA Tnaive -3.1020   ><  0.0078   **
+## (Intercept)_Tnaive                         NA Tnaive -3.1020   ><  0.0058   **
 ## ChanLP_Tnaive                              NA Tnaive -7.6164   ><  0.0002  ***
-## ChanLPO_Tnaive                             NA Tnaive -5.2511   ><  0.0002  ***
-## LateralRight_Tnaive                        NA Tnaive -1.7162   ><  0.1064     
-## Conditionf_Tnaive                          NA Tnaive  0.9595   ><  0.3528     
-## Conditionh_Tnaive                          NA Tnaive  4.8141   ><  0.0004  ***
+## ChanLPO_Tnaive                             NA Tnaive -5.2511   ><  0.0008  ***
+## LateralRight_Tnaive                        NA Tnaive -1.7162   ><  0.0996     
+## Conditionf_Tnaive                          NA Tnaive  0.9595   ><  0.3456     
+## Conditionh_Tnaive                          NA Tnaive  4.8141   ><  0.0008  ***
 ## Conditionn_Tnaive                          NA Tnaive  4.5430   ><  0.0002  ***
 ## Conditiono_Tnaive                          NA Tnaive  6.7913   ><  0.0002  ***
-## ChanLP:LateralRight_Tnaive                 NA Tnaive  0.5942   ><  0.5636     
-## ChanLPO:LateralRight_Tnaive                NA Tnaive  2.4635   ><  0.0252    *
-## ChanLP:Conditionf_Tnaive                   NA Tnaive -0.3815   ><  0.7046     
-## ChanLPO:Conditionf_Tnaive                  NA Tnaive -0.7127   ><  0.4910     
-## ChanLP:Conditionh_Tnaive                   NA Tnaive -1.2310   ><  0.2296     
-## ChanLPO:Conditionh_Tnaive                  NA Tnaive -1.0945   ><  0.2886     
-## ChanLP:Conditionn_Tnaive                   NA Tnaive  0.1750   ><  0.8616     
-## ChanLPO:Conditionn_Tnaive                  NA Tnaive  0.2800   ><  0.7752     
+## ChanLP:LateralRight_Tnaive                 NA Tnaive  0.5942   ><  0.5588     
+## ChanLPO:LateralRight_Tnaive                NA Tnaive  2.4635   ><  0.0234    *
+## ChanLP:Conditionf_Tnaive                   NA Tnaive -0.3815   ><  0.7118     
+## ChanLPO:Conditionf_Tnaive                  NA Tnaive -0.7127   ><  0.4800     
+## ChanLP:Conditionh_Tnaive                   NA Tnaive -1.2310   ><  0.2270     
+## ChanLPO:Conditionh_Tnaive                  NA Tnaive -1.0945   ><  0.2850     
+## ChanLP:Conditionn_Tnaive                   NA Tnaive  0.1750   ><  0.8640     
+## ChanLPO:Conditionn_Tnaive                  NA Tnaive  0.2800   ><  0.7914     
 ## ChanLP:Conditiono_Tnaive                   NA Tnaive  4.5902   ><  0.0002  ***
-## ChanLPO:Conditiono_Tnaive                  NA Tnaive  4.1505   ><  0.0004  ***
-## LateralRight:Conditionf_Tnaive             NA Tnaive  0.9319   ><  0.3592     
-## LateralRight:Conditionh_Tnaive             NA Tnaive  0.1410   ><  0.8878     
-## LateralRight:Conditionn_Tnaive             NA Tnaive  1.6669   ><  0.1106     
-## LateralRight:Conditiono_Tnaive             NA Tnaive  0.5563   ><  0.5822     
-## ChanLP:LateralRight:Conditionf_Tnaive      NA Tnaive -1.1426   ><  0.2740     
-## ChanLPO:LateralRight:Conditionf_Tnaive     NA Tnaive -1.0363   ><  0.3166     
-## ChanLP:LateralRight:Conditionh_Tnaive      NA Tnaive -0.5911   ><  0.5702     
-## ChanLPO:LateralRight:Conditionh_Tnaive     NA Tnaive -2.1793   ><  0.0452    *
-## ChanLP:LateralRight:Conditionn_Tnaive      NA Tnaive -0.6310   ><  0.5280     
-## ChanLPO:LateralRight:Conditionn_Tnaive     NA Tnaive -1.4425   ><  0.1722     
-## ChanLP:LateralRight:Conditiono_Tnaive      NA Tnaive  1.0884   ><  0.2936     
-## ChanLPO:LateralRight:Conditiono_Tnaive     NA Tnaive -1.0263   ><  0.3158
+## ChanLPO:Conditiono_Tnaive                  NA Tnaive  4.1505   ><  0.0014   **
+## LateralRight:Conditionf_Tnaive             NA Tnaive  0.9319   ><  0.3518     
+## LateralRight:Conditionh_Tnaive             NA Tnaive  0.1410   ><  0.8876     
+## LateralRight:Conditionn_Tnaive             NA Tnaive  1.6669   ><  0.1138     
+## LateralRight:Conditiono_Tnaive             NA Tnaive  0.5563   ><  0.5940     
+## ChanLP:LateralRight:Conditionf_Tnaive      NA Tnaive -1.1426   ><  0.2640     
+## ChanLPO:LateralRight:Conditionf_Tnaive     NA Tnaive -1.0363   ><  0.3134     
+## ChanLP:LateralRight:Conditionh_Tnaive      NA Tnaive -0.5911   ><  0.5490     
+## ChanLPO:LateralRight:Conditionh_Tnaive     NA Tnaive -2.1793   ><  0.0416    *
+## ChanLP:LateralRight:Conditionn_Tnaive      NA Tnaive -0.6310   ><  0.5380     
+## ChanLPO:LateralRight:Conditionn_Tnaive     NA Tnaive -1.4425   ><  0.1734     
+## ChanLP:LateralRight:Conditiono_Tnaive      NA Tnaive  1.0884   ><  0.2860     
+## ChanLPO:LateralRight:Conditiono_Tnaive     NA Tnaive -1.0263   ><  0.3234
 \end{verbatim}
 
 Since the fitted model within each subject is a saturated one, the
@@ -667,7 +667,7 @@ p-values for Global effect and factor are computed by NPC methodology.
 \begin{verbatim}
 ## 
 ##    comb.funct nVar  Stat p-value
-## V1     Fisher   30 89.57  0.0002
+## V1     Fisher   30 86.83  0.0002
 \end{verbatim}
 
 \begin{Shaded}
@@ -688,13 +688,13 @@ p-values for Global effect and factor are computed by NPC methodology.
 ##  permutations.
 ## 
 ##                         comb.funct nVar   Stat p-value sig.
-## ChanL                       Fisher    2 13.371  0.0002  ***
-## Lateral                     Fisher    1  8.517  0.0002  ***
-## Condition                   Fisher    4 19.624  0.0002  ***
-## ChanL_Lateral               Fisher    2  9.091  0.0006  ***
-## ChanL_Condition             Fisher    8 16.377  0.0476    *
-## Lateral_Condition           Fisher    4 11.169  0.0092   **
-## ChanL_Lateral_Condition     Fisher    8 10.267  0.2184
+## ChanL                       Fisher    2 13.667  0.0002  ***
+## Lateral                     Fisher    1  7.131  0.0008  ***
+## Condition                   Fisher    4 19.017  0.0004  ***
+## ChanL_Lateral               Fisher    2  9.099  0.0004  ***
+## ChanL_Condition             Fisher    8 16.464  0.0446    *
+## Lateral_Condition           Fisher    4  9.909  0.0224    *
+## ChanL_Lateral_Condition     Fisher    8 10.416  0.2074
 \end{verbatim}
 
 This approach is very general, it works also when we have non-balanced
@@ -875,12 +875,12 @@ Analysis: raw and adjusted p-values (min-p procedure)
 ## 9999 permutations.
 ## 
 ##         Test   Stat tail p-value Adjust:maxT sig.
-## ChanO1     t -1.472   ><  0.1592      0.1592     
-## ChanO2     t -2.137   ><  0.0454      0.0744     
-## ChanP7     t -2.449   ><  0.0270      0.0630     
-## ChanP8     t -3.675   ><  0.0020      0.0066   **
-## ChanPO7    t -2.375   ><  0.0320      0.0644     
-## ChanPO8    t -2.981   ><  0.0074      0.0240    *
+## ChanO1     t -1.472   ><  0.1594      0.1594     
+## ChanO2     t -2.137   ><  0.0438      0.0744     
+## ChanP7     t -2.449   ><  0.0264      0.0588     
+## ChanP8     t -3.675   ><  0.0022      0.0056   **
+## ChanPO7    t -2.375   ><  0.0322      0.0620     
+## ChanPO8    t -2.981   ><  0.0060      0.0212    *
 \end{verbatim}
 
 To show the results plot intensity colors based on the significance of

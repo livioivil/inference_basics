@@ -2,16 +2,16 @@
 title: "Conditional Inference for Repeated Measures models"
 author: "Livio Finos"
 output: 
+  html_document:
+    toc: yes
+    # toc_float: yes
+  beamer_presentation: default  
+  ioslides_presentation:
+    logo: figs/logoUnipd.jpg
   pdf_document:
     keep_tex: yes
     number_sections: yes
     toc: yes
-  beamer_presentation: default  
-  ioslides_presentation:
-    logo: figs/logoUnipd.jpg
-  html_document:
-    toc: yes
-    # toc_float: yes
 ---
 
 # Introduction

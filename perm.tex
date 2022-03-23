@@ -527,12 +527,12 @@ Remarks:
 \subsubsection{Calculation of the
 p-value}\label{calculation-of-the-p-value}}
 
-Over B=\ensuremath{10^{4}} permutations we got 9845 times a
+Over B=\ensuremath{10^{4}} permutations we got 9831 times a
 \(\hat{\beta}_1 ^{* b} \leq \hat{\beta}_1 ^{obs}\).
 
 The p-value (significance) is
 \(p=\frac{\# (\hat{\beta}_1 ^{* b} \geq \hat{\beta}_1 ^{obs})}{B} =\)
-0.0157
+0.0171
 
 (\(\hat{\beta}_1 ^{obs}\) counts as a random permutation)
 
@@ -540,7 +540,7 @@ The p-value (significance) is
 \subsubsection{Interpretation}\label{interpretation}}
 
 The probability of \(p=P (\hat{\beta}_1 ^ * \geq \hat{\beta}_1=\) 0.206
-\(| H_0)\) is equal to \(p =\) 0.0157, i.e.~very small.\\
+\(| H_0)\) is equal to \(p =\) 0.0171, i.e.~very small.\\
 So, it was unlikely to get a value like this \textbf{IF \(H_0\) is
 true}.
 
@@ -611,7 +611,7 @@ experiment) finds false correlations with probability \(\alpha\)
 \begin{verbatim}
 ## 
 ##               Test  Stat tail p-value
-## Reaction.Time    t 2.633    >  0.0110
+## Reaction.Time    t 2.633    >  0.0260
 \end{verbatim}
 
 \begin{Shaded}
@@ -657,7 +657,7 @@ I consider anomalous coefficients estimated as very small but also very
 large (`far from 0'). The p-value is
 
 \(p=\frac{\#(|\hat{\beta}_1^{*b} | \geq|\hat{\beta}_1^{obs}|)}{B}=\)
-0.0316
+0.0347
 
 (remark: the observed test stat is included among the permuted one)
 
@@ -673,7 +673,7 @@ In \texttt{flip}:
 \begin{verbatim}
 ## 
 ##               Test  Stat tail p-value
-## Reaction.Time    t 2.633   ><  0.0368
+## Reaction.Time    t 2.633   ><  0.0362
 \end{verbatim}
 
 \begin{Shaded}
@@ -761,25 +761,30 @@ hypotheses. Springer Science \& Business Media.)
 If we assume exchangeability of observations, then:
 \[\mathcal{O}=\{\textrm{all permutations of the observed data }\mathbf{y}\} = \{\mathbf{y}^*:\pi^*\circ\mathbf{y}\}\]
 
-\textbf{Remark}: exchangeable observations: \(f(y_1,y_2)=f(y_2,y_1)\).
+\textbf{Remark about assumption of exchangeability}: This means that,
+Under the Null Hypothesis, observations within subject are assumed to be
+exchangeable: e.g.~\(f(y_1,y_2)=f(y_2,y_1)\).
 
-It implies observations:
+This assumption is always true as long as observations:
 
 \begin{itemize}
 \tightlist
 \item
-  are \textbf{identically distributed}:\\
-  \(t\)-test and linear models assume normality, only asymptotic control
-  of the tye I error\\
+  are \textbf{identically distributed},\\
 \item
-  have the \textbf{same dependence}:\\
-  \(t\)-test and linear models assumes independence, which is just a
-  special case (\(f(y_1,y_2)=f(y_2)f(y_1)=f(y_2,y_1)\)), i.e.~more
-  stringent assumptions
+  have the \textbf{same dependence}, e.g.~the same correlation.
 \end{itemize}
 
-\textbf{Intuition} for an alternative proof of the control of the type I
-error
+Parametric \(t\)-test and linear models assumes independence (more
+stringent than `same dependence'), and normality of the errors,
+i.e.~more severe assumptions than permutation approach.
+
+When normality is not met, the parametric approach only provides
+asymptotic control of the tye I error, while permutation approach
+provides exactness.
+
+\textbf{An Intuition about the proof} for an alternative proof of the
+control of the type I error
 
 \[f(\mathbf{y}|\mathcal{O})=\frac{f(\mathbf{y}\cap\mathcal{O})}{f(\mathcal{O})}=
 \frac{f(\mathbf{y})}{f(\mathcal{O})}=
@@ -881,12 +886,6 @@ If \(H_0: \beta_1=0\), \(t \sim t (n-2)\) is true
 
 On \texttt{reaction} data and \(H_1: \beta_1 \neq 0\) (bilateral
 alternative)
-
-han detto che era probabillmente uno dei partecipanti, e che bisogna
-disattivare la possibilità di scrivere sullo schermo, credo l'host possa
-risalire a chi sia stato han detto che era probabillmente uno dei
-partecipanti, e che bisogna disattivare la possibilità di scrivere sullo
-schermo, credo l'host possa risalire a chi sia stato
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1034,7 +1033,7 @@ tests}\label{permutationally-equivalent-tests}}
   \tightlist
   \item
     we don't need \(y_1\) and \(y_2\) do be continuous, we don't even
-    neet to have finite moments (usual minimal assumption).
+    need to have finite moments (usual minimal assumption).
   \end{itemize}
 \item
   Hypotheses
@@ -1119,12 +1118,13 @@ problem}\label{the-two-independent-sample-problem}}
   \begin{itemize}
   \tightlist
   \item
-    \(n_1\) observations from \(y_1\)
+    \(n_1\) observations from \(y_1\)\\
   \item
-    \(n_2\) observations from \(y_2\)
+    \(n_2\) observations from \(y_2\)\\
   \item
     we don't need \(y_1\) and \(y_2\) do be continuous, we don't even
-    neet to have finite moments (usual minimal assumption)
+    neeD to have second (nor higher order) finite moments, which is the
+    usual minimal assumption.
   \end{itemize}
 \item
   Hypotheses
@@ -1151,7 +1151,7 @@ problem}\label{the-two-independent-sample-problem}}
   \item
     Estimated slope coefficient (label of groups as dummy predictor)\\
   \item
-    other test statistic such as the (unstandardized) mean difference
+    other test statistic such as the (non standardized) mean difference
     are permutationally equivalent
   \end{itemize}
 \end{itemize}
@@ -1344,7 +1344,7 @@ old {[}60-100)
   \item
     \(n_i\) observations from \(y_i\) (\(i=1,\ldots,C\))
   \item
-    we don't need \(y_i\) do be continuous, we don't even neet to have
+    we don't need \(y_i\) do be continuous, we don't even need to have
     finite moments (usual minimal assumption)
   \end{itemize}
 \item
@@ -1371,7 +1371,7 @@ old {[}60-100)
   \item
     \(R^2\)\\
   \item
-    other test statistic such as the (unstandardized) mean difference
+    other test statistic such as the (non standardized) mean difference
     are permutationally equivalent
   \item
     Rank-based is also possible
@@ -1471,7 +1471,7 @@ old {[}60-100)
 nuisances)}\label{stratified-permutations-discrete-nuisances}}
 
 What if we want to test \(x=\) \texttt{Age} also using \(z=\)
-\texttt{Gender} as nuisance in the \texttt{reaction} dataset?
+\texttt{Gender} as nuisance in the \texttt{reaction} data set?
 
 Under the null hypothesis:
 \(f(y|x,z)=f(y|x',z)=f(y|z) \ \forall (x,x')\)
@@ -1675,7 +1675,7 @@ testing.
 \subsubsection{Tippett (min-p) Combining
 Function}\label{tippett-min-p-combining-function}}
 
-We ispect the rejection regions of the two univariate tests and the one
+We inspect the rejection regions of the two univariate tests and the one
 of Fisher combination.\\
 The intersection of each univariate test with the Fisher region defines
 the rejection region of a closed testing - i.e.~adjusted for multiple
@@ -1856,7 +1856,7 @@ p-value Independents: little or no gain\\
 correlation produce p-value positively correlated)
 
 \textbf{Real data}\\
-The variables of real datasets are often correlated\\
+The variables of real data sets are often correlated\\
 then permutations are (often) convenient
 
 \textbf{How?} \texttt{R:\ library(flip);\ flip();\ flip.adjust()}
@@ -2069,8 +2069,8 @@ There is an effect of \texttt{Dose}, overall.
 \begin{itemize}
 \tightlist
 \item
-  By end-points (closed testing with max-t combininig function). Try
-  also different methods (e.g.~\texttt{method="Fisher"}) and compare the
+  By end-points (closed testing with max-t combining function). Try also
+  different methods (e.g.~\texttt{method="Fisher"}) and compare the
   results of \texttt{method="minP"} with the one of
   \texttt{method="Holm"}.
 \end{itemize}
@@ -2103,6 +2103,11 @@ correction for multiplicity, while \texttt{Tmax} does not.
 The Grounding Theory:\\
 - Pesarin (2001) Multivariate Permutation Tests: With Applications in
 Biostatistics by Fortunato, Wiley, New York
+
+An alternative approach to the Permutation testing:\\
+- Hemerik J, Goeman J. Exact testing with random permutations. Test
+(Madr). 2018;27(4):811-825. doi: 10.1007/s11749-017-0571-1. Epub 2017
+Nov 30. PMID: 30930620; PMCID: PMC6405018.
 
 A flexible approach to General Linear Model based on the sign-flip score
 test:\\
