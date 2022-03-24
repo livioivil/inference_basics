@@ -2,10 +2,10 @@
 title: "Statistical Inference with Repeated Measures (EEG) data"
 author: "Livio Finos"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     number_sections: yes
+    toc: yes
+  pdf_document:
     toc: yes
 ---
 
@@ -115,7 +115,7 @@ p+geom_point(aes(group = Subj, colour = Subj))+
 The dispersion of the data has been largely reduced.
 This effect is the one taken in account by the models for repeated measures.
 
-# Repeated Mesures ANOVA
+# Repeated Measures ANOVA
 ## Introduction
 
 wiki reference:
@@ -286,7 +286,7 @@ between each pair of scores it is necessary that these differences have equal va
 
 
 We can check sphericity assumption using the covariance matrix, but it turns out to be fairly laborious. Remember that  variance of differences can be computed as:
-$$S^2_x-S^2_y = S^2_x +S^2_y - 2S_{xy}$$
+$$Var(x-y)=S^2_{x-y} = S^2_x +S^2_y - 2S_{xy}$$
 
 
 Further reading:
