@@ -6,8 +6,8 @@
 ]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -99,7 +99,7 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
@@ -527,12 +527,12 @@ Remarks:
 \subsubsection{Calculation of the
 p-value}\label{calculation-of-the-p-value}}
 
-Over B=\ensuremath{10^{4}} permutations we got 9831 times a
+Over B=\ensuremath{10^{4}} permutations we got 9830 times a
 \(\hat{\beta}_1 ^{* b} \leq \hat{\beta}_1 ^{obs}\).
 
 The p-value (significance) is
 \(p=\frac{\# (\hat{\beta}_1 ^{* b} \geq \hat{\beta}_1 ^{obs})}{B} =\)
-0.0171
+0.0172
 
 (\(\hat{\beta}_1 ^{obs}\) counts as a random permutation)
 
@@ -540,7 +540,7 @@ The p-value (significance) is
 \subsubsection{Interpretation}\label{interpretation}}
 
 The probability of \(p=P (\hat{\beta}_1 ^ * \geq \hat{\beta}_1=\) 0.206
-\(| H_0)\) is equal to \(p =\) 0.0171, i.e.~very small.\\
+\(| H_0)\) is equal to \(p =\) 0.0172, i.e.~very small.\\
 So, it was unlikely to get a value like this \textbf{IF \(H_0\) is
 true}.
 
@@ -611,7 +611,7 @@ experiment) finds false correlations with probability \(\alpha\)
 \begin{verbatim}
 ## 
 ##               Test  Stat tail p-value
-## Reaction.Time    t 2.633    >  0.0260
+## Reaction.Time    t 2.633    >  0.0120
 \end{verbatim}
 
 \begin{Shaded}
@@ -657,7 +657,7 @@ I consider anomalous coefficients estimated as very small but also very
 large (`far from 0'). The p-value is
 
 \(p=\frac{\#(|\hat{\beta}_1^{*b} | \geq|\hat{\beta}_1^{obs}|)}{B}=\)
-0.0347
+0.0374
 
 (remark: the observed test stat is included among the permuted one)
 
@@ -673,7 +673,7 @@ In \texttt{flip}:
 \begin{verbatim}
 ## 
 ##               Test  Stat tail p-value
-## Reaction.Time    t 2.633   ><  0.0362
+## Reaction.Time    t 2.633   ><  0.0369
 \end{verbatim}
 
 \begin{Shaded}
@@ -796,7 +796,7 @@ i.e.~each permutation is equally likely in the Orbit \(\mathcal{O}\).
 &E(\phi(Y)|\mathbf{y}\in\mathcal{O}, H_0)=\\
 &P(T(\mathbf{y})\geq T^{(k)} | \mathbf{y}\in\mathcal{O}, H_0)=\\
 &=\int_{T^{(k)}}^{+\infty} f(T(\mathbf{y}))dT(\mathbf{y})=\\
-&=\sum_{\mathbf{y}\in\mathcal{O}} I(T(\mathbf{y})\geq T^{}/|\mathcal{O}|\leq \alpha
+&=\sum_{\mathbf{y}\in\mathcal{O}} I(T(\mathbf{y})\geq T^{})/|\mathcal{O}|\leq \alpha
 \ \ \ \ \forall\mathcal{O}
 \end{aligned}
 \]
@@ -811,8 +811,11 @@ And now
 The theorem above proves that the permutation tests have \textbf{exact
 control of the type I error}, i.e.~\(P(p-value\leq \alpha|H_0)=\alpha\)
 assuming \(\alpha\in \{1/|\mathcal{O}|,2/|\mathcal{O}|,\ldots,1\}\) -
-don't forget that the orbit \(\mathcal{O}\) is a finite set; if this is
-not the case, the test is (slightly) conservative.
+don't forget that the orbit \(\mathcal{O}\) is a finite set and the
+cumulative distribution of \(T(\pi \mathbf{y})\) is a step function.\\
+When \(\alpha\) has different values, the test is (slightly)
+conservative (or one need to use randomized tests that are not discussed
+in this course).
 
 Further properties:
 
@@ -1332,696 +1335,24 @@ methods}\label{chi-square-and-other-cathegorical-methods}}
 \subsection{ANOVA (C-sample)}\label{anova-c-sample}}
 
 e.g.~3 groups of \texttt{Age}: young {[}18-35), middle age {[}35-60),
-old {[}60-100)
-
-\begin{itemize}
-\tightlist
-\item
-  C samples:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    \(n_i\) observations from \(y_i\) (\(i=1,\ldots,C\))
-  \item
-    we don't need \(y_i\) do be continuous, we don't even need to have
-    finite moments (usual minimal assumption)
-  \end{itemize}
-\item
-  Hypotheses
-
-  \begin{itemize}
-  \tightlist
-  \item
-    \(H_0: F(y_i)=F(y_j)\ \forall (i,j)\)\\
-  \item
-    \(H_1: \exists (i,j): \ F(y_i)\neq F(y_j)\)
-  \end{itemize}
-\end{itemize}
-
-\begin{itemize}
-\tightlist
-\item
-  Test Statistic:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    F-statistic\\
-  \item
-    \(R^2\)\\
-  \item
-    other test statistic such as the (non standardized) mean difference
-    are permutationally equivalent
-  \item
-    Rank-based is also possible
-  \end{itemize}
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{reaction}\SpecialCharTok{$}\NormalTok{AgeCateg}\OtherTok{=}\FunctionTok{cut}\NormalTok{(reaction}\SpecialCharTok{$}\NormalTok{Age,}\FunctionTok{c}\NormalTok{(}\DecValTok{18}\NormalTok{,}\DecValTok{35}\NormalTok{,}\DecValTok{65}\NormalTok{,}\DecValTok{100}\NormalTok{),}\AttributeTok{right =} \ConstantTok{FALSE}\NormalTok{)}
-  
-\NormalTok{(}\AttributeTok{res=}\FunctionTok{flip}\NormalTok{(Reaction.Time}\SpecialCharTok{\textasciitilde{}}\NormalTok{AgeCateg,}\AttributeTok{data=}\NormalTok{reaction,}\AttributeTok{perms =} \DecValTok{10000}\NormalTok{,}\AttributeTok{statTest  =} \StringTok{"ANOVA"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
+old {[}60-100){]} lines(d\(Dose,(d\)AUC),col=s,lwd=2)\}){]}
+lines(d\(Dose,(d\)Cmax),col=s,lwd=2)\}){]}
+lines(d\(Dose,(d\)Tmax),col=s,lwd=2)\})
 
 \begin{verbatim}
-## 
-##               Test Stat tail p-value
-## Reaction.Time    F 4.02    >  0.0838
-\end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{summary}\NormalTok{(}\FunctionTok{lm}\NormalTok{(Reaction.Time}\SpecialCharTok{\textasciitilde{}}\NormalTok{AgeCateg,}\AttributeTok{data=}\NormalTok{reaction))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = Reaction.Time ~ AgeCateg, data = reaction)
-## 
-## Residuals:
-##    Min     1Q Median     3Q    Max 
-## -6.495 -3.279  0.465  2.246  6.112 
-## 
-## Coefficients:
-##                  Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)        16.157      2.331   6.932 0.000225 ***
-## AgeCateg[35,65)     4.428      3.296   1.343 0.221144    
-## AgeCateg[65,100)   11.418      4.037   2.828 0.025478 *  
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 4.662 on 7 degrees of freedom
-## Multiple R-squared:  0.5346, Adjusted R-squared:  0.4016 
-## F-statistic:  4.02 on 2 and 7 DF,  p-value: 0.06878
-\end{verbatim}
-
-\hypertarget{stochastic-ordering}{%
-\subsubsection{Stochastic Ordering}\label{stochastic-ordering}}
-
-\begin{itemize}
-\tightlist
-\item
-  Same assumptions of ANOVA\\
-\item
-  Hypotheses
-
-  \begin{itemize}
-  \tightlist
-  \item
-    same null hypo \(H_0: F(y_i)=F(y_j)\ \forall (i,j)\)\\
-  \item
-    BUT \(H_1: \exists (i,j): \ F(y_i)< F(y_j)\) (or \(>\))
-  \end{itemize}
-\end{itemize}
-
-(more details on NPC later)
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{(}\AttributeTok{res=}\FunctionTok{flip}\NormalTok{(Reaction.Time}\SpecialCharTok{\textasciitilde{}}\NormalTok{AgeCateg,}\AttributeTok{data=}\NormalTok{reaction,}\AttributeTok{perms =} \DecValTok{10000}\NormalTok{,}\AttributeTok{tail=}\DecValTok{1}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##                                    Test   Stat tail p-value
-## Reaction.Time_|_AgeCateg.[35,65).     t 0.1423    >  0.4322
-## Reaction.Time_|_AgeCateg.[65,100).    t 2.2444    >  0.0259
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{npc}\NormalTok{(res)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##    comb.funct nVar  Stat p-value
-## V1     Fisher    2 4.492  0.0210
-\end{verbatim}
-
-\hypertarget{stratified-permutations-discrete-nuisances}{%
-\subsection{Stratified permutations (discrete
-nuisances)}\label{stratified-permutations-discrete-nuisances}}
-
-What if we want to test \(x=\) \texttt{Age} also using \(z=\)
-\texttt{Gender} as nuisance in the \texttt{reaction} data set?
-
-Under the null hypothesis:
-\(f(y|x,z)=f(y|x',z)=f(y|z) \ \forall (x,x')\)
-
-Therefore, even under the \(H_0\), it holds \(f(y_i)=f(y_j)\) ONLY IF
-\(z_i=z_j\) (obs \(i\) and \(j\) have the same gender).
-
-Can e permute same as in the previous cases? NO. We permute the
-observations only within the strata defined by \(z\).
-
-\textbf{Remark}:\\
-- we don't assume linear effect of the nuisance,\\
-- we also allow heteroscedastic errors among strata.
-
-(Test statistic remains the same)
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{(}\AttributeTok{res=}\FunctionTok{flip}\NormalTok{(Reaction.Time}\SpecialCharTok{\textasciitilde{}}\NormalTok{Age,}\AttributeTok{Strata=}\SpecialCharTok{\textasciitilde{}}\NormalTok{Gender,}\AttributeTok{data=}\NormalTok{reaction,}\AttributeTok{perms=}\DecValTok{10000}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##               Test  Stat tail p-value
-## Reaction.Time    t 2.633   ><  0.0684
-\end{verbatim}
-
-Alternative model (more about NPC later):
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{(}\AttributeTok{res=}\FunctionTok{flip}\NormalTok{(Reaction.Time}\SpecialCharTok{\textasciitilde{}}\NormalTok{Age}\SpecialCharTok{*}\NormalTok{Gender,}\AttributeTok{Strata=}\SpecialCharTok{\textasciitilde{}}\NormalTok{Gender,}\AttributeTok{data=}\NormalTok{reaction,}\AttributeTok{perms=}\DecValTok{10000}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##                               Test    Stat tail p-value
-## Reaction.Time_|_Age              t  2.4826   ><  0.0725
-## Reaction.Time_|_Age:Gender.M.    t -0.6518   ><  0.3402
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{npc}\NormalTok{(res)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##    comb.funct nVar  Stat p-value
-## V1     Fisher    2 3.702  0.1371
-\end{verbatim}
-
-\hypertarget{multivariate-testing}{%
-\section{Multivariate Testing}\label{multivariate-testing}}
-
-\hypertarget{seeds-data}{%
-\subsection{Seeds data}\label{seeds-data}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# install.packages("flip")}
-\FunctionTok{library}\NormalTok{(flip)}
-\end{Highlighting}
-\end{Shaded}
-
-omit the \texttt{NA}s:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{data}\NormalTok{(seeds,}\AttributeTok{package =} \StringTok{"flip"}\NormalTok{)}
-\NormalTok{seeds}\OtherTok{=}\FunctionTok{na.omit}\NormalTok{(seeds)}
-\NormalTok{seeds}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##    grp    x     y
-## 9    0 6.03 12.54
-## 10   0 4.20 14.81
-## 11   0 4.49 16.71
-## 12   0 2.00  7.53
-## 13   0 2.84  7.02
-## 14   0 3.88  8.09
-## 15   0 2.04  5.76
-## 16   0 5.48 18.01
-## 17   0 2.31  8.81
-## 18   0 1.90  8.17
-## 19   0 1.75  6.62
-## 20   0 3.02  7.69
-## 24   1 3.31 18.49
-## 25   1 6.56 19.20
-## 26   1 3.16  9.85
-## 27   1 4.07 15.83
-## 28   1 2.09  6.16
-## 29   1 6.72 17.58
-## 30   1 3.93 19.29
-## 31   1 2.56 10.77
-## 32   1 8.30 18.31
-## 33   1 4.21 10.56
-## 34   1 1.86  9.48
-## 35   1 3.09 12.54
-## 36   1 5.09 18.35
-## 37   1 4.08 11.84
-## 38   1 3.63 11.44
-## 39   1 2.61  7.66
-## 40   1 5.21 12.00
-\end{verbatim}
-
-Use a permutation methods to test if there is any difference between the
-two groups in \texttt{grp} on the two variables \texttt{x} and
-\texttt{y}:
-
-\begin{itemize}
-\tightlist
-\item
-  perform the two tests for the two variables
-\item
-  Combine the two p-values using the Fisher Combining Function to test
-  the global hypothesis
-\item
-  Use a closed testing procedure to adjust the 2 p-values.
-\end{itemize}
-
-\hypertarget{joint-distribution}{%
-\subsection{Joint distribution}\label{joint-distribution}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(flip)}
-\NormalTok{res}\OtherTok{=}\FunctionTok{flip}\NormalTok{(.}\SpecialCharTok{\textasciitilde{}}\NormalTok{grp,}\AttributeTok{data=}\NormalTok{seeds)}
-\FunctionTok{hist}\NormalTok{(res)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-35-1} \end{center}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(res)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-35-2} \end{center}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Global p{-}value}
-\FunctionTok{npc}\NormalTok{(res,}\StringTok{"Fisher"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##    comb.funct nVar  Stat p-value
-## V1     Fisher    2 4.628  0.0880
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# adjusted p: Closed testing with Fisher combination}
-\FunctionTok{flip.adjust}\NormalTok{(res,}\StringTok{"Fisher"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##   Test  Stat tail p-value Adjust:Fisher
-## x    t 1.320   ><  0.1810        0.1810
-## y    t 2.061   ><  0.0540        0.0880
-\end{verbatim}
-
-\hypertarget{rejection-regions}{%
-\subsection{Rejection regions}\label{rejection-regions}}
-
-Ask for the multivariate distribution of the p-values:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{res}\OtherTok{=}\FunctionTok{flip}\NormalTok{(.}\SpecialCharTok{\textasciitilde{}}\NormalTok{grp,}\AttributeTok{data=}\NormalTok{seeds,}\AttributeTok{flipReturn =}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
-\NormalTok{res.fisher}\OtherTok{=}\FunctionTok{npc}\NormalTok{(res,}\StringTok{"Fisher"}\NormalTok{,}\AttributeTok{flipReturn =}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
-\NormalTok{res.tippett}\OtherTok{=}\FunctionTok{npc}\NormalTok{(res,}\StringTok{"minP"}\NormalTok{,}\AttributeTok{flipReturn =}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{fisher-combining-function}{%
-\subsubsection{Fisher Combining
-Function}\label{fisher-combining-function}}
-
-We inspect the rejection regions of the two univariate tests and the one
-of Fisher combination.\\
-The intersection of each univariate test with the Fisher region defines
-the rejection region of a closed testing - i.e.~adjusted for multiple
-testing.
-
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-37-1} \end{center}
-
-\hypertarget{tippett-min-p-combining-function}{%
-\subsubsection{Tippett (min-p) Combining
-Function}\label{tippett-min-p-combining-function}}
-
-We inspect the rejection regions of the two univariate tests and the one
-of Fisher combination.\\
-The intersection of each univariate test with the Fisher region defines
-the rejection region of a closed testing - i.e.~adjusted for multiple
-testing. This fall to be the same rejection region given by Wesfall \&
-Young. Indeed, it is a closed testing with shortcut.
-
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-38-1} \end{center}
-
-\hypertarget{fwer-control-via-permutations-tests}{%
-\section{FWER control via Permutations
-tests}\label{fwer-control-via-permutations-tests}}
-
-\hypertarget{permutation-bonferroni}{%
-\subsection{Permutation Bonferroni}\label{permutation-bonferroni}}
-
-Bonferroni is conservative
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Bonferroni bound}\\
-  Reject for p-values at most \(\alpha/m\)\\
-\item
-  \textbf{By Boole's inequality}\\
-  Guaranteed: FWER \(\leq \alpha\), but often FWER \(<\alpha\)\\
-\item
-  \textbf{Can we improve?}\\
-  Reject for p-values at most \(\tilde\alpha > \alpha/m\), while keeping
-  FWER control\\
-\item
-  \textbf{Yes we can}\\
-  By permutations
-\end{itemize}
-
-\hypertarget{improved-bonferroni}{%
-\subsection{Improved Bonferroni}\label{improved-bonferroni}}
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Reduced \(\alpha\)}\\
-  Reject \(H_i\) if \(p_i \leq \tilde\alpha\)
-\item
-  \textbf{Control of FWER?}
-\end{itemize}
-
-\[
-\begin{aligned}
-\mathrm{FWER} &= \mathrm{P} \big(\textrm{$p_i \leq \tilde\alpha$ for at least one $i$ with $H_i$ true} \big) \\
-    &= \mathrm{P} \Big( \bigcup_{i\in T} \{p_i \leq \tilde\alpha\} \Big) \\
-    &= \mathrm{P} \Big( \min_{i \in T} p_i \leq \tilde\alpha \Big) \leq \alpha
-\end{aligned}
-\]
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{How can we determine the value of \(\tilde \alpha\)?}\\
-  Using permutations to find the distribution of the minimum p-value
-\end{itemize}
-
-\hypertarget{multiple-testing-using-permutations}{%
-\subsection{Multiple testing using
-permutations}\label{multiple-testing-using-permutations}}
-
-\textbf{The single step min-P method}
-
-\begin{itemize}
-\tightlist
-\item
-  Calculate the smallest p-value \(m\) for the real data\\
-\item
-  Randomly permute the data\\
-\item
-  Calculate new p-values for all tests based on permuted data\\
-\item
-  Calculate the smallest p-value \(m^\pi\) for permuted data\\
-\item
-  Repeat permutation many (say k=1000) times:
-  \(m^\pi_1, \ldots, m^\pi_k\)\\
-\item
-  Calculate \(\tilde\alpha\) as the \(\alpha\)-quantile of
-  \(m^\pi_1, \ldots, m^\pi_k\)
-\end{itemize}
-
-\textbf{Multiple testing result}\\
-Reject all hypotheses with (non-permuted) p-values at most
-\(\tilde\alpha\)
-
-\hypertarget{correlation-structure-of-p-values}{%
-\subsection{Correlation structure of
-p-values}\label{correlation-structure-of-p-values}}
-
-\textbf{Permutation}\\
-- Destroys correlation between covariates and response\\
-- Retains correlation among covariates
-
-\textbf{Consequence}\\
-- P-values of correlated tests (i.e.~data) remain correlated in
-permutations\\
-- Distribution of minimum p-value correctly takes correlations into
-account
-
-\textbf{When the gain relative to Bonferroni is the gain large?}\\
-- Negatively correlated p-values: typically no gain\\
-- Independent p-values: minimal gain\\
-- Positively correlated p-values: gain can be large
-
-\hypertarget{westfall-young-permutation-holm}{%
-\subsection{Westfall \&~Young: permutation
-Holm}\label{westfall-young-permutation-holm}}
-
-\emph{Westfall PH, Young SS (1993) Resampling-Based Multiple Testing:
-Examples and Methods for p-Value Adjustment. Wiley}
-
-\textbf{Sequential permutation multiple testing}
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Single step}\\
-  Single step min-P is permutation equivalent of Bonferroni\\
-\item
-  \textbf{What about Holm?}\\
-  Permutation equivalent of Holm's method: Westfall \&~Young
-\end{itemize}
-
-\textbf{The min-P algorithm}
-
-\begin{itemize}
-\tightlist
-\item
-  Start with all hypotheses
-\item
-  Repeat
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Do single step min-P to calculate \(\tilde\alpha\)\\
-  \item
-    Reject hypotheses with p-value \(\leq \tilde\alpha\)\\
-  \item
-    Remove rejected hypotheses\\
-  \end{itemize}
-\item
-  Until no new rejections occur
-\end{itemize}
-
-\hypertarget{closed-testing}{%
-\subsection{Closed Testing}\label{closed-testing}}
-
-\emph{R Marcus, E Peritz, KR Gabriel (1976). On closed testing
-procedures with special reference to ordered analysis of variance.
-Biometrika 63: 655-660.}
-
-Test in each node: any multivariate permutation test
-
-\hypertarget{closure-set}{%
-\subsubsection{Closure Set}\label{closure-set}}
-
-\begin{center}\includegraphics[width=9.82in]{./figs/closed_set} \end{center}
-
-Adjusted \(\tilde p_A=\max(p_A,p_{AB},p_{AC},p_{ABC})\)
-
-\hypertarget{conclusion-1}{%
-\subsection{Conclusion}\label{conclusion-1}}
-
-\textbf{Accounting for dependencies}
-
-Adjusted p-value become lower (i.e.~more rejections)
-
-\textbf{When?}\\
-- Negative correlation: generally no gain\\
-p-value Independents: little or no gain\\
-- Positive correlation: big gain, usually\\
-(NB: a test with bi-directional alternative and with negative
-correlation produce p-value positively correlated)
-
-\textbf{Real data}\\
-The variables of real data sets are often correlated\\
-then permutations are (often) convenient
-
-\textbf{How?} \texttt{R:\ library(flip);\ flip();\ flip.adjust()}
-
-\hypertarget{a-case-study-pharmacokinetic-study-of-carbidopa}{%
-\section{A case study: Pharmacokinetic Study of
-Carbidopa}\label{a-case-study-pharmacokinetic-study-of-carbidopa}}
-
-Description:\\
-\url{http://webserv.jcu.edu/math//faculty/TShort/Bradstreet/part2/part2-table6.html}
-
-As part of a pharmacokinetic study, 12 healthy male subjects were
-allocated randomly to a three period crossover design receiving one of
-three graded doses (25, 50, 100 mg) of Carbidopa q8h in each treatment
-period. A seven day washout period separated the treatment periods. The
-pharmacokinetic variables AUC, Cmax, and Tmax were calculated for each
-subject from plasma concentrations assayed from blood samples taken at
-0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, and 8 hours postdosing following the
-second dose of carbidopa on the sixth day of each treatment period.
-
-dataset:\\
-\url{http://webserv.jcu.edu/math//faculty/TShort/Bradstreet/part2/Bradp2t6.txt}
-
-Analyze the dataset without taking in account the Study Periods (which
-have been randomized in each subject, hence we can avoid to account for
-it in the analysis).
-
-Research questions:
-
-\begin{itemize}
-\tightlist
-\item
-  Is there a dose response for AUC, Cmax, or Tmax? Overall?
-\item
-  Can dose proportionality be established? (try to fit a linear model
-  for each endpoint, then discuss the results)
-\end{itemize}
-
-\hypertarget{a-solution}{%
-\subsection{A solution}\label{a-solution}}
-
-We answer to both first and second question with a single analysis: we
-perform a linear model (accounting for individual variability) on log
-transformed end-points.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\#Reading and make{-}up of the data}
-
-\NormalTok{dati}\OtherTok{=}\FunctionTok{read.table}\NormalTok{(}\StringTok{"http://webserv.jcu.edu/math//faculty/TShort/Bradstreet/part2/Bradp2t6.txt"}\NormalTok{,}\AttributeTok{skip =} \DecValTok{1}\NormalTok{,}\AttributeTok{header =} \ConstantTok{TRUE}\NormalTok{)}
-
-\NormalTok{dati}\OtherTok{=}\FunctionTok{cbind}\NormalTok{(dati[,}\DecValTok{1}\NormalTok{],}\FunctionTok{matrix}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(dati[,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]),}\FunctionTok{nrow}\NormalTok{(dati)}\SpecialCharTok{*}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{))}
-\FunctionTok{colnames}\NormalTok{(dati)}\OtherTok{=}\FunctionTok{c}\NormalTok{(}\StringTok{"Sub"}\NormalTok{,}\StringTok{"Dose"}\NormalTok{,}\StringTok{"AUC"}\NormalTok{,}\StringTok{"Cmax"}\NormalTok{,}\StringTok{"Tmax"}\NormalTok{)}
-
-\NormalTok{dati}\OtherTok{=}\FunctionTok{as.data.frame}\NormalTok{(dati)}
-\FunctionTok{str}\NormalTok{(dati)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 'data.frame':    36 obs. of  5 variables:
-##  $ Sub : num  1 2 3 4 5 6 7 8 9 10 ...
-##  $ Dose: num  100 25 50 50 50 25 100 25 50 25 ...
-##  $ AUC : num  604 140 386 175 605 ...
-##  $ Cmax: num  137 44.4 86.6 46.4 194 44.9 318 29 119 58.4 ...
-##  $ Tmax: num  1.5 1 1.5 1.5 0.5 1 1 1 2 2 ...
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# transform all responses with log{-}transformed, }
-\CommentTok{\# so that a linear relationship between time and end{-}point indicates proportionality }
-\NormalTok{dati[,}\DecValTok{3}\SpecialCharTok{:}\DecValTok{5}\NormalTok{]}\OtherTok{=}\FunctionTok{log}\NormalTok{(dati[,}\DecValTok{3}\SpecialCharTok{:}\DecValTok{5}\NormalTok{])}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\#Descriptives and plots:}
-\FunctionTok{summary}\NormalTok{(dati[,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{])}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##       Dose             AUC             Cmax            Tmax        
-##  Min.   : 25.00   Min.   :4.337   Min.   :3.219   Min.   :-0.6931  
-##  1st Qu.: 25.00   1st Qu.:5.156   1st Qu.:3.966   1st Qu.: 0.0000  
-##  Median : 50.00   Median :5.886   Median :4.485   Median : 0.2027  
-##  Mean   : 58.33   Mean   :5.873   Mean   :4.547   Mean   : 0.2474  
-##  3rd Qu.:100.00   3rd Qu.:6.539   3rd Qu.:5.280   3rd Qu.: 0.6931  
-##  Max.   :100.00   Max.   :7.335   Max.   :5.989   Max.   : 1.0986
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{by}\NormalTok{(dati[,}\DecValTok{3}\SpecialCharTok{:}\DecValTok{5}\NormalTok{],dati}\SpecialCharTok{$}\NormalTok{Dose,summary)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## dati$Dose: 25
-##       AUC             Cmax            Tmax        
-##  Min.   :4.337   Min.   :3.219   Min.   :-0.6931  
-##  1st Qu.:4.803   1st Qu.:3.390   1st Qu.: 0.0000  
-##  Median :4.972   Median :3.801   Median : 0.0000  
-##  Mean   :5.051   Mean   :3.783   Mean   : 0.2071  
-##  3rd Qu.:5.289   3rd Qu.:4.022   3rd Qu.: 0.6931  
-##  Max.   :5.818   Max.   :4.464   Max.   : 0.6931  
-## ------------------------------------------------------------ 
-## dati$Dose: 50
-##       AUC             Cmax            Tmax        
-##  Min.   :5.133   Min.   :3.837   Min.   :-0.6931  
-##  1st Qu.:5.670   1st Qu.:4.374   1st Qu.: 0.0000  
-##  Median :5.886   Median :4.484   Median : 0.2027  
-##  Mean   :5.815   Mean   :4.479   Mean   : 0.1689  
-##  3rd Qu.:5.967   3rd Qu.:4.625   3rd Qu.: 0.4055  
-##  Max.   :6.405   Max.   :5.268   Max.   : 1.0986  
-## ------------------------------------------------------------ 
-## dati$Dose: 100
-##       AUC             Cmax            Tmax       
-##  Min.   :6.164   Min.   :4.920   Min.   :0.0000  
-##  1st Qu.:6.607   1st Qu.:5.229   1st Qu.:0.0000  
-##  Median :6.782   Median :5.412   Median :0.4055  
-##  Mean   :6.751   Mean   :5.378   Mean   :0.3662  
-##  3rd Qu.:6.922   3rd Qu.:5.515   3rd Qu.:0.6931  
-##  Max.   :7.335   Max.   :5.989   Max.   :1.0986
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(dati}\SpecialCharTok{$}\NormalTok{Dose,dati}\SpecialCharTok{$}\NormalTok{AUC,}\AttributeTok{ylab=}\StringTok{"log(AUC)"}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"Dose"}\NormalTok{,}\AttributeTok{main=}\StringTok{"Dose vs log(AUC)"}\NormalTok{)}
-
-\NormalTok{r}\OtherTok{=}\FunctionTok{sapply}\NormalTok{(}\FunctionTok{unique}\NormalTok{(dati}\SpecialCharTok{$}\NormalTok{Sub),}\ControlFlowTok{function}\NormalTok{(s)\{}
-\NormalTok{  d}\OtherTok{=}\FunctionTok{subset}\NormalTok{(dati,Sub}\SpecialCharTok{==}\NormalTok{s)}
-\NormalTok{  d}\OtherTok{=}\NormalTok{d[}\FunctionTok{order}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{Dose),]}
-  \FunctionTok{lines}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{Dose,(d}\SpecialCharTok{$}\NormalTok{AUC),}\AttributeTok{col=}\NormalTok{s,}\AttributeTok{lwd=}\DecValTok{2}\NormalTok{)\})}
-
-
-\FunctionTok{plot}\NormalTok{(dati}\SpecialCharTok{$}\NormalTok{Dose,dati}\SpecialCharTok{$}\NormalTok{Cmax,}\AttributeTok{ylab=}\StringTok{"log(Cmax)"}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"Dose"}\NormalTok{,}\AttributeTok{main=}\StringTok{"Dose vs log(Cmax)"}\NormalTok{)}
-\NormalTok{r}\OtherTok{=}\FunctionTok{sapply}\NormalTok{(}\FunctionTok{unique}\NormalTok{(dati}\SpecialCharTok{$}\NormalTok{Sub),}\ControlFlowTok{function}\NormalTok{(s)\{}
-\NormalTok{  d}\OtherTok{=}\FunctionTok{subset}\NormalTok{(dati,Sub}\SpecialCharTok{==}\NormalTok{s)}
-\NormalTok{  d}\OtherTok{=}\NormalTok{d[}\FunctionTok{order}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{Dose),]}
-  \FunctionTok{lines}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{Dose,(d}\SpecialCharTok{$}\NormalTok{Cmax),}\AttributeTok{col=}\NormalTok{s,}\AttributeTok{lwd=}\DecValTok{2}\NormalTok{)\})}
-
-
-\FunctionTok{plot}\NormalTok{(dati}\SpecialCharTok{$}\NormalTok{Dose,dati}\SpecialCharTok{$}\NormalTok{Tmax,}\AttributeTok{ylab=}\StringTok{"log(Tmax)"}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"Dose"}\NormalTok{,}\AttributeTok{main=}\StringTok{"Dose vs log(Tmax)"}\NormalTok{)}
-\NormalTok{r}\OtherTok{=}\FunctionTok{sapply}\NormalTok{(}\FunctionTok{unique}\NormalTok{(dati}\SpecialCharTok{$}\NormalTok{Sub),}\ControlFlowTok{function}\NormalTok{(s)\{}
-\NormalTok{  d}\OtherTok{=}\FunctionTok{subset}\NormalTok{(dati,Sub}\SpecialCharTok{==}\NormalTok{s)}
-\NormalTok{  d}\OtherTok{=}\NormalTok{d[}\FunctionTok{order}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{Dose),]}
-  \FunctionTok{lines}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{Dose,(d}\SpecialCharTok{$}\NormalTok{Tmax),}\AttributeTok{col=}\NormalTok{s,}\AttributeTok{lwd=}\DecValTok{2}\NormalTok{)\})}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-41-1} \end{center}
 
+
 Now the analysis: A simple solution could be:
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(flip)}
-\NormalTok{res}\OtherTok{=}\FunctionTok{flip}\NormalTok{(.}\SpecialCharTok{\textasciitilde{}}\NormalTok{Dose,}\AttributeTok{data=}\NormalTok{dati,}\AttributeTok{Strata=}\SpecialCharTok{\textasciitilde{}}\NormalTok{Sub,}\AttributeTok{statTest =} \StringTok{"coeff"}\NormalTok{)}
-\FunctionTok{summary}\NormalTok{(res)}
-\end{Highlighting}
-\end{Shaded}
+
+```r
+library(flip)
+res=flip(.~Dose,data=dati,Strata=~Sub,statTest = "coeff")
+summary(res)
+\end{verbatim}
 
 \begin{verbatim}
 ##  Call:
@@ -2116,7 +1447,7 @@ models by sign flipping score contributions. Journal of the Royal
 Statistical Society Series B (Statistical Methodology) 82(3). DOI:
 10.1111/rssb.12369\\
 Implemented in R package flipscores:\\
-\url{https://cran.r-project.org/web/packages/flipscores/index.html}~\\
+\url{https://cran.r-project.org/web/packages/flipscores/index.html}\strut \\
 better to use the github develop version:\\
 \url{https://github.com/livioivil/flipscores}
 

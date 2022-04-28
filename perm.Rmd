@@ -3,14 +3,14 @@ title: "Permutation Tests"
 author: "Livio Finos"
 date: "University of Padova"
 output: 
-  pdf_document:
-    keep_tex: yes
-    number_sections: yes
-    toc: yes
   html_document:
     toc: yes
     # toc_float: yes
     number_sections: yes
+  pdf_document:
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
   beamer_presentation: default  
   ioslides_presentation:
     logo: figs/logoUnipd.jpg
@@ -616,7 +616,7 @@ i.e. each permutation is equally likely in the Orbit $\mathcal{O}$.
 &E(\phi(Y)|\mathbf{y}\in\mathcal{O}, H_0)=\\
 &P(T(\mathbf{y})\geq T^{(k)} | \mathbf{y}\in\mathcal{O}, H_0)=\\
 &=\int_{T^{(k)}}^{+\infty} f(T(\mathbf{y}))dT(\mathbf{y})=\\
-&=\sum_{\mathbf{y}\in\mathcal{O}} I(T(\mathbf{y})\geq T^{}/|\mathcal{O}|\leq \alpha
+&=\sum_{\mathbf{y}\in\mathcal{O}} I(T(\mathbf{y})\geq T^{})/|\mathcal{O}|\leq \alpha
 \ \ \ \ \forall\mathcal{O}
 \end{aligned}
 \]
@@ -629,7 +629,8 @@ $E(\phi(\mathbf{y}))=\int_P E(\phi(\mathbf{y})|\mathbf{y}\in\mathcal{O}, H_0) d\
 
 ### Properties (see Pesarin, 2001)
 
-The theorem above proves that the permutation tests have **exact control of the type I error**, i.e. $P(p-value\leq \alpha|H_0)=\alpha$ assuming $\alpha\in \{1/|\mathcal{O}|,2/|\mathcal{O}|,\ldots,1\}$ - don't forget that the orbit $\mathcal{O}$ is a finite set; if this is not the case, the test is (slightly) conservative.
+The theorem above proves that the permutation tests have **exact control of the type I error**, i.e. $P(p-value\leq \alpha|H_0)=\alpha$ assuming $\alpha\in \{1/|\mathcal{O}|,2/|\mathcal{O}|,\ldots,1\}$ - don't forget that the orbit $\mathcal{O}$ is a finite set and the cumulative distribution of $T(\pi \mathbf{y})$ is a step function.  
+When $\alpha$ has different values, the test is (slightly) conservative (or one need to use randomized tests that are not discussed in this course).
 
 Further properties:  
 
