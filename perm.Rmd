@@ -854,20 +854,18 @@ fisher.test(seeds$grp,seeds$Germinated)$p.value
 
 ## ANOVA (C-sample)
 
-e.g. 3 groups of `Age`: young [18-35), middle age [35-60), old [60-100)
+e.g. 3 groups of `Age`: young $[18-35)$, middle age $[35-60)$, old $[60-100)$
 
-* C samples: 
+- C samples:  
     - $n_i$ observations from $y_i$ ($i=1,\ldots,C$)
     - we don't need $y_i$ do be continuous, we don't even need to have finite moments (usual minimal assumption)
 
-* Hypotheses
+- Hypotheses  
     - $H_0: F(y_i)=F(y_j)\ \forall (i,j)$  
     - $H_1: \exists (i,j): \ F(y_i)\neq F(y_j)$ 
 
-<!-- ---- -->
 
-
-* Test Statistic: 
+- Test Statistic:  
      - F-statistic  
      - $R^2$  
      - other test statistic such as the (non standardized) mean difference are permutationally equivalent 
@@ -883,7 +881,6 @@ summary(lm(Reaction.Time~AgeCateg,data=reaction))
 
 ```
 
-<!-- ---- -->
 
 ### Stochastic Ordering
 * Same assumptions of ANOVA  
