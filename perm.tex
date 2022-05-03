@@ -499,7 +499,7 @@ We repeat \ensuremath{10^{4}} times and we look at the histogram of the
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-12-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-13-1} \end{center}
 
 \hypertarget{how-likely-was-hatbeta_1-obs}{%
 \subsubsection{\texorpdfstring{How likely WAS
@@ -527,12 +527,12 @@ Remarks:
 \subsubsection{Calculation of the
 p-value}\label{calculation-of-the-p-value}}
 
-Over B=\ensuremath{10^{4}} permutations we got 9837 times a
+Over B=\ensuremath{10^{4}} permutations we got 9816 times a
 \(\hat{\beta}_1 ^{* b} \leq \hat{\beta}_1 ^{obs}\).
 
 The p-value (significance) is
 \(p=\frac{\# (\hat{\beta}_1 ^{* b} \geq \hat{\beta}_1 ^{obs})}{B} =\)
-0.0165
+0.0186
 
 (\(\hat{\beta}_1 ^{obs}\) counts as a random permutation)
 
@@ -540,7 +540,7 @@ The p-value (significance) is
 \subsubsection{Interpretation}\label{interpretation}}
 
 The probability of \(p=P (\hat{\beta}_1 ^ * \geq \hat{\beta}_1=\) 0.206
-\(| H_0)\) is equal to \(p =\) 0.0165, i.e.~very small.\\
+\(| H_0)\) is equal to \(p =\) 0.0186, i.e.~very small.\\
 So, it was unlikely to get a value like this \textbf{IF \(H_0\) is
 true}.
 
@@ -611,7 +611,7 @@ experiment) finds false correlations with probability \(\alpha\)
 \begin{verbatim}
 ## 
 ##               Test  Stat tail p-value
-## Reaction.Time    t 2.633    >  0.0140
+## Reaction.Time    t 2.633    >  0.0120
 \end{verbatim}
 
 \begin{Shaded}
@@ -628,7 +628,7 @@ experiment) finds false correlations with probability \(\alpha\)
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-14-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-15-1} \end{center}
 
 \textbf{Type I error control}
 
@@ -657,7 +657,7 @@ I consider anomalous coefficients estimated as very small but also very
 large (`far from 0'). The p-value is
 
 \(p=\frac{\#(|\hat{\beta}_1^{*b} | \geq|\hat{\beta}_1^{obs}|)}{B}=\)
-0.0334
+0.0365
 
 (remark: the observed test stat is included among the permuted one)
 
@@ -673,7 +673,7 @@ In \texttt{flip}:
 \begin{verbatim}
 ## 
 ##               Test  Stat tail p-value
-## Reaction.Time    t 2.633   ><  0.0321
+## Reaction.Time    t 2.633   ><  0.0385
 \end{verbatim}
 
 \begin{Shaded}
@@ -682,7 +682,7 @@ In \texttt{flip}:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-16-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-17-1} \end{center}
 
 \hypertarget{a-more-formal-approach}{%
 \subsection{A more formal approach}\label{a-more-formal-approach}}
@@ -847,7 +847,7 @@ curve.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-17-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-18-1} \end{center}
 
 \hypertarget{the-simple-linear-parametric-model}{%
 \subsubsection{The (simple) linear parametric
@@ -974,7 +974,7 @@ tests}\label{permutationally-equivalent-tests}}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-19-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-20-1} \end{center}
 
 \hypertarget{conclusion}{%
 \subsubsection{Conclusion}\label{conclusion}}
@@ -1107,7 +1107,7 @@ tests}\label{permutationally-equivalent-tests}}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-21-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 \hypertarget{the-two-independent-sample-problem}{%
 \subsection{The Two-independent-sample
@@ -1207,7 +1207,7 @@ problem}\label{the-two-independent-sample-problem}}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-24-1} \end{center}
 
 \hypertarget{rank-test}{%
 \subsubsection{Rank test}\label{rank-test}}
@@ -1304,7 +1304,7 @@ methods}\label{chi-square-and-other-cathegorical-methods}}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-27-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-28-1} \end{center}
 
 \ldots{} and the Fisher test:
 
@@ -1582,33 +1582,33 @@ omit the \texttt{NA}s:
 ## 40   1 5.21 12.00
 \end{verbatim}
 
+\hypertarget{marginal-vs-joint-distribution}{%
+\subsection{Marginal vs Joint
+distribution}\label{marginal-vs-joint-distribution}}
+
 Use a permutation methods to test if there is any difference between the
 two groups in \texttt{grp} on the two variables \texttt{x} and
 \texttt{y}:
 
-\begin{itemize}
-\tightlist
-\item
-  perform the two tests for the two variables
-\item
-  Combine the two p-values using the Fisher Combining Function to test
-  the global hypothesis
-\item
-  Use a closed testing procedure to adjust the 2 p-values.
-\end{itemize}
-
-\hypertarget{joint-distribution}{%
-\subsection{Joint distribution}\label{joint-distribution}}
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(flip)}
-\NormalTok{res}\OtherTok{=}\FunctionTok{flip}\NormalTok{(.}\SpecialCharTok{\textasciitilde{}}\NormalTok{grp,}\AttributeTok{data=}\NormalTok{seeds)}
+\NormalTok{res}\OtherTok{=}\FunctionTok{flip}\NormalTok{(.}\SpecialCharTok{\textasciitilde{}}\NormalTok{grp,}\AttributeTok{data=}\NormalTok{seeds,}\AttributeTok{flipReturn =}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
 \FunctionTok{hist}\NormalTok{(res)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-35-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-36-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# flipReturn =list(permP=TRUE,permT=TRUE) is not really needed, we will need it later}
+\end{Highlighting}
+\end{Shaded}
+
+We can perform the two tests for the two variables separately. But we
+don't get the overall p-value (is there any difference among the ANY of
+the two variables?)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1616,47 +1616,59 @@ two groups in \texttt{grp} on the two variables \texttt{x} and
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-35-2} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-37-1} \end{center}
+
+What will we see next:\\
+- how to combine the two p-values (e.g.~using the Fisher Combining
+Function) to test the global hypothesis\\
+- How to use a closed testing procedure to adjust the 2 p-values: which
+variables?.
+
+\hypertarget{rejection-regions-and-overall-testing}{%
+\subsection{Rejection regions (and overall
+testing)}\label{rejection-regions-and-overall-testing}}
+
+In the univariate setting it is easy to define what is \emph{far from
+the null hypothesis} (i.e.~usually from a value of 0 of the test
+statistic), while in the multivariate setting, there is not only one
+answer (nor a better one).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Global p{-}value}
-\FunctionTok{npc}\NormalTok{(res,}\StringTok{"Fisher"}\NormalTok{)}
+\CommentTok{\# install.packages("plotrix")}
+\FunctionTok{library}\NormalTok{(}\StringTok{"plotrix"}\NormalTok{) }
+\NormalTok{res.sumt2}\OtherTok{=}\FunctionTok{npc}\NormalTok{(res,}\StringTok{"sumT2"}\NormalTok{,}\AttributeTok{flipReturn=}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{limsumt2}\OtherTok{=}\NormalTok{res.sumt2}\SpecialCharTok{@}\NormalTok{permT[}\FunctionTok{which.min}\NormalTok{(}\FunctionTok{abs}\NormalTok{(res.sumt2}\SpecialCharTok{@}\NormalTok{permP}\FloatTok{{-}0.05}\NormalTok{))]}
+\NormalTok{res.sumt}\OtherTok{=}\FunctionTok{npc}\NormalTok{(res,}\StringTok{"sumT"}\NormalTok{,}\AttributeTok{flipReturn=}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{limsumt}\OtherTok{=}\NormalTok{res.sumt}\SpecialCharTok{@}\NormalTok{permT[}\FunctionTok{which.min}\NormalTok{(}\FunctionTok{abs}\NormalTok{(res.sumt}\SpecialCharTok{@}\NormalTok{permP}\FloatTok{{-}0.05}\NormalTok{))]}
+\NormalTok{res.maxt}\OtherTok{=}\FunctionTok{npc}\NormalTok{(res,}\StringTok{"maxT"}\NormalTok{,}\AttributeTok{flipReturn=}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{limmaxt}\OtherTok{=}\NormalTok{res.maxt}\SpecialCharTok{@}\NormalTok{permT[}\FunctionTok{which.min}\NormalTok{(}\FunctionTok{abs}\NormalTok{(res.maxt}\SpecialCharTok{@}\NormalTok{permP}\FloatTok{{-}0.05}\NormalTok{))]}
+
+
+\FunctionTok{plot}\NormalTok{(res}\SpecialCharTok{@}\NormalTok{permT[,}\DecValTok{1}\NormalTok{],res}\SpecialCharTok{@}\NormalTok{permT[,}\DecValTok{2}\NormalTok{],}\AttributeTok{col=}\StringTok{"\#F2AD00"}\NormalTok{,}\AttributeTok{bg=}\StringTok{"\#F98400"}\NormalTok{,}\AttributeTok{pch=}\DecValTok{21}\NormalTok{,}\AttributeTok{main=}\StringTok{"Some rejection region (alpha=.05)"}\NormalTok{,}\AttributeTok{asp=}\DecValTok{1}\NormalTok{)}
+\FunctionTok{draw.circle}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, limsumt2}\SpecialCharTok{\^{}}\NormalTok{.}\DecValTok{5}\NormalTok{,}\AttributeTok{border=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{segments}\NormalTok{(}\FunctionTok{c}\NormalTok{(limsumt,}\SpecialCharTok{{-}}\NormalTok{limsumt,limsumt,}\SpecialCharTok{{-}}\NormalTok{limsumt),}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{),}
+         \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{),}\FunctionTok{c}\NormalTok{(limsumt,}\SpecialCharTok{{-}}\NormalTok{limsumt,}\SpecialCharTok{{-}}\NormalTok{limsumt,limsumt),}\AttributeTok{col=}\StringTok{"green"}\NormalTok{)}
+\FunctionTok{segments}\NormalTok{(}\FunctionTok{c}\NormalTok{(limmaxt,}\SpecialCharTok{{-}}\NormalTok{limmaxt,}\SpecialCharTok{{-}}\NormalTok{limmaxt,limmaxt),}\FunctionTok{c}\NormalTok{(limmaxt,limmaxt,}\SpecialCharTok{{-}}\NormalTok{limmaxt,}\SpecialCharTok{{-}}\NormalTok{limmaxt),}
+         \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{limmaxt,}\SpecialCharTok{{-}}\NormalTok{limmaxt,limmaxt,limmaxt),}\FunctionTok{c}\NormalTok{(limmaxt,}\SpecialCharTok{{-}}\NormalTok{limmaxt,}\SpecialCharTok{{-}}\NormalTok{limmaxt,limmaxt),}\AttributeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{,}\AttributeTok{legend=}\FunctionTok{c}\NormalTok{(}\StringTok{"SumT\^{}2"}\NormalTok{,}\StringTok{"Sum |T|"}\NormalTok{,}\StringTok{"maxT"}\NormalTok{),}\AttributeTok{col=}\FunctionTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{,}\StringTok{"green"}\NormalTok{,}\StringTok{"blue"}\NormalTok{),}\AttributeTok{bty=}\StringTok{"n"}\NormalTok{,}\AttributeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## 
-##    comb.funct nVar  Stat p-value
-## V1     Fisher    2 4.628  0.0880
-\end{verbatim}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-38-1} \end{center}
+
+\textbf{REMARK} We can derive the distribution of the p-value by
+computing the p-value for each test statistic (i.e.~computed on observed
+and permuted data). We get then the multivariate distribution of the
+p-values, which looks something like this one:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# adjusted p: Closed testing with Fisher combination}
-\FunctionTok{flip.adjust}\NormalTok{(res,}\StringTok{"Fisher"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(res}\SpecialCharTok{@}\NormalTok{permP,}\AttributeTok{col=}\StringTok{"\#F2AD00"}\NormalTok{,}\AttributeTok{bg=}\StringTok{"\#F98400"}\NormalTok{,}\AttributeTok{pch=}\DecValTok{21}\NormalTok{,}\AttributeTok{main=}\StringTok{"Joint Distribution of p{-}values"}\NormalTok{,}\AttributeTok{asp=}\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## 
-##   Test  Stat tail p-value Adjust:Fisher
-## x    t 1.320   ><  0.1810        0.1810
-## y    t 2.061   ><  0.0540        0.0880
-\end{verbatim}
-
-\hypertarget{rejection-regions}{%
-\subsection{Rejection regions}\label{rejection-regions}}
-
-Ask for the multivariate distribution of the p-values:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{res}\OtherTok{=}\FunctionTok{flip}\NormalTok{(.}\SpecialCharTok{\textasciitilde{}}\NormalTok{grp,}\AttributeTok{data=}\NormalTok{seeds,}\AttributeTok{flipReturn =}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
-\NormalTok{res.fisher}\OtherTok{=}\FunctionTok{npc}\NormalTok{(res,}\StringTok{"Fisher"}\NormalTok{,}\AttributeTok{flipReturn =}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
-\NormalTok{res.tippett}\OtherTok{=}\FunctionTok{npc}\NormalTok{(res,}\StringTok{"minP"}\NormalTok{,}\AttributeTok{flipReturn =}\FunctionTok{list}\NormalTok{(}\AttributeTok{permP=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{permT=}\ConstantTok{TRUE}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-39-1} \end{center}
 
 \hypertarget{fisher-combining-function}{%
 \subsubsection{Fisher Combining
@@ -1668,7 +1680,7 @@ The intersection of each univariate test with the Fisher region defines
 the rejection region of a closed testing - i.e.~adjusted for multiple
 testing.
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-37-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-40-1} \end{center}
 
 \hypertarget{tippett-min-p-combining-function}{%
 \subsubsection{Tippett (min-p) Combining
@@ -1681,7 +1693,7 @@ the rejection region of a closed testing - i.e.~adjusted for multiple
 testing. This fall to be the same rejection region given by Wesfall \&
 Young. Indeed, it is a closed testing with shortcut.
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-38-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-41-1} \end{center}
 
 \hypertarget{fwer-control-via-permutations-tests}{%
 \section{FWER control via Permutations
@@ -1824,8 +1836,9 @@ Examples and Methods for p-Value Adjustment. Wiley}
   Until no new rejections occur
 \end{itemize}
 
-\hypertarget{closed-testing}{%
-\subsection{Closed Testing}\label{closed-testing}}
+\hypertarget{the-general-framework-closed-testing}{%
+\subsection{The general framework: Closed
+Testing}\label{the-general-framework-closed-testing}}
 
 \emph{R Marcus, E Peritz, KR Gabriel (1976). On closed testing
 procedures with special reference to ordered analysis of variance.
@@ -1833,12 +1846,43 @@ Biometrika 63: 655-660.}
 
 Test in each node: any multivariate permutation test
 
+Westfall \&~Young is a special case of closed testing (i.e.~each node of
+the closure set uses min-p/Tippett or max-T combining function)
+
 \hypertarget{closure-set}{%
 \subsubsection{Closure Set}\label{closure-set}}
 
 \begin{center}\includegraphics[width=9.82in]{./figs/closed_set} \end{center}
 
 Adjusted \(\tilde p_A=\max(p_A,p_{AB},p_{AC},p_{ABC})\)
+
+In our data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\AttributeTok{res=}\FunctionTok{flip.adjust}\NormalTok{(res,}\AttributeTok{method =} \StringTok{"Fisher"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##   Test  Stat tail p-value Adjust:Fisher
+## x    t 1.320   ><  0.1810        0.1810
+## y    t 2.061   ><  0.0540        0.0880
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\AttributeTok{res=}\FunctionTok{flip.adjust}\NormalTok{(res,}\AttributeTok{method =} \StringTok{"maxT"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##   Test  Stat tail p-value Adjust:Fisher Adjust:maxT
+## x    t 1.320   ><  0.1810        0.1810      0.1810
+## y    t 2.061   ><  0.0540        0.0880      0.0750
+\end{verbatim}
 
 \hypertarget{conclusion-1}{%
 \subsection{Conclusion}\label{conclusion-1}}
@@ -2010,7 +2054,7 @@ transformed end-points.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-41-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-45-1} \end{center}
 
 Now the analysis: A simple solution could be:
 
@@ -2030,7 +2074,7 @@ Now the analysis: A simple solution could be:
 ##       Test   Stat tail p-value sig.
 ## AUC  coeff 0.0221   ><  0.0010  ***
 ## Cmax coeff 0.0208   ><  0.0010  ***
-## Tmax coeff 0.0024   ><  0.2680
+## Tmax coeff 0.0024   ><  0.2930
 \end{verbatim}
 
 \begin{Shaded}
@@ -2040,7 +2084,7 @@ Now the analysis: A simple solution could be:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-42-1} \end{center}
+\begin{center}\includegraphics{perm_files/figure-latex/unnamed-chunk-46-1} \end{center}
 
 Multivariate:
 
@@ -2060,7 +2104,7 @@ Multivariate:
 \begin{verbatim}
 ## 
 ##    comb.funct nVar  Stat p-value
-## V1     Fisher    3 15.13  0.0010
+## V1     Fisher    3 15.04  0.0010
 \end{verbatim}
 
 There is an effect of \texttt{Dose}, overall.
@@ -2088,9 +2132,9 @@ There is an effect of \texttt{Dose}, overall.
 ## 999 permutations.
 ## 
 ##       Test   Stat tail p-value Adjust:maxT Adjust:holm Adjust:Fisher sig.
-## AUC  coeff 0.0221   ><  0.0010      0.0010      0.0030        0.0030   **
-## Cmax coeff 0.0208   ><  0.0010      0.0010      0.0030        0.0020   **
-## Tmax coeff 0.0024   ><  0.2680      0.2680      0.2680        0.2680
+## AUC  coeff 0.0221   ><  0.0010      0.0010      0.0030        0.0010  ***
+## Cmax coeff 0.0208   ><  0.0010      0.0010      0.0030        0.0010  ***
+## Tmax coeff 0.0024   ><  0.2930      0.2930      0.2930        0.2930
 \end{verbatim}
 
 \texttt{AUC} and \texttt{Cmax} show a significant effect after

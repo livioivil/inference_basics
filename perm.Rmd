@@ -3,14 +3,14 @@ title: "Permutation Tests"
 author: "Livio Finos"
 date: "University of Padova"
 output: 
-  pdf_document:
-    keep_tex: yes
-    number_sections: yes
-    toc: yes
   html_document:
     toc: yes
     # toc_float: yes
     number_sections: yes
+  pdf_document:
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
   beamer_presentation: default  
   ioslides_presentation:
     logo: figs/logoUnipd.jpg
@@ -343,7 +343,11 @@ par(mfrow=c(1,1))
 
 <!-- --- -->
 
-We repeat `r (B=10000)` times and we look at the histogram of the $\hat{\beta}_1$
+```{r,echo=FALSE}
+B=10000
+```
+
+We repeat `r B` times and we look at the histogram of the $\hat{\beta}_1$
 
 ```{r}
 # beta_1 estimated on the observed data:
@@ -954,34 +958,62 @@ seeds=na.omit(seeds)
 seeds
 ```
 
+
+## Marginal vs Joint distribution
 Use a permutation methods to test if there is any difference between the two groups in `grp` on the two variables `x` and `y`:
 
-- perform the two tests for the two variables
-- Combine the two p-values using the Fisher Combining Function to test the global hypothesis
-- Use a closed testing procedure to adjust the 2 p-values.
-
-## Joint distribution
 ```{r}
 library(flip)
-res=flip(.~grp,data=seeds)
-hist(res)
-plot(res)
-
-# Global p-value
-npc(res,"Fisher")
-
-# adjusted p: Closed testing with Fisher combination
-flip.adjust(res,"Fisher")
-```
-
-## Rejection regions
-
-Ask for the multivariate distribution of the p-values: 
-```{r}
 res=flip(.~grp,data=seeds,flipReturn =list(permP=TRUE,permT=TRUE))
-res.fisher=npc(res,"Fisher",flipReturn =list(permP=TRUE,permT=TRUE))
-res.tippett=npc(res,"minP",flipReturn =list(permP=TRUE,permT=TRUE))
+hist(res)
+# flipReturn =list(permP=TRUE,permT=TRUE) is not really needed, we will need it later
 ```
+
+
+We can perform the two tests for the two variables separately. But we don't get the overall p-value (is there any difference among the ANY of the two variables?)
+
+```{r}
+plot(res)
+```
+
+What will we see next:  
+- how to combine the two p-values (e.g. using the Fisher Combining Function) to test the global hypothesis  
+- How to use a closed testing procedure to adjust the 2 p-values: which variables?.
+
+
+## Rejection regions (and overall testing)
+
+In the univariate setting it is easy to define what is *far from the null hypothesis* (i.e. usually from a value of 0 of the test statistic), while in the multivariate setting, there is not only one answer (nor a better one).
+
+
+```{r}
+
+# install.packages("plotrix")
+library("plotrix") 
+res.sumt2=npc(res,"sumT2",flipReturn=list(permP=TRUE,permT=TRUE))
+limsumt2=res.sumt2@permT[which.min(abs(res.sumt2@permP-0.05))]
+res.sumt=npc(res,"sumT",flipReturn=list(permP=TRUE,permT=TRUE))
+limsumt=res.sumt@permT[which.min(abs(res.sumt@permP-0.05))]
+res.maxt=npc(res,"maxT",flipReturn=list(permP=TRUE,permT=TRUE))
+limmaxt=res.maxt@permT[which.min(abs(res.maxt@permP-0.05))]
+
+
+plot(res@permT[,1],res@permT[,2],col="#F2AD00",bg="#F98400",pch=21,main="Some rejection region (alpha=.05)",asp=1)
+draw.circle(0, 0, limsumt2^.5,border="red")
+segments(c(limsumt,-limsumt,limsumt,-limsumt),c(0,0,0,0),
+         c(0,0,0,0),c(limsumt,-limsumt,-limsumt,limsumt),col="green")
+segments(c(limmaxt,-limmaxt,-limmaxt,limmaxt),c(limmaxt,limmaxt,-limmaxt,-limmaxt),
+         c(-limmaxt,-limmaxt,limmaxt,limmaxt),c(limmaxt,-limmaxt,-limmaxt,limmaxt),col="blue")
+legend("topright",legend=c("SumT^2","Sum |T|","maxT"),col=c("red","green","blue"),bty="n",lwd=2)
+```
+
+**REMARK** We can derive the distribution of the p-value by computing the p-value for each test statistic (i.e. computed on observed and permuted data). We get then the multivariate distribution of the p-values, which looks something like this one:
+
+```{r}
+plot(res@permP,col="#F2AD00",bg="#F98400",pch=21,main="Joint Distribution of p-values",asp=1)
+```
+
+
 
 ### Fisher Combining Function
 
@@ -989,13 +1021,14 @@ We inspect the rejection regions of the two univariate tests and the one of Fish
 The intersection of each univariate test with the Fisher region defines the rejection region of a closed testing - i.e. adjusted for multiple testing.
 
 ```{r,echo=FALSE}
+res.fisher=npc(res,"Fisher",flipReturn=list(permP=TRUE,permT=TRUE))
 Falpha5=res.fisher@permT[which.min(abs(res.fisher@permP-.05))]
 plot(res@permP[,1],res@permP[,2],col="#F2AD00",bg="#F98400",pch=21,main="Alpha .05",asp=1)
 
 curve(exp(-Falpha5)/x,ylim=c(0,1),from=0.00001,to=1,add=TRUE,col="red",lwd=2)
 abline(v=.05,col="green",lwd=2)
 abline(h=.05,col="blue",lwd=2)
-legend("topright",legend=c("H0(x,y) (Fisher)","H0(x)","H0(y)"),col=2:4,bty="n",lwd=2)
+legend("topright",legend=c("H0(x,y) (Fisher)","H0(x)","H0(y)"),col=c("red","green","blue"),bty="n",lwd=2)
 ```
 
 
@@ -1006,6 +1039,7 @@ This fall to be the same rejection region given by Wesfall \& Young. Indeed, it 
 
 
 ```{r,echo=FALSE}
+res.tippett=npc(res,"Tippett",flipReturn=list(permP=TRUE,permT=TRUE))
 Falpha5=-res.tippett@permT[which.min(abs(res.tippett@permP-.05))]
 plot(res@permP[,1],res@permP[,2],col="#F2AD00",bg="#F98400",pch=21,main="Alpha .05",asp=1)
 
@@ -1013,7 +1047,7 @@ lines(c(Falpha5,Falpha5),c(Falpha5,1),col="red",lwd=2)
 lines(c(Falpha5,1),c(Falpha5,Falpha5),col="red",lwd=2)
 abline(v=.05,col="green",lwd=2)
 abline(h=.05,col="blue",lwd=2)
-legend("topright",legend=c("H0(x,y) (Tippett)","H0(x)","H0(y)"),col=2:4,bty="n",lwd=2)
+legend("topright",legend=c("H0(x,y) (Tippett)","H0(x)","H0(y)"),col=c("red","green","blue"),bty="n",lwd=2)
 ```
 
 # FWER control via Permutations tests
@@ -1079,7 +1113,7 @@ Bonferroni is conservative
 - Independent p-values: minimal gain  
 - Positively correlated p-values: gain can be large
 
-## Westfall \&\ Young: permutation Holm
+## Improved Holm: Westfall \&\ Young
 
 *Westfall PH, Young SS (1993) Resampling-Based Multiple Testing: Examples and Methods for p-Value Adjustment. Wiley*
 
@@ -1104,12 +1138,13 @@ Bonferroni is conservative
 
 
 
-## Closed Testing
+## The general framework: Closed Testing
 
 *R Marcus, E Peritz, KR Gabriel (1976). On closed testing procedures with special reference to ordered analysis of variance. Biometrika 63: 655-660.*
 
 Test in each node: any multivariate permutation test
 
+Westfall \&\ Young is a special case of closed testing (i.e. each node of the closure set uses min-p/Tippett or max-T combining function)
 
 ### Closure Set
 
@@ -1135,6 +1170,13 @@ knitr::include_graphics("./figs/closed_set.PNG")
 
 Adjusted $\tilde p_A=\max(p_A,p_{AB},p_{AC},p_{ABC})$
 
+In our data:
+```{r}
+(res=flip.adjust(res,method = "Fisher"))
+
+(res=flip.adjust(res,method = "maxT"))
+
+```
 
 ## Conclusion
 
