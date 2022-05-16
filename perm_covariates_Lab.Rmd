@@ -1,0 +1,156 @@
+---
+title: "Permutation Testing with covariates: a lab"
+author: "Livio Finos"
+date: "University of Padova"
+output: 
+  html_document:
+    toc: yes
+    # toc_float: yes
+    number_sections: yes
+  pdf_document:
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+  beamer_presentation: default  
+  ioslides_presentation:
+    logo: figs/logoUnipd.jpg
+---
+
+# Intro
+
+The following examples refers to the materials exposed in 
+<https://github.com/livioivil/inference_basics/blob/master/perm_covariates_22.pdf>
+
+```{r}
+n=6
+#iid error: example of var/cov matrix:
+Sigma=3*diag(n)
+# \Sigma=\sigma^2 I
+
+
+I=diag(n)
+#A (not so) random permutation matrix
+Pi=matrix(0,n,n)
+for(i in seq(1,n,by=2))
+  Pi[i,i+1]<-Pi[i+1,i]<-1
+
+head(Pi)
+
+
+```
+
+
+
+# Coviarates: only the intercept
+
+```{r}
+Z=matrix(1,n,1)
+
+H=Z%*%solve(t(Z)%*%Z)%*%t(Z)
+IH=I-H
+
+
+```
+
+Under the null hypo: $f((I-H)y)=f(\Pi (I-H) y)$? YES!
+
+The mean of each obs is 0 after residualization, the variance is $\Pi(I-H)\Sigma(I-H)Pi=\sigma^2 \Pi(I-H)\Pi$
+
+```{r}
+#\sigma^2 doesn't change over \Pi, compare the remaining part:
+
+IH
+Pi%*%IH%*%Pi
+```
+# (Continuos) Covariates
+
+```{r}
+(Z=cbind(1,rnorm(n)))
+Z=model.matrix(~0+.,data=data.frame(Z))
+
+Zcont=Z # stored for later
+
+H=Z%*%solve(t(Z)%*%Z)%*%t(Z)
+(IH=I-H)
+
+
+```
+
+Under the null hypo: $f((I-H)y)=f(\Pi (I-H) y)$? No, in general!
+
+The mean of each obs is 0 after residualization, the variance is $\Pi(I-H)\Sigma(I-H)Pi=\sigma^2 \Pi(I-H)\Pi$
+
+```{r}
+IH
+Pi%*%IH%*%Pi
+```
+
+
+# Discrete Covariates
+
+```{r}
+(Z=factor(rep(1:2,each=n/2)))
+(Z=model.matrix(~0+.,data=data.frame(Z)))
+
+
+H=Z%*%solve(t(Z)%*%Z)%*%t(Z)
+(IH=I-H)
+
+
+```
+
+Under the null hypo: $f((I-H)y)=f(\Pi (I-H) y)$? No, in general!
+
+The mean of each obs is 0 after residualization, the variance is $\Pi(I-H)\Sigma(I-H)Pi=\sigma^2 \Pi(I-H)\Pi$
+
+```{r}
+IH
+Pi%*%IH%*%Pi
+```
+
+But we can restrict the permutations within the same levels of $Z$
+
+```{r}
+Pi3=I
+Pi3[1:3,1:3]=Pi3[3:1,1:3]
+Pi3[4:6,4:6]=Pi3[6:4,4:6]
+Pi3
+Pi3%*%IH%*%Pi3
+```
+
+
+# Paired sample modeled by dummy variables
+
+Paired sample are a special case of categorical covariates:
+
+```{r}
+(Z=factor(rep(1:(n/2),each=2)))
+(Z=model.matrix(~0+.,data=data.frame(Z)))
+
+
+H=Z%*%solve(t(Z)%*%Z)%*%t(Z)
+(IH=I-H)
+
+```
+
+Under the null hypo: $f((I-H)y)=f(\Pi (I-H) y)$ only if one restrict the permutations within the same levels of $Z$:
+
+```{r}
+#(Pi already permutes within subjects)
+IH
+Pi%*%IH%*%Pi
+```
+
+# Decomposing I-H
+
+```{r}
+Z=Zcont
+H=Z%*%solve(t(Z)%*%Z)%*%t(Z)
+(IH=I-H)
+
+ei=eigen(IH)
+ei$values
+ei$vectors
+
+```
+

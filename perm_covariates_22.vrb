@@ -1,0 +1,4 @@
+\frametitle{Familywise Error Rate (Holm vs min-p)}
+\textcolor{myblue}{\tt res=flip.adjust(pvalues,'maxT')}
+\includegraphics[scale=.45]{figures_perm_covariates/compareFWER2}
+
