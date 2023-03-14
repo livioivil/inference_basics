@@ -74,6 +74,10 @@ H=Z%*%solve(t(Z)%*%Z)%*%t(Z)
 (IH=I-H)
 
 
+ei=eigen(IH)
+
+
+round(ei$vectors%*%t(ei$vectors),10)
 ```
 
 Under the null hypo: $f((I-H)y)=f(\Pi (I-H) y)$? No, in general!
