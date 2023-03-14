@@ -2,10 +2,10 @@
 title: "Statistical Inference with Repeated Measures (EEG) data"
 author: "Livio Finos"
 output:
+  pdf_document:
+    toc: yes
   html_document:
     number_sections: yes
-    toc: yes
-  pdf_document:
     toc: yes
 ---
 
@@ -258,7 +258,7 @@ similar and that no two conditions are any more dependent than any other two.
 
 Provided the observed covariances are roughly equal in our samples (and the variances are OK too) we can be pretty confident that compound symmetry is not violated.
 
-compound symmetry is met when the correlation between `Condition f` and `Condition h` is equal to the correlation between `Condition f` and `Condition o` or `Condition h` and `Condition n`, etc (same for any other factor within subject, such as `Chan`). But a more direct way to think about compound symmetry is to say that it requires that all subjects in each group change in the same way over trials. In other words the slopes of the lines regressing the dependent variable on time are the same for all subjects. 
+compound symmetry is met when the correlation between `Condition f` and `Condition h` is equal to the correlation between `Condition f` and `Condition o` or `Condition h` and `Condition n`, etc (same for any other factor within subject, such as `Chan`). But a more direct way to think about compound symmetry is to say that it requires that all subjects in each group change in the same way over conditions/levels. In other words the slopes of the lines regressing the dependent variable on time are the same for all subjects. 
 Put that way it is easy to see that compound symmetry can really be an unrealistic assumption. 
 
 
