@@ -28,7 +28,7 @@ ERP experiment
     * 2 (h): happiness (face)
     * 3 (d): disgust (face)
     * 4 (n): neutral (face)
-    * 5 (o): object (face)
+    * 5 (o): object
 - Measure: Area around the component P170
 
 Setting parameters, importing the data:
@@ -241,7 +241,7 @@ print(mod)
 
 ```{r}
 ezPlot(dv=Y, wid=Subj, within=.(ChanL,Lateral,Condition),data=dati,
-       x=Condition,split=ChanL,row=Lateral)
+       x=Condition,split=Lateral,row=ChanL)
 
 ```
 
@@ -443,7 +443,7 @@ An alternative plotting tool:
 ```{r message=FALSE}
 library(sjPlot)
 library(ggplot2)
-plot_model(mod3, type = "pred", terms = c("Condition", "ChanL","Lateral"))
+plot_model(mod3, type = "pred", terms = c("Condition","Lateral", "ChanL"))
 ```
 
 
