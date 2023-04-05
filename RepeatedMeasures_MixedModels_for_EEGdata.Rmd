@@ -156,7 +156,10 @@ Can you write it as a linear model?
 
 ```{r}
 mod2=lm(Y~ Condition+Subj,data=dati2)
+
+summary(mod2)
 anova(mod2)
+
 ```
 
 Compare the results. (Different or the same?)
