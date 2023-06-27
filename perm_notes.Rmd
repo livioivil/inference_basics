@@ -1,0 +1,75 @@
+---
+title: "Conditional Inference for Repeated Measures models"
+author: "Livio Finos"
+output: 
+  html_document:
+    toc: yes
+    # toc_float: yes
+  beamer_presentation: default  
+  ioslides_presentation:
+    logo: figs/logoUnipd.jpg
+  pdf_document:
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+---
+
+# (minimal) Bibliography
+
+The Grounding Theory:  
+- Pesarin (2001) Multivariate Permutation Tests: With Applications in Biostatistics by Fortunato, Wiley, New York
+
+An alternative approach to the Permutation testing:  
+- Hemerik J, Goeman J. Exact testing with random permutations. Test (Madr). 2018;27(4):811-825. doi: 10.1007/s11749-017-0571-1. Epub 2017 Nov 30. PMID: 30930620; PMCID: PMC6405018.  
+
+
+
+
+# Testing with Covariates (coonfounders)
+
+A nice review of the regression model within the permutation framework:   
+- Anderson M. Winkler, Gerard R. Ridgway, Matthew A. Webster, Stephen M. Smith, Thomas E. Nichols (2014)
+Permutation inference for the general linear model, NeuroImage, Volume 92, Pages 381-397, ISSN 1053-8119 <https://doi.org/10.1016/j.neuroimage.2014.01.060>
+
+
+A flexible approach to General Linear Model based on the sign-flip score test:  
+- Hemerik, Goeman and Finos (2020) Robust testing in generalized linear models by sign flipping score contributions. Journal of the Royal Statistical Society Series B (Statistical Methodology) 82(3). DOI: 10.1111/rssb.12369  
+Implemented in R package flipscores:  
+<https://cran.r-project.org/web/packages/flipscores/index.html>  
+better to use the github develop version:  
+<https://github.com/livioivil/flipscores>
+
+
+# notes
+Kherad-Pajouh, S., & Renaud, O. (2015). A general permutation approach
+for analyzing repeated measures ANOVA and mixed-model designs.
+Statistical Papers, 56(4), 947-967.
+Frossard, J. (2019). Permutation tests and multiple comparisons in the
+linear models and mixed linear models, with extension to experiments
+using electroencephalography. DOI:
+10.13097/archive-ouverte/unige:125617.
+Frossard, J. & O. Renaud (2018). Permuco: Permutation Tests for
+Regression, (Repeated Measures) ANOVA/ANCOVA and Comparison of
+Signals. R Packages.
+
+che usa ugualmente i residui ma li ortogonalizza prima di permutarli
+(occhio che usa il termine repeated measure, ma siccome lo generalizza
+ai disegni sbilanciati sta facendo in pratica dei mixed models).
+Se volete vedere un tutorial in R che mi pare ben fatto della mia ex
+dottoranda Angela Andreella (che Giada conosce dall'aip di lecce):
+https://angeella.github.io/Tutorials/pARIEEG.html
+nel tutorial tra l'altro lei presenta un suo lavoro con il quale
+supera la cluster-level analysis (e che potrebbe essere applicato
+anche al metodo proposto da voi/noi).
+
+# Bibliography
+
+
+- Basso \& Finos (2012). Exact Multivariate Permutation Tests for Fixed
+Effects in Mixed-Models. *Communications in Statistics - Theory and Methods*, 41: 2991 - 3001.
+
+- Finos \& Basso (2014) Permutation tests for between-unit fixed effects in multivariate
+generalized linear mixed models. *Stat Comput* 24, 941–952.
+
+- Nichols \& Holmes (2001) Nonparametric Permutation Tests For Functional Neuroimaging: A Primer with Examples. *Human Brain Mapping* 15, 1-25.
+<https://onlinelibrary.wiley.com/doi/ftr/10.1002/hbm.1058>
