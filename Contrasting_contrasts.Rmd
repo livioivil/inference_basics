@@ -2,12 +2,12 @@
 title: "Contrasting Contrasts"
 author: "Livio Finos"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
   html_document:
     number_sections: yes
     toc_float: yes
+    toc: yes
+  pdf_document:
+    number_sections: yes
     toc: yes
 ---
 
@@ -49,7 +49,7 @@ D
 
 library(ggplot2)
 ggplot(D,aes(x=x,y=y,color=gr))+geom_point()+
-  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+xlim(-.5, 6)
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+xlim(-.5, 6)+theme_bw()
 ```
 
 # Linear Models  
@@ -94,7 +94,7 @@ there is a clear difference between groups A and B.
 
 ```{r}
 ggplot(D2,aes(x=x,y=y,color=gr))+geom_point()+
-  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_vline(xintercept = 0)
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_vline(xintercept = 0)+theme_bw()
 
 ```
 
@@ -134,7 +134,7 @@ summary(modS0)
 
 ```{r}
 ggplot(D3,aes(x=x,y=y,color=gr))+geom_point()+
-  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_abline(intercept = coef(modS0)[1], slope = coef(modS0)[3])
+  geom_smooth(method = "lm", fill = NA,fullrange = TRUE)+ geom_abline(intercept = coef(modS0)[1], slope = coef(modS0)[3])+theme_bw()
 
 ```
 
@@ -204,12 +204,20 @@ summaryResSim(res_sim[,9:12])
 
 # Conclusion
 
-The definition of an effect depends crucially on the way we encode variables (whether they are factors or continuous). The interpretation changes depending on the encoding.
+The definition of an effect depends crucially on how we encode variables, whether they are factors or continuous. The interpretation changes depending on the encoding.
 
-Anche la potenza dei test ad essi associati è guidata dalla dipendenza con gli altri coefficienti (e quindi dalla dipendenza tra i predittori del disegno sperimentale). Questo aspetto è importante soprattutto nelle interazioni, dove le correlazioni con gli effetti principali sono spesso elevate per natura perchè sono definite come prodotto delle colonne del disegno sperimentale.
+Furthermore, the power to test these effects depends on the dependence among predictors, such as cross-products and mixed moments. This becomes particularly salient in interactions, where correlations are often naturally high, as interactions are defined as a product of the columns of the experimental design.
 
-Quando è possibile (e sensato), la raccomandazione è quella di centrare i contrasti intorno allo 0 (vedi uso di `contr.sum()`).
+When possible (and sensible), the recommendation is to center the contrasts around 0 (see `contr.sum ()`).
 
-Furthermore, the power to test these effects dependes on the dependendence among predictors (i.e. cross product, mixed moments). This point becomes salient in interactions, where correlations are often high by nature (interactions are defined as a product of the columns of the experimental design).
 
-When possible (and sensible), the recommendation is to center the contrasts around 0 (see using `contr.sum ()`).
+## PS: What if I use ANOVA (i.e. LRT) tests?
+
+Even the results of the ANOVA test depend on the contrasts (and linear transformations of the original variables) used to fit the model. In this case, one obtains exactly the same results:
+
+```{r}
+car::Anova(modDU, type=3)
+car::Anova(modDUC, type=3)
+car::Anova(modS0, type=3)
+```
+
