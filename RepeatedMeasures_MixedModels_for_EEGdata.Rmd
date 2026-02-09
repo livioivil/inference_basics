@@ -2,18 +2,21 @@
 title: "Statistical Inference with Repeated Measures (EEG) data"
 author: "Livio Finos"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     number_sections: yes
     toc: yes
+  pdf_document:
+    toc: yes
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Introduction
+
 ```{r setup, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 ## The data
 
@@ -21,17 +24,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ERP experiment
 
-- 20 Subjects,
-- 6 Channels: O1, O2, PO7, PO8, P7, P8
-- Stimuli: pictures. Conditions:
-    * 1 (f): fear (face)
-    * 2 (h): happiness (face)
-    * 3 (d): disgust (face)
-    * 4 (n): neutral (face)
-    * 5 (o): object
-- Measure: Area around the component P170
+-   20 Subjects,
+-   6 Channels: O1, O2, PO7, PO8, P7, P8
+-   Stimuli: pictures. Conditions:
+    -   1 (f): fear (face)
+    -   2 (h): happiness (face)
+    -   3 (d): disgust (face)
+    -   4 (n): neutral (face)
+    -   5 (o): object
+-   Measure: Area around the component P170
 
 Setting parameters, importing the data:
+
 ```{r,warning=FALSE,message=FALSE}
 # 
 # # example of files contents:
@@ -98,7 +102,8 @@ p+geom_point(aes(group = Subj, colour = Subj))+
    geom_boxplot(alpha=.1)
 ```
 
-We subtract the subject-specific effect (i.e. subject's mean) to each observation.
+We subtract the subject-specific effect (i.e. subject's mean) to each
+observation.
 
 ```{r}
 dati01=subset(dati,Chan=="O1")
@@ -112,37 +117,42 @@ p+geom_point(aes(group = Subj, colour = Subj))+
    geom_boxplot(alpha=.1)
 ```
 
-The dispersion of the data has been largely reduced.
-This effect is the one taken in account by the models for repeated measures.
+The dispersion of the data has been largely reduced. This effect is the
+one taken in account by the models for repeated measures.
 
 # Repeated Measures ANOVA
+
 ## Introduction
 
-wiki reference:
-<https://en.wikipedia.org/wiki/Repeated_measures_design>
+wiki reference: <https://en.wikipedia.org/wiki/Repeated_measures_design>
 
-A nice explanation can be found (in particular see 7.9 and 7.10):   
-Jonathan Baron (2011) Notes on the use of R for psychology experiments and questionnaires
+A nice explanation can be found (in particular see 7.9 and 7.10):\
+Jonathan Baron (2011) Notes on the use of R for psychology experiments
+and questionnaires
 <https://www.sas.upenn.edu/~baron/from_cattell/rpsych/rpsych.html>
 
-and in the Course materal of   
-ST 732, Applied Longitudinal Data Analysis, NC State University
-by Marie Davidian
+and in the Course materal of\
+ST 732, Applied Longitudinal Data Analysis, NC State University by Marie
+Davidian
 <https://www.stat.ncsu.edu/people/davidian/courses/st732/notes/chap5.pdf>
 from <https://www.stat.ncsu.edu/people/davidian/courses/st732/>
 
 ## 2 conditions, paired observations
-Let consider the reduced problem: channel `Chan=="O1`  and `Condition=="n"` or `Condition=="f"`.
 
-How to compare the two conditions?
-First try:
+Let consider the reduced problem: channel `Chan=="O1` and
+`Condition=="n"` or `Condition=="f"`.
+
+How to compare the two conditions? First try:
+
 ```{r}
 t.test(dati2$Y[dati2$Condition=="n"],
        dati2$Y[dati2$Condition=="f"])
 ```
+
 Is it ok?
 
-NO! We don't take in account the fact that measures are taken on the same subject!
+NO! We don't take in account the fact that measures are taken on the
+same subject!
 
 ```{r}
 t.test(dati2$Y[dati2$Condition=="n"],
@@ -165,6 +175,7 @@ anova(mod2)
 Compare the results. (Different or the same?)
 
 ## Linear models with repeated measures
+
 Let's consider (and fit) a linear model with `Chan*Condition`:
 
 ```{r}
@@ -172,7 +183,8 @@ modlmf=lm(Y~ Chan*Condition,data=dati)
 anova(modlmf)
 ```
 
-We don't take in account the fact that measures are taken on the same subject!
+We don't take in account the fact that measures are taken on the same
+subject!
 
 Can we just add the `Subj` term?
 
@@ -181,10 +193,12 @@ modlmf=lm(Y~ Chan*Condition+Subj,data=dati)
 anova(modlmf)
 ```
 
-Answer:  yes and no.  
-The estimates are ok, but we need to take care of the residuals SS in the testing step.
+Answer: yes and no.\
+The estimates are ok, but we need to take care of the residuals SS in
+the testing step.
 
-All the SS that we need can be found in the saturated linear model. We compute them now and we use them later. 
+All the SS that we need can be found in the saturated linear model. We
+compute them now and we use them later.
 
 ```{r}
 modlmf=lm(Y~ Chan*Condition*Subj,data=dati)
@@ -199,8 +213,8 @@ mod=aov(Y~ Chan*Condition+Subj + Error(Subj/(Chan*Condition)),data=dati)
 summary(mod)
 ```
 
-
-A better output and slightly more compleate analysis (Sphericity Corrections):
+A better output and slightly more compleate analysis (Sphericity
+Corrections):
 
 ```{r}
 library(ez)
@@ -209,9 +223,12 @@ print(mod)
 
 ```
 
-To see the relation between repeated measures and linear model, again, the Baron material is a good start. Specially see section "7.9.3  The Appropriate Error Terms"
+To see the relation between repeated measures and linear model, again,
+the Baron material is a good start. Specially see section "7.9.3 The
+Appropriate Error Terms"
 
 ## Spend your DF in a different way!
+
 Same number of DF, but spent in a different way
 
 ```{r}
@@ -229,7 +246,6 @@ dati$ChanL=dati$Chan
 
 contrasts(dati$ChanL) <- contr.sum(3)
 ```
-
 
 ```{r}
 # The standard way
@@ -249,21 +265,33 @@ ezPlot(dv=Y, wid=Subj, within=.(ChanL,Lateral,Condition),data=dati,
 ```
 
 ## Sphericity
-Sphericity is an assumption about the structure of the covariance matrix in a repeated measures design. Before we describe it, let's consider a simpler (but more strict) condition.
+
+Sphericity is an assumption about the structure of the covariance matrix
+in a repeated measures design. Before we describe it, let's consider a
+simpler (but more strict) condition.
 
 **Compound symmetry**
 
-Compound symmetry holds true
-when the variances within conditions are equal (this is the same as the homogeneity of variance
-assumption in between-group designs) but also when the covariances between pairs of conditions
-are roughly equal. As such, we assume that the variation within experimental conditions is fairly
-similar and that no two conditions are any more dependent than any other two.
+Compound symmetry holds true when the variances within conditions are
+equal (this is the same as the homogeneity of variance assumption in
+between-group designs) but also when the covariances between pairs of
+conditions are roughly equal. As such, we assume that the variation
+within experimental conditions is fairly similar and that no two
+conditions are any more dependent than any other two.
 
-Provided the observed covariances are roughly equal in our samples (and the variances are OK too) we can be pretty confident that compound symmetry is not violated.
+Provided the observed covariances are roughly equal in our samples (and
+the variances are OK too) we can be pretty confident that compound
+symmetry is not violated.
 
-compound symmetry is met when the correlation between `Condition f` and `Condition h` is equal to the correlation between `Condition f` and `Condition o` or `Condition h` and `Condition n`, etc (same for any other factor within subject, such as `Chan`). But a more direct way to think about compound symmetry is to say that it requires that all subjects in each group change in the same way over conditions/levels. In other words the slopes of the lines regressing the dependent variable on time are the same for all subjects. 
-Put that way it is easy to see that compound symmetry can really be an unrealistic assumption. 
-
+compound symmetry is met when the correlation between `Condition f` and
+`Condition h` is equal to the correlation between `Condition f` and
+`Condition o` or `Condition h` and `Condition n`, etc (same for any
+other factor within subject, such as `Chan`). But a more direct way to
+think about compound symmetry is to say that it requires that all
+subjects in each group change in the same way over conditions/levels. In
+other words the slopes of the lines regressing the dependent variable on
+time are the same for all subjects. Put that way it is easy to see that
+compound symmetry can really be an unrealistic assumption.
 
 **Is compound symmetry met in our data?**
 
@@ -278,34 +306,40 @@ ggpairs(Y,aes(colour = dati$Condition[1:100], alpha = 0.4))
 
 Not really! (correlations do often differ)
 
-**Sphericity**  
+**Sphericity**
 
-Although
-compound symmetry has been shown to be a sufficient condition for conducting ANOVA on
-repeated measures data, it is not a necessary condition. Sphericity is a less restrictive form of
-compound symmetry. Sphericity refers to the equality of variances of the differences between
-treatment levels. If you were to take each pair of treatment levels, and calculate the differences
-between each pair of scores it is necessary that these differences have equal variances.
+Although compound symmetry has been shown to be a sufficient condition
+for conducting ANOVA on repeated measures data, it is not a necessary
+condition. Sphericity is a less restrictive form of compound symmetry.
+Sphericity refers to the equality of variances of the differences
+between treatment levels. If you were to take each pair of treatment
+levels, and calculate the differences between each pair of scores it is
+necessary that these differences have equal variances.
 
-
-We can check sphericity assumption using the covariance matrix, but it turns out to be fairly laborious. Remember that  variance of differences can be computed as:
-$$Var(x-y)=S^2_{x-y} = S^2_x +S^2_y - 2S_{xy}$$
-
+We can check sphericity assumption using the covariance matrix, but it
+turns out to be fairly laborious. Remember that variance of differences
+can be computed as: $$Var(x-y)=S^2_{x-y} = S^2_x +S^2_y - 2S_{xy}$$
 
 Further reading:
 <https://en.wikipedia.org/wiki/Mauchly%27s_sphericity_test>
 
 <!-- and a Video:   -->
+
 <!-- Part 1: <https://www.youtube.com/watch?v=8BvlRJeCIaM>   -->
+
 <!-- Part 2: <https://www.youtube.com/watch?v=bUXdWUHJRqA> -->
+
 <!-- vedi anche:  https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiQ4b-TtrPvAhWJO-wKHZ2rB4wQFjABegQIAhAD&url=http%3A%2F%2Foak.ucc.nau.edu%2Frh232%2Fcourses%2FEPS625%2FHandouts%2FRM-ANOVA%2FSphericity.pdf&usg=AOvVaw2AjUDNrV5Yn7zbplgBWLYq -->
-This is often an unrealistic assumption in EEG data (spatial location of channel relates to correlation between measures)
+
+This is often an unrealistic assumption in EEG data (spatial location of
+channel relates to correlation between measures)
 
 ## (Further) Limitations of Repeated Measures ANOVA
 
-- (Design and) Data must be balanced
-- Repeated Measures Anova doesn't allow for missing data (e.g. subjects/condiction/channel cells)
-- It only handle factors, no quantitative variables
+-   (Design and) Data must be balanced
+-   Repeated Measures Anova doesn't allow for missing data (e.g.
+    subjects/condiction/channel cells)
+-   It only handle factors, no quantitative variables
 
 Mixed model is a more flexible approach.
 
@@ -316,7 +350,6 @@ Mixed model is a more flexible approach.
 ```{r out.width = "700px",echo=FALSE}
 knitr::include_graphics("./figs/example_mixed_model.png")
 ```
-
 
 ```{r message=FALSE,echo=FALSE}
 par(mfrow=c(1,3))
@@ -339,29 +372,30 @@ for(i in 1:5) abline(intrc[i],1+slopes[i],lwd=2,col=i+1,lty=2)
 Mixed models allow for more flexible modelization.
 
 I assume you are expert on mixed models, if not
-<https://en.wikipedia.org/wiki/Mixed_model>   
+<https://en.wikipedia.org/wiki/Mixed_model>\
 and much more on:
-<http://webcom.upmf-grenoble.fr/LIP/Perso/DMuller/M2R/R_et_Mixed/documents/Bates-book.pdf>  
-and  
+<http://webcom.upmf-grenoble.fr/LIP/Perso/DMuller/M2R/R_et_Mixed/documents/Bates-book.pdf>\
+and\
 <https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf>
 
-
 ## The model
+
 Models with random effects can be defined as:
 $$Y_{n\times 1} = X_{n\times p} B_{p\times 1} + Z_{n\times q} b_{q\times 1} + \varepsilon_{n\times 1}$$
 
 where $$\varepsilon\sim\mathcal{N}( 0,\sigma^2 I_n)$$
 
-In the models we will consider, the random effects are modeled
-    as a multivariate normal random variable:
-    $$b\sim\mathcal{N}(0,\Sigma_{q\times q}),$$
+In the models we will consider, the random effects are modeled as a
+multivariate normal random variable:
+$$b\sim\mathcal{N}(0,\Sigma_{q\times q}),$$
 
-In a *linear mixed model* the conditional distribution $(Y|\mathcal B=b)$ is    a *spherical* multivariate Gaussian.
+In a *linear mixed model* the conditional distribution
+$(Y|\mathcal B=b)$ is a *spherical* multivariate Gaussian.
 
-
-In our case $n=\#Subjects \times \#Conditions \times \#Channels=20\times 5 \times 6 = 600$.
-$X$ is the matrix of (dummified) predictors. 
-$Z$ can take many dimensions and values. Examples follow.
+In our case
+$n=\#Subjects \times \#Conditions \times \#Channels=20\times 5 \times 6 = 600$.
+$X$ is the matrix of (dummified) predictors. $Z$ can take many
+dimensions and values. Examples follow.
 
 **Random Intercept (for each Subject)**
 
@@ -379,10 +413,11 @@ mod=lmer(Y~ Condition*Lateral*ChanL +(1|Subj),data=dati)
 car::Anova(mod)
 ```
 
-
 **Random Channel (for each Subject)**
 
-Actually, instead of `Channel`, we use the combination of `ChanL*Lateral`. Same prediction ability (6 channels in Channel and 3X2 combination of ChanL and Lateral), just a different point of view.
+Actually, instead of `Channel`, we use the combination of
+`ChanL*Lateral`. Same prediction ability (6 channels in Channel and 3X2
+combination of ChanL and Lateral), just a different point of view.
 
 $Z$ is the matrix of dummy variables of the column `dati$Chan`.
 
@@ -398,14 +433,18 @@ car::Anova(mod2)
 # 
 ```
 
-**NOTE** the warning message. Not a good sign, actually. We don't discuss it in this lab. However, one should either, find out a different algorithm or change the model. Remember that the results of a model's fit that doesn't converge, can not be trusted!
+**NOTE** the warning message. Not a good sign, actually. We don't
+discuss it in this lab. However, one should either, find out a different
+algorithm or change the model. Remember that the results of a model's
+fit that doesn't converge, can not be trusted!
 
 **Random Emisphere (for each Subject)**
 
-A simplified model may be based on Left/Right random effect for each subject.
+A simplified model may be based on Left/Right random effect for each
+subject.
 
-$Z$ is the matrix of 2 dummy variables from the column `dati$Lateral` (intercept is not inclued in the random part of the model).
-
+$Z$ is the matrix of 2 dummy variables from the column `dati$Lateral`
+(intercept is not inclued in the random part of the model).
 
 ```{r}
 mod3=lmer(Y~ Lateral*ChanL*Condition +(1+Lateral|Subj),data=dati)
@@ -415,10 +454,10 @@ car::Anova(mod3)
 
 ```
 
-
 ## Plotting tools
 
 for the first model:
+
 ```{r message=FALSE}
 library(effects)
 plot(allEffects(mod))
@@ -429,6 +468,7 @@ qqmath(ranef(mod, condVar=TRUE))
 ```
 
 The second model:
+
 ```{r,message=FALSE}
 library(effects)
 plot(allEffects(mod3))
@@ -449,21 +489,22 @@ library(ggplot2)
 plot_model(mod3, type = "pred", terms = c("Condition","Lateral", "ChanL"))
 ```
 
-
 ## Validity of the assumptions
 
+-   Independence of the residuals?
 
-* Independence of the residuals?
-* Normality of the residuals?
-* Homoscedasticity of the residuals (i.e. same variance between subject/channel/condition)?
-* outliers?
+-   Normality of the residuals?
 
-* Leaverage? (influential observations)
+-   Homoscedasticity of the residuals (i.e. same variance between
+    subject/channel/condition)?
 
-Please, do not test for normality, for homoscedasticity, sphericity etc. 
+-   outliers?
+
+-   Leaverage? (influential observations)
+
+Please, do not test for normality, for homoscedasticity, sphericity etc.
 
 Use Exploratory data Analysis, instead!
-
 
 ```{r}
 dati$residuals=residuals(mod3)
@@ -477,18 +518,20 @@ p
 ## Contrasts and post-hoc
 
 ### Post-hoc
+
 ```{r}
 library(multcomp)
 summary(glht(mod3, linfct = mcp(Condition = "Tukey")))
 ```
 
 ### Custom contrasts
-An example:   
 
-- neutral vs object in O1 (left)
-- disgust vs neutral in O1 (left)
-- fear vs neutral in O1 (left)
-- happy vs neutral in O1 (left)
+An example:
+
+-   neutral vs object in O1 (left)
+-   disgust vs neutral in O1 (left)
+-   fear vs neutral in O1 (left)
+-   happy vs neutral in O1 (left)
 
 ```{r}
 library(multcomp)
@@ -504,26 +547,29 @@ summary(compa, test = adjusted("none"))
 summary(compa)
 ```
 
-
 # Multivariate ANOVA (MANOVA)
 
 ## Motivation
-Hei, wait a moment... the trials for `object` condition are much more than any other condition, the variance of its estimated component must be (much?) lower, homoschedastcity doesn't hold!!
 
-Let's use a different approach
-Reshape the data from `long` to `wide` format.
+Hei, wait a moment... the trials for `object` condition are much more
+than any other condition, the variance of its estimated component must
+be (much?) lower, homoschedastcity doesn't hold!!
 
-to simplify the example, let's consider the comparison between conditions `neutral` vs `object`.
+Let's use a different approach Reshape the data from `long` to `wide`
+format.
+
+to simplify the example, let's consider the comparison between
+conditions `neutral` vs `object`.
 
 ## Reshaping the data
 
-Let' now compute the vectors of contrasts (one vector of reach channel, length equal to number of subjects): `Happy vs Neutral`
+Let' now compute the vectors of contrasts (one vector of reach channel,
+length equal to number of subjects): `Happy vs Neutral`
 
 ```{r}
 Y=matrix(dati$Y,byrow = TRUE,nrow = 20)
 colnames(Y)=paste(dati$Condition,dati$ChanL,dati$Lateral,sep = "_")[1:30]
 ```
-
 
 ```{r}
 colnames(Y)
@@ -552,11 +598,13 @@ abline(0,0)
 ```
 
 Same test as above, but under a different model
+
 ```{r}
 t.test(Yhn[,1])
 ```
 
 We can run the analysis over all channels
+
 ```{r}
 (uni_t=apply(Yhn,2,t.test))
 ```
@@ -570,10 +618,11 @@ abline(h=0)
 points(mean(Yhn[,1]),mean(Yhn[,2]),cex=3,col=2,pch=20)
 ```
 
-Manova test, overall among all channels:   
+Manova test, overall among all channels:\
 $H_0$ neutral=object in ANY of the channels.
 <https://en.wikipedia.org/wiki/Multivariate_analysis_of_variance>
 <https://en.wikipedia.org/wiki/Hotelling%27s_T-squared_distribution>
+
 ```{r}
 modman <- manova(Yhn ~ 1)
 anova(modman)
@@ -587,8 +636,6 @@ ggpairs(data.frame(Yhn))
 ```
 
 Not so bad, actually.
-
-
 
 # Mapping results on a scalp
 
@@ -617,23 +664,60 @@ eegspace(eegcoord[cidx,4:5],t_chan,cex.point = 3,colorlab="t-statistic",mycolors
 
 ```
 
-I suggest you to play with much nicer plots (based on library `ggplot2`):  
-- package eeguana <https://github.com/bnicenboim/eeguana>  
+I suggest you to play with much nicer plots (based on library
+`ggplot2`):\
+- package eeguana <https://github.com/bnicenboim/eeguana>\
 - package eegUtils <https://github.com/craddm/eegUtils>
-
 
 # (minimal) Bibliography
 
-Jonathan Baron (2011) Notes on the use of R for psychology experiments and questionnaires
+## About (generalizzed) linear Mixed models:
+
+lme4 package
+<https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf>
+
+Jonathan Baron (2011) Notes on the use of R for psychology experiments
+and questionnaires
 <https://www.sas.upenn.edu/~baron/from_cattell/rpsych/rpsych.html>
 
-and Course materal of   
-ST 732, Applied Longitudinal Data Analysis, NC State University
-by Marie Davidian
-<https://www.stat.ncsu.edu/people/davidian/courses/st732/notes/chap5.pdf>
-from <https://www.stat.ncsu.edu/people/davidian/courses/st732/>
+Pinheiro, J., & Bates, D. (2006) Mixed-effects models in S and S-PLUS.
+<https://www.springer.com/gp/book/9780387954580>
 
-The bridge between rep meas. ANOVA and Mixed Models is built and developed by (very nice job (!), by the way):
+Bates, D. (2022) lme4: Mixed-effects modeling with R.
+<https://stat.ethz.ch/~maechler/MEMo-pages/lMMwR.pdf>
+
+Fox, J. (2015) Applied regression analysis and generalized linear
+models.
+<https://us.sagepub.com/en-us/nam/applied-regression-analysis-and-generalized-linear-models/book246125>
+
+Fox, J., & Weisberg, S. (2018) An R companion to applied regression.
+<https://us.sagepub.com/en-us/nam/an-r-companion-to-applied-regression/book246125>
+
+Bliese, P. (2022) Multilevel modeling in R (2.7).
+<https://cran.r-project.org/doc/contrib/Bliese_Multilevel.pdf>
+
+Baayen, R. H., Davidson, D. J., & Bates, D. M. (2008) Mixed-effects
+modeling with crossed random effects for subjects and items.
+<https://doi.org/10.1016/j.jml.2007.12.005>
+
+Bürkner, P. C. (2017) brms: An R package for Bayesian multilevel models
+using Stan.
+<https://doi.org/10.18637/jss.v080.i01>
+
+McElreath, R. (2020) Statistical rethinking: A Bayesian course with
+examples in R and Stan.
+<https://xcelab.net/rm/statistical-rethinking/>
+
+GLMM FAQ by Ben Bolker and others
+<https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html>
+
+A complete course on mixed models (in italian)
+<https://osf.io/b7tkp/>
+
+## Resampling based:
+
+The bridge between rep meas. ANOVA and Mixed Models is built and
+developed by (very nice job (!), by the way):
 
 <https://jaromilfrossard.github.io/gANOVA/>
 
@@ -641,9 +725,7 @@ The bridge between rep meas. ANOVA and Mixed Models is built and developed by (v
 
 <https://arxiv.org/abs/1903.10766>
 
-About Type I, II, III SS:    <https://mcfromnz.wordpress.com/2011/03/02/anova-type-iiiiii-ss-explained/>
+## More
 
-About Mixed models:   
-<http://webcom.upmf-grenoble.fr/LIP/Perso/DMuller/M2R/R_et_Mixed/documents/Bates-book.pdf>  
-and  
-<https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf>
+About Type I error, II, III SS:
+<https://mcfromnz.wordpress.com/2011/03/02/anova-type-iiiiii-ss-explained/>
